@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        maven { url 'http://repo1.maven.org/maven2' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.4'
+    }
+}
+apply plugin: 'android'
+dependencies {
+    compile files('libs/android-support-v4.jar')
+    compile project(':libraries:google-play-services_lib')
+    compile project(':libraries:ZXingLib')
+}
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17.0.0"
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
+    }
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 16
+    }
+}

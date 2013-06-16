@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="google-play-services_lib.aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/stroll/build/exploded-bundles/google-play-services_lib.aar/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
