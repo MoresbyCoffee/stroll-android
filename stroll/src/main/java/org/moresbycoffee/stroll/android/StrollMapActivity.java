@@ -10,9 +10,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +20,22 @@ public class StrollMapActivity extends Activity {
     private LocationClient mLocationClient;
     private Map<String, Integer> mMarkers = new HashMap<String, Integer>();
     private PlacesService mPlacesService;
+    private UserService mUserService;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stroll_map_layout);
         mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
+        mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMap.clear();
+        for (Place place : mPlacesService.getAllPlaces()) {
+            addPlaceToMap(place);
+        }
     }
 
     @Override
@@ -49,9 +58,6 @@ public class StrollMapActivity extends Activity {
             public void onConnected(Bundle bundle) {
                 Location loc = mLocationClient.getLastLocation();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16f));
-                for (Place place : mPlacesService.getAllPlaces()) {
-                    addPlaceToMap(place);
-                }
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
@@ -75,9 +81,16 @@ public class StrollMapActivity extends Activity {
     }
 
     private void addPlaceToMap(Place place) {
+        BitmapDescriptor bitmapDescriptor;
+        if (mUserService.isPlaceCaptured(place.mId)) {
+            bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+        } else {
+            bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+        }
+
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(place.mLat, place.mLon))
-                .title(place.mTitle));
+                .title(place.mTitle).icon(bitmapDescriptor));
         mMarkers.put(marker.getId(), place.mId);
     }
 
