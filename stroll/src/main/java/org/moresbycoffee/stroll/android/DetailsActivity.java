@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import jim.h.common.android.lib.zxing.config.ZXingLibConfig;
 import jim.h.common.android.lib.zxing.integrator.IntentIntegrator;
@@ -24,6 +25,7 @@ public class DetailsActivity extends Activity {
     private TextView mTitleTextView;
     private Place mCurrentPlace;
     private Button mCaptureButton;
+    private ImageView mStatusImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class DetailsActivity extends Activity {
 
         setContentView(R.layout.details_screen);
         mStatusTextView = (TextView)findViewById(R.id.status);
+        mStatusImageView = (ImageView)findViewById(R.id.status_icon);
         mTitleTextView = (TextView)findViewById(R.id.title);
         mCaptureButton = (Button)findViewById(R.id.capture_button);
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
@@ -47,9 +50,12 @@ public class DetailsActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (mUserService.isPlaceCaptured(mCurrentPlace.mId)) {
-            mStatusTextView.setText("Captured");
+            mStatusTextView.setText("Opened");
+            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.opened));
+
         } else {
-            mStatusTextView.setText("Uncaptured");
+            mStatusTextView.setText("Closed");
+            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.closed));
         }
     }
 

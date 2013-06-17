@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stroll_blue">#ff0099cc</color>
+    <color name="stroll_panel_bg">#eeeeee</color>
+    <color name="stroll_panel_separator">#bbbbbb</color>
+
+</resources>
