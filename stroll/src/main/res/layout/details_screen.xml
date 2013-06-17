@@ -44,8 +44,7 @@
                     android:layout_marginBottom="10dp"
                     android:scaleType="centerInside"
                     android:id="@+id/status_icon"
-                    android:src="@drawable/closed"
-                    android:layout_gravity="left|center_vertical"/>
+                    android:src="@drawable/closed"/>
 
             <TextView
                     android:layout_width="wrap_content"
