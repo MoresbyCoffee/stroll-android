@@ -1,11 +1,13 @@
 package org.moresbycoffee.stroll.android;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,26 +22,39 @@ public class DetailsActivity extends Activity {
     private ZXingLibConfig zxingLibConfig;
     private PlacesService mPlacesService;
     private UserService mUserService;
-
     private TextView mStatusTextView;
     private TextView mTitleTextView;
     private Place mCurrentPlace;
     private Button mCaptureButton;
     private ImageView mStatusImageView;
+    private View.OnClickListener onCaptureButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            IntentIntegrator.initiateScan(DetailsActivity.this, zxingLibConfig);
+        }
+    };
+
+    public static Intent createDetailsIntent(Context context, int placeId) {
+        Intent intent = new Intent(context, DetailsActivity.class);
+        intent.putExtra(PLACE_ID_EXTRA, placeId);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPlacesService = ((StrollApplication)getApplication()).getService(PlacesService.class);
-        mUserService = ((StrollApplication)getApplication()).getService(UserService.class);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
+        mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
         zxingLibConfig = new ZXingLibConfig();
         zxingLibConfig.useFrontLight = true;
 
         setContentView(R.layout.details_screen);
-        mStatusTextView = (TextView)findViewById(R.id.status);
-        mStatusImageView = (ImageView)findViewById(R.id.status_icon);
-        mTitleTextView = (TextView)findViewById(R.id.title);
-        mCaptureButton = (Button)findViewById(R.id.capture_button);
+        mStatusTextView = (TextView) findViewById(R.id.status);
+        mStatusImageView = (ImageView) findViewById(R.id.status_icon);
+        mTitleTextView = (TextView) findViewById(R.id.title);
+        mCaptureButton = (Button) findViewById(R.id.capture_button);
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
 
         mCurrentPlace = mPlacesService.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
@@ -87,17 +102,17 @@ public class DetailsActivity extends Activity {
         }
     }
 
-    public static Intent createDetailsIntent(Context context, int placeId) {
-        Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(PLACE_ID_EXTRA, placeId);
-        return intent;
-    }
-
-    private View.OnClickListener onCaptureButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            IntentIntegrator.initiateScan(DetailsActivity.this, zxingLibConfig);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, StrollMapActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-    };
-
+    }
 }
