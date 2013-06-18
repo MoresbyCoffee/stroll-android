@@ -8,11 +8,20 @@
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginBottom="10dp"
             android:id="@+id/detailed_photo"
             android:src="@drawable/canary2"
             android:scaleType="centerCrop"
             android:layout_gravity="left|center_vertical"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#AAAAAA"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF"/>
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -31,6 +40,7 @@
                 android:typeface="sans"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:textColor="@color/title_text_color"
                 android:layout_marginBottom="15dp"/>
 
         <LinearLayout
@@ -38,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:orientation="horizontal">
+
             <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -51,6 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="[status placeholder]"
+                    android:textColor="@color/normal_text_color"
                     android:layout_marginLeft="10dp"
                     android:id="@+id/status"/>
         </LinearLayout>
@@ -59,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:text="Do you see the clocks? Find the third, on the right and look closely at the bottom. You'll find your treasure there."
+                android:textColor="@color/normal_text_color"
                 android:id="@+id/description_edit_text"
                 android:background="@drawable/rounded_description_bg"
                 android:padding="10dp"
@@ -70,6 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Open treasure"
+                android:textStyle="bold"
                 android:background="@color/stroll_blue"
                 android:textColor="@android:color/white"
                 />
