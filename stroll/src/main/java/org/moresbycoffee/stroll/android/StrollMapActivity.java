@@ -57,13 +57,15 @@ public class StrollMapActivity extends Activity {
             @Override
             public void onConnected(Bundle bundle) {
                 Location loc = mLocationClient.getLastLocation();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 16f));
+                CameraPosition pos = CameraPosition.builder().target(new LatLng(loc.getLatitude(), loc.getLongitude())).zoom(16f).tilt(45).build();
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         return false;
                     }
                 });
+                mMap.getUiSettings().setZoomControlsEnabled(false);
             }
 
             @Override
@@ -83,9 +85,9 @@ public class StrollMapActivity extends Activity {
     private void addPlaceToMap(Place place) {
         BitmapDescriptor bitmapDescriptor;
         if (mUserService.isPlaceCaptured(place.mId)) {
-            bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
-            bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()

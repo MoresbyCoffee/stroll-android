@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@+id/map"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:name="com.google.android.gms.maps.MapFragment"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+        <fragment
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.gms.maps.MapFragment"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                >
+            <View
+                android:background="#555555"
+                android:layout_width="match_parent"
+                android:layout_height="1px"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/stroll_panel_bg"
+                    >
+
+                <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/canary2"
+                        android:scaleType="centerCrop"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[place title placeholder]"
+                        android:id="@+id/title"
+                        android:typeface="sans"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/title_text_color"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+
+            <View
+                    android:layout_height="3dp"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/drop_shadow"
+
+                    />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
