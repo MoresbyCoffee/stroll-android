@@ -1,0 +1,3 @@
+[submodule "libraries/ImageLoader"]
+	path = libraries/ImageLoader
+	url = https://github.com/novoda/ImageLoader.git

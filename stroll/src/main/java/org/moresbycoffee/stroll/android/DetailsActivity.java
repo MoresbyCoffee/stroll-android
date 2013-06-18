@@ -33,6 +33,7 @@ public class DetailsActivity extends Activity {
             IntentIntegrator.initiateScan(DetailsActivity.this, zxingLibConfig);
         }
     };
+    private ImageView mDetailsPhoto;
 
     public static Intent createDetailsIntent(Context context, int placeId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -58,7 +59,9 @@ public class DetailsActivity extends Activity {
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
 
         mCurrentPlace = mPlacesService.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
-        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.mTitle);
+        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.mTitle.toUpperCase());
+        mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
+        mDetailsPhoto.setImageBitmap(mCurrentPlace.getBitmap());
     }
 
     @Override

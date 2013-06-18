@@ -38,7 +38,7 @@
                 android:text="[place title placeholder]"
                 android:id="@+id/title"
                 android:typeface="sans"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/title_text_color"
                 android:layout_marginBottom="15dp"/>

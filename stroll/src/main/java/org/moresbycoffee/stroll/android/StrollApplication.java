@@ -9,7 +9,7 @@ public class StrollApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mPlacesService = new PlacesService();
+        mPlacesService = new PlacesService(this);
         mUserService = new UserService();
     }
 

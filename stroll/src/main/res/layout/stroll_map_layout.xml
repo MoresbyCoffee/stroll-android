@@ -17,16 +17,19 @@
                 android:name="com.google.android.gms.maps.MapFragment"/>
 
         <LinearLayout
+                android:id="@+id/ribbon_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="30dp"
+                android:visibility="invisible"
                 >
             <View
-                android:background="#555555"
-                android:layout_width="match_parent"
-                android:layout_height="1px"/>
+                    android:layout_height="3dp"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/drop_shadow_top"
+                    />
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,6 +38,7 @@
                     >
 
                 <ImageView
+                        android:id="@+id/place_image"
                         android:layout_width="120dp"
                         android:layout_height="70dp"
                         android:src="@drawable/canary2"
@@ -44,7 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="[place title placeholder]"
-                        android:id="@+id/title"
+                        android:id="@+id/place_title"
                         android:typeface="sans"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -57,8 +61,7 @@
             <View
                     android:layout_height="3dp"
                     android:layout_width="match_parent"
-                    android:background="@drawable/drop_shadow"
-
+                    android:background="@drawable/drop_shadow_bottom"
                     />
         </LinearLayout>
 
