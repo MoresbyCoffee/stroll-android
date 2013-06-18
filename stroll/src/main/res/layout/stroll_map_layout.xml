@@ -7,64 +7,75 @@
 
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             >
+
         <fragment
                 android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:name="com.google.android.gms.maps.MapFragment"/>
 
-        <LinearLayout
+        <RelativeLayout
                 android:id="@+id/ribbon_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="30dp"
-                android:visibility="invisible"
-                >
-            <View
-                    android:layout_height="3dp"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/drop_shadow_top"
-                    />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:clickable="true"
+                android:visibility="gone">
+
             <LinearLayout
+                    android:id="@+id/inner_panel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/stroll_panel_bg"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
                     >
 
-                <ImageView
-                        android:id="@+id/place_image"
-                        android:layout_width="120dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/canary2"
-                        android:scaleType="centerCrop"/>
+                <View
+                        android:layout_height="3dp"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/drop_shadow_top"
+                        />
 
-                <TextView
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="[place title placeholder]"
-                        android:id="@+id/place_title"
-                        android:typeface="sans"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/title_text_color"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginLeft="10dp"/>
+                        android:orientation="horizontal"
+                        android:background="@color/stroll_panel_bg"
+                        >
 
+                    <ImageView
+                            android:id="@+id/place_image"
+                            android:layout_width="120dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/canary2"
+                            android:scaleType="centerCrop"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="[place title placeholder]"
+                            android:id="@+id/place_title"
+                            android:typeface="sans"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/title_text_color"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginLeft="10dp"/>
+
+                </LinearLayout>
+
+                <View
+                        android:layout_height="3dp"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/drop_shadow_bottom"
+                        />
             </LinearLayout>
-
-            <View
-                    android:layout_height="3dp"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/drop_shadow_bottom"
-                    />
-        </LinearLayout>
-
+        </RelativeLayout>
     </RelativeLayout>
 
 

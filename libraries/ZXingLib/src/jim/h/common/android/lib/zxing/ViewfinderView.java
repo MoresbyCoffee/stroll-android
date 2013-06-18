@@ -34,7 +34,7 @@ import com.google.zxing.ResultPoint;
 
 /**
  * This view is overlaid on top of the camera preview. It adds the viewfinder rectangle and partial
- * transparency outside it, as well as the laser scanner animation and result points.
+ * transparency outside it, as well as the laser scanner anim and result points.
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
@@ -142,7 +142,7 @@ public final class ViewfinderView extends View {
         }
       }
 
-      // Request another update at the animation interval, but only repaint the laser line,
+      // Request another update at the anim interval, but only repaint the laser line,
       // not the entire viewfinder mask.
       postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);
     }
