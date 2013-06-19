@@ -2,7 +2,6 @@ package org.moresbycoffee.stroll.android;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import jim.h.common.android.lib.zxing.config.ZXingLibConfig;
 import jim.h.common.android.lib.zxing.integrator.IntentIntegrator;
 import jim.h.common.android.lib.zxing.integrator.IntentResult;
+import org.moresbycoffee.stroll.android.dialog.TreasureFoundDialog;
 
 public class DetailsActivity extends Activity {
 
@@ -98,8 +98,11 @@ public class DetailsActivity extends Activity {
                     Log.i("BB", "Not valid");
                     title = "Not valid code";
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(title).create().show();
+
+                TreasureFoundDialog editNameDialog = new TreasureFoundDialog();
+                editNameDialog.show(getFragmentManager(), "fragment_edit_name");
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                builder.setTitle(title).create().show();
                 break;
             default:
         }

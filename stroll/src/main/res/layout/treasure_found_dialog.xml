@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/edit_name"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#BB000000">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            >
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/dialog_bg"
+                >
+            <TextView
+                    android:id="@+id/lbl_your_name"
+                    android:gravity="center"
+                    android:layout_marginTop="80dp"
+                    android:text="Congratulation!"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/medal_blue"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

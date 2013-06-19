@@ -155,7 +155,7 @@ public class StrollMapActivity extends Activity {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right);
         mRibbonPanel.setVisibility(View.VISIBLE);
         mPlaceImage.setImageBitmap(place.getBitmap());
-        mPlaceTitle.setText(place.mTitle);
+        mPlaceTitle.setText(place.mTitle.toUpperCase());
         mRibbonPanel.startAnimation(anim);
     }
 
