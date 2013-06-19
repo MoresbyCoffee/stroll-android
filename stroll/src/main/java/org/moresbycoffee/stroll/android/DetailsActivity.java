@@ -100,7 +100,7 @@ public class DetailsActivity extends Activity {
                 }
 
                 TreasureFoundDialog editNameDialog = new TreasureFoundDialog();
-                editNameDialog.show(getFragmentManager(), "fragment_edit_name");
+                editNameDialog.show(getFragmentManager(), "dialog");
 //                AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //                builder.setTitle(title).create().show();
                 break;
