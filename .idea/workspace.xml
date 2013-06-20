@@ -97,10 +97,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TreasureFoundDialog.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TreasureFoundDialog.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureFoundDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="92" selection-start="512" selection-end="512" vertical-scroll-proportion="0.32822758" vertical-offset="0" max-vertical-offset="457">
+            <state line="15" column="92" selection-start="512" selection-end="512" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="405">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlacesService.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/PlacesService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="51" selection-start="1127" selection-end="1141" vertical-scroll-proportion="0.57279235" vertical-offset="0" max-vertical-offset="495">
               <folding />
             </state>
           </provider>
@@ -271,7 +280,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/stroll/src/main/res/animation/slide_in_from_right.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/anim/slide_in_from_right.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/anim/slide_out_to_left.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/layout/stroll_map_layout.xml" />
@@ -287,12 +295,14 @@
         <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/DetailsActivity.java" />
         <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureNotFoundDialog.java" />
         <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureFoundDialog.java" />
+        <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/PlacesService.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="693" />
     <option name="y" value="22" />
-    <option name="width" value="1384" />
+    <option name="width" value="694" />
     <option name="height" value="878" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -874,7 +884,7 @@
     <option name="totallyTimeSpent" value="24727000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1384" height="878" extended-state="6" />
+    <frame x="693" y="22" width="694" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884902" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -883,18 +893,18 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934132" sideWeight="0.6701847" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39973614" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36015832" sideWeight="0.29446936" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.372442" sideWeight="0.29475307" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16666667" sideWeight="0.4050132" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16605437" sideWeight="0.4050132" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298153" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36015832" sideWeight="0.70553064" order="7" side_tool="false" content_ui="tabs" x="5" y="22" width="1386" height="878" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.372442" sideWeight="0.7052469" order="7" side_tool="false" content_ui="tabs" x="5" y="22" width="1386" height="878" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16666667" sideWeight="0.6398417" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3441358" sideWeight="0.627558" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26121372" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -988,11 +998,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/app/DialogFragment.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="0" selection-start="2357" selection-end="2357" vertical-scroll-proportion="0.7968397" vertical-offset="517" max-vertical-offset="960" />
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/app/Dialog.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="178" column="0" selection-start="7933" selection-end="7933" vertical-scroll-proportion="0.7968397" vertical-offset="2302" max-vertical-offset="2745" />
@@ -1096,7 +1101,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureFoundDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="92" selection-start="512" selection-end="512" vertical-scroll-proportion="0.32822758" vertical-offset="0" max-vertical-offset="457">
+        <state line="15" column="92" selection-start="512" selection-end="512" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="405">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/PlacesService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="51" selection-start="1127" selection-end="1141" vertical-scroll-proportion="0.57279235" vertical-offset="0" max-vertical-offset="495">
           <folding />
         </state>
       </provider>
