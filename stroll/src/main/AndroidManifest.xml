@@ -5,7 +5,7 @@
           android:versionName="1.0">
 
     <uses-sdk
-            android:minSdkVersion="11"
+            android:minSdkVersion="13"
             android:targetSdkVersion="16"/>
 
     <uses-feature
@@ -16,7 +16,7 @@
             android:allowBackup="true"
             android:icon="@drawable/ic_launcher"
             android:label="stroll"
-            android:theme="@android:style/Theme.Holo.Light"
+            android:theme="@style/CustomActivityTheme"
             android:name=".StrollApplication">
         <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"

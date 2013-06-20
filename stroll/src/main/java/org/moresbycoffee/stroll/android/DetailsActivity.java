@@ -47,6 +47,7 @@ public class DetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
         mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
         zxingLibConfig = new ZXingLibConfig();
@@ -70,11 +71,11 @@ public class DetailsActivity extends Activity {
         super.onResume();
         if (mUserService.isPlaceCaptured(mCurrentPlace.mId)) {
             mStatusTextView.setText("Opened");
-            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.opened));
+            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
 
         } else {
             mStatusTextView.setText("Closed");
-            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.closed));
+            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.closed_padlock));
         }
     }
 

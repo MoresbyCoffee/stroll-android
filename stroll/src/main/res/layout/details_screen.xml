@@ -55,7 +55,7 @@
                     android:layout_marginBottom="10dp"
                     android:scaleType="centerInside"
                     android:id="@+id/status_icon"
-                    android:src="@drawable/closed"/>
+                    android:src="@drawable/closed_padlock"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="Open treasure"
                 android:textStyle="bold"
-                android:background="@color/stroll_blue"
+                android:background="@drawable/dialog_bg"
                 android:textColor="@android:color/white"
                 />
 

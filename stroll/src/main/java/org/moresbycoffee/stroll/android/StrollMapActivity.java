@@ -35,6 +35,7 @@ public class StrollMapActivity extends Activity {
         super.onCreate(savedInstanceState);
         firstStart = true;
         setContentView(R.layout.stroll_map_layout);
+        getActionBar().setDisplayUseLogoEnabled(false);
         mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
         mPlaceImage = (ImageView)findViewById(R.id.place_image);
@@ -119,7 +120,8 @@ public class StrollMapActivity extends Activity {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        CameraPosition pos = CameraPosition.builder().target(new LatLng(loc.getLatitude(), loc.getLongitude())).zoom(16f).tilt(45).build();
+                        Place place = mPlacesService.getPlaceById(1);
+                        CameraPosition pos = CameraPosition.builder().target(new LatLng(place.mLat, place.mLon)).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }
