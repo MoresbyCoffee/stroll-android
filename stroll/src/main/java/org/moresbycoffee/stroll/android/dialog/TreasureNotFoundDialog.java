@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import org.moresbycoffee.stroll.android.R;
 
-public class TreasureFoundDialog extends DialogFragment {
+public class TreasureNotFoundDialog extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,7 @@ public class TreasureFoundDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.treasure_found_dialog, container);
+        View view = inflater.inflate(R.layout.treasure_not_correct_dialog, container);
         view.findViewById(R.id.full_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

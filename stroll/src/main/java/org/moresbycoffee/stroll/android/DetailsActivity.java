@@ -15,6 +15,7 @@ import jim.h.common.android.lib.zxing.config.ZXingLibConfig;
 import jim.h.common.android.lib.zxing.integrator.IntentIntegrator;
 import jim.h.common.android.lib.zxing.integrator.IntentResult;
 import org.moresbycoffee.stroll.android.dialog.TreasureFoundDialog;
+import org.moresbycoffee.stroll.android.dialog.TreasureNotFoundDialog;
 
 public class DetailsActivity extends Activity {
 
@@ -91,18 +92,12 @@ public class DetailsActivity extends Activity {
                 Log.i("BB", "" + result);
                 String title = "";
                 if (mCurrentPlace.isScannedCodeValid(result)) {
-                    Log.i("BB", "Captured");
-                    title = "Captured";
+                    new TreasureFoundDialog().show(getFragmentManager(), "dialog");
                     mUserService.capturePlace(mCurrentPlace.mId);
                 } else {
-                    Log.i("BB", "Not valid");
-                    title = "Not valid code";
+                    new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
                 }
 
-                TreasureFoundDialog editNameDialog = new TreasureFoundDialog();
-                editNameDialog.show(getFragmentManager(), "dialog");
-//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle(title).create().show();
                 break;
             default:
         }
