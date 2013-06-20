@@ -23,9 +23,6 @@
       </layout>
     </layouts>
   </component>
-  <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="baef7c05-a212-44e6-b353-de2e1ae3ce8c" name="Default" comment="" />
     <ignored path="stroll.iws" />
@@ -44,7 +41,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -81,7 +78,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -94,7 +91,7 @@
       <file leaf-file-name="StrollMapActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/StrollMapActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="158" column="33" selection-start="5996" selection-end="5996" vertical-scroll-proportion="0.0" vertical-offset="1830" max-vertical-offset="2460">
+            <state line="158" column="33" selection-start="5996" selection-end="5996" vertical-scroll-proportion="0.0" vertical-offset="2355" max-vertical-offset="2955">
               <folding />
             </state>
           </provider>
@@ -103,50 +100,49 @@
       <file leaf-file-name="TreasureFoundDialog.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureFoundDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="43" selection-start="775" selection-end="775" vertical-scroll-proportion="0.59210527" vertical-offset="0" max-vertical-offset="555">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#795#941#0" expanded="true" />
-                <element signature="e#930#931#0" expanded="true" />
-              </folding>
+            <state line="15" column="92" selection-start="512" selection-end="512" vertical-scroll-proportion="0.32822758" vertical-offset="0" max-vertical-offset="457">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TreasureNotFoundDialog.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureNotFoundDialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="64" selection-start="487" selection-end="515" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="405">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="treasure_found_dialog.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/treasure_found_dialog.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="38" selection-start="797" selection-end="797" vertical-scroll-proportion="-10.555555" vertical-offset="0" max-vertical-offset="1110">
+              <folding />
+            </state>
+          </provider>
           <provider editor-type-id="android-designer">
             <state />
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="treasure_not_correct_dialog.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/treasure_not_correct_dialog.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="42" selection-start="104" selection-end="115" vertical-scroll-proportion="-0.5555556" vertical-offset="0" max-vertical-offset="1080">
+            <state line="44" column="47" selection-start="1932" selection-end="1932" vertical-scroll-proportion="-24.444445" vertical-offset="0" max-vertical-offset="975">
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="34" selection-start="572" selection-end="572" vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="1200">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rounded_description_bg.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/stroll/src/main/res/drawable/rounded_description_bg.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dialog_bg.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/stroll/src/main/res/drawable/dialog_bg.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="34" selection-start="217" selection-end="217" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="255">
+            <state line="17" column="28" selection-start="566" selection-end="566" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1200">
               <folding />
             </state>
           </provider>
@@ -164,7 +160,7 @@
       <file leaf-file-name="DetailsActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/DetailsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="40" selection-start="3286" selection-end="3286" vertical-scroll-proportion="0.0" vertical-offset="1185" max-vertical-offset="1950">
+            <state line="100" column="0" selection-start="4252" selection-end="4252" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1605">
               <folding />
             </state>
           </provider>
@@ -172,13 +168,13 @@
       </file>
       <file leaf-file-name="stroll_map_layout.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/stroll_map_layout.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
           <provider selected="true" editor-type-id="text-editor">
             <state line="18" column="23" selection-start="651" selection-end="651" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1305">
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
@@ -275,9 +271,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/stroll/src/main/res/layout/details_screen.xml" />
-        <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/StrollApplication.java" />
-        <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/PlacesService.java" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/animation/slide_in_from_right.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/anim/slide_in_from_right.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/anim/slide_out_to_left.xml" />
@@ -287,9 +280,12 @@
         <option value="$PROJECT_DIR$/stroll/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/drawable/drop_shadow_bottom.xml" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/drawable/dialog_bg.xml" />
-        <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/DetailsActivity.java" />
-        <option value="$PROJECT_DIR$/stroll/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/stroll/build.gradle" />
         <option value="$PROJECT_DIR$/stroll/src/main/res/layout/treasure_found_dialog.xml" />
+        <option value="$PROJECT_DIR$/stroll/src/main/res/layout/treasure_not_correct_dialog.xml" />
+        <option value="$PROJECT_DIR$/stroll/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/DetailsActivity.java" />
+        <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureNotFoundDialog.java" />
         <option value="$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureFoundDialog.java" />
       </list>
     </option>
@@ -353,6 +349,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -543,40 +540,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll-android-old2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll-android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll-android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -612,40 +575,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="drawable-hdpi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll-android-old2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll-android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll-android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stroll" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="drawable" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -741,7 +670,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -754,6 +682,7 @@
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="004ca60a1662a517" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="AVD_for_Galaxy_Nexus_by_Google" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
@@ -761,22 +690,25 @@
     <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.moresbycoffee.stroll.android.dialog" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/stroll/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/stroll/src/main/res/drawable-hdpi" />
       <recent name="$PROJECT_DIR$/stroll/src/main/res/layout" />
+      <recent name="$PROJECT_DIR$/stroll/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/stroll/src/main/res/anim" />
       <recent name="$PROJECT_DIR$/stroll/src/main/res/drawable-xhdpi" />
     </key>
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.moresbycoffee.stroll.android" />
     </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="org.moresbycoffee.stroll.android" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/stroll/src/main/res/drawable-xhdpi" />
       <recent name="$PROJECT_DIR$/stroll/src/main/res/drawable-xxhdpi" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.moresbycoffee.stroll.android" />
     </key>
   </component>
   <component name="RunManager" selected="Android Application.stroll">
@@ -951,19 +883,19 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934132" sideWeight="0.6701847" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39973614" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3641161" sideWeight="0.29446936" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16666667" sideWeight="0.2994723" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36015832" sideWeight="0.29446936" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16666667" sideWeight="0.4050132" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16605437" sideWeight="0.4050132" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298153" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36052632" sideWeight="0.70553064" order="7" side_tool="false" content_ui="tabs" x="5" y="22" width="1386" height="878" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36015832" sideWeight="0.70553064" order="7" side_tool="false" content_ui="tabs" x="5" y="22" width="1386" height="878" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16666667" sideWeight="0.43931398" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26121372" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16666667" sideWeight="0.6398417" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26121372" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1056,33 +988,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/anim/slide_out_to_left.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="32" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/details_screen.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="43" selection-start="463" selection-end="477" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="1500">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="31" selection-start="505" selection-end="505" vertical-scroll-proportion="0.39473686" vertical-offset="0" max-vertical-offset="532">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/widget/TextView.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7890" />
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/app/DialogFragment.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="0" selection-start="2357" selection-end="2357" vertical-scroll-proportion="0.7968397" vertical-offset="517" max-vertical-offset="960" />
@@ -1095,9 +1000,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/stroll/src/main/res/drawable/rounded_description_bg.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stroll/src/main/res/drawable/dialog_bg.xml">
@@ -1114,43 +1017,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/DetailsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="40" selection-start="3286" selection-end="3286" vertical-scroll-proportion="0.0" vertical-offset="1239" max-vertical-offset="1695">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/stroll_map_layout.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="23" selection-start="651" selection-end="651" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1305">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stroll/src/main/res/drawable-hdpi/ic_launcher.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="34" selection-start="572" selection-end="572" vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="1200">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/treasure_found_dialog.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="42" selection-start="104" selection-end="115" vertical-scroll-proportion="-0.5555556" vertical-offset="0" max-vertical-offset="1080">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/StrollMapActivity.java">
@@ -1160,14 +1029,75 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/R.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="202" column="32" selection-start="15025" selection-end="15025" vertical-scroll-proportion="0.0" vertical-offset="3000" max-vertical-offset="29445">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/stroll_map_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="23" selection-start="651" selection-end="651" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1305">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="44" selection-start="516" selection-end="516" vertical-scroll-proportion="0.59210527" vertical-offset="0" max-vertical-offset="705">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/treasure_found_dialog.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="38" selection-start="797" selection-end="797" vertical-scroll-proportion="-10.555555" vertical-offset="0" max-vertical-offset="1110">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/res/layout/treasure_not_correct_dialog.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="47" selection-start="1932" selection-end="1932" vertical-scroll-proportion="-24.444445" vertical-offset="0" max-vertical-offset="975">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="28" selection-start="566" selection-end="566" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1200">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/DetailsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="0" selection-start="4252" selection-end="4252" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1605">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureNotFoundDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="64" selection-start="487" selection-end="515" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="405">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/stroll/src/main/java/org/moresbycoffee/stroll/android/dialog/TreasureFoundDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="43" selection-start="775" selection-end="775" vertical-scroll-proportion="0.59210527" vertical-offset="0" max-vertical-offset="555">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#795#941#0" expanded="true" />
-            <element signature="e#930#931#0" expanded="true" />
-          </folding>
+        <state line="15" column="92" selection-start="512" selection-end="512" vertical-scroll-proportion="0.32822758" vertical-offset="0" max-vertical-offset="457">
+          <folding />
         </state>
       </provider>
     </entry>

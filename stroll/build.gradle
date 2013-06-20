@@ -21,7 +21,19 @@ android {
         debug {
             storeFile file("debug.keystore")
         }
+        release {
+            storeFile file("/Users/balazsbalazs/Dropbox/stroll/stroll-release-key.keystore")
+            storePassword "BullGitar"
+            keyAlias "stroll-key"
+            keyPassword "BullGitar"
+        }
     }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 16
