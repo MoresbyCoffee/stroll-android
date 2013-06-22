@@ -22,7 +22,7 @@ android {
             storeFile file("debug.keystore")
         }
         release {
-            storeFile file("/Users/balazsbalazs/Dropbox/stroll/stroll-release-key.keystore")
+            storeFile file("/Users/balazsbalazs/Dropbox/strollimo/strollimo-release-key.keystore")
             storePassword "BullGitar"
             keyAlias "stroll-key"
             keyPassword "BullGitar"

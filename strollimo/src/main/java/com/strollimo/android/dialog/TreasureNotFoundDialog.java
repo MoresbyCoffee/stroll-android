@@ -1,4 +1,4 @@
-package org.moresbycoffee.stroll.android.dialog;
+package com.strollimo.android.dialog;
 
 
 import android.app.DialogFragment;

@@ -1,4 +1,4 @@
-package org.moresbycoffee.stroll.android;
+package com.strollimo.android;
 
 import java.util.HashSet;
 import java.util.Set;

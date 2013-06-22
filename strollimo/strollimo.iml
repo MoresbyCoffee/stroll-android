@@ -11,7 +11,7 @@
     </facet>
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":stroll" />
+        <option name="GRADLE_PROJECT_PATH" value=":strollimo" />
       </configuration>
     </facet>
   </component>
@@ -50,6 +50,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/instrumentTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/instrumentTest/res" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/instrumentTest/resources" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/../stroll/build/bundles" />
+      <excludeFolder url="file://$MODULE_DIR$/../stroll/build/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/apk" />
       <excludeFolder url="file://$MODULE_DIR$/build/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/bundles" />

@@ -1,8 +1,8 @@
-package org.moresbycoffee.stroll.android;
+package com.strollimo.android;
 
 import android.app.Application;
 
-public class StrollApplication extends Application {
+public class StrollimoApplication extends Application {
     private PlacesService mPlacesService;
     private UserService mUserService;
 

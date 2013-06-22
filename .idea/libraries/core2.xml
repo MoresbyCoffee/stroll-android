@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="core">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/stroll/build/exploded-bundles/ZXingLib.aar/libs/core.jar!/" />
       <root url="jar://$PROJECT_DIR$/libraries/ZXingLib/libs/core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/ZXingLib.aar/libs/core.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

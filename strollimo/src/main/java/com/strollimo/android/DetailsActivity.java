@@ -1,4 +1,4 @@
-package org.moresbycoffee.stroll.android;
+package com.strollimo.android;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,8 +14,8 @@ import android.widget.TextView;
 import jim.h.common.android.lib.zxing.config.ZXingLibConfig;
 import jim.h.common.android.lib.zxing.integrator.IntentIntegrator;
 import jim.h.common.android.lib.zxing.integrator.IntentResult;
-import org.moresbycoffee.stroll.android.dialog.TreasureFoundDialog;
-import org.moresbycoffee.stroll.android.dialog.TreasureNotFoundDialog;
+import com.strollimo.android.dialog.TreasureFoundDialog;
+import com.strollimo.android.dialog.TreasureNotFoundDialog;
 
 public class DetailsActivity extends Activity {
 
@@ -47,21 +47,21 @@ public class DetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
-        mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
+        mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
+        mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
         zxingLibConfig = new ZXingLibConfig();
         zxingLibConfig.useFrontLight = true;
 
-        setContentView(R.layout.details_screen);
-        mStatusTextView = (TextView) findViewById(R.id.status);
-        mStatusImageView = (ImageView) findViewById(R.id.status_icon);
-        mTitleTextView = (TextView) findViewById(R.id.title);
-        mCaptureButton = (Button) findViewById(R.id.capture_button);
+        setContentView(org.moresbycoffee.stroll.android.R.layout.details_screen);
+        mStatusTextView = (TextView) findViewById(org.moresbycoffee.stroll.android.R.id.status);
+        mStatusImageView = (ImageView) findViewById(org.moresbycoffee.stroll.android.R.id.status_icon);
+        mTitleTextView = (TextView) findViewById(org.moresbycoffee.stroll.android.R.id.title);
+        mCaptureButton = (Button) findViewById(org.moresbycoffee.stroll.android.R.id.capture_button);
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
 
         mCurrentPlace = mPlacesService.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
         mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.mTitle.toUpperCase());
-        mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
+        mDetailsPhoto = (ImageView)findViewById(org.moresbycoffee.stroll.android.R.id.detailed_photo);
         mDetailsPhoto.setImageBitmap(mCurrentPlace.getBitmap());
     }
 
@@ -70,11 +70,11 @@ public class DetailsActivity extends Activity {
         super.onResume();
         if (mUserService.isPlaceCaptured(mCurrentPlace.mId)) {
             mStatusTextView.setText("Opened");
-            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
+            mStatusImageView.setImageDrawable(getResources().getDrawable(org.moresbycoffee.stroll.android.R.drawable.open_padlock));
 
         } else {
             mStatusTextView.setText("Closed");
-            mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.closed_padlock));
+            mStatusImageView.setImageDrawable(getResources().getDrawable(org.moresbycoffee.stroll.android.R.drawable.closed_padlock));
         }
     }
 

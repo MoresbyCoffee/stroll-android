@@ -1,4 +1,4 @@
-package org.moresbycoffee.stroll.android;
+package com.strollimo.android;
 
 import android.app.Activity;
 import android.location.Location;
@@ -36,12 +36,12 @@ public class StrollMapActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firstStart = true;
-        setContentView(R.layout.stroll_map_layout);
-        mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
-        mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
-        mPlaceImage = (ImageView)findViewById(R.id.place_image);
-        mPlaceTitle = (TextView)findViewById(R.id.place_title);
-        mRibbonPanel = findViewById(R.id.ribbon_panel);
+        setContentView(org.moresbycoffee.stroll.android.R.layout.stroll_map_layout);
+        mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
+        mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
+        mPlaceImage = (ImageView)findViewById(org.moresbycoffee.stroll.android.R.id.place_image);
+        mPlaceTitle = (TextView)findViewById(org.moresbycoffee.stroll.android.R.id.place_title);
+        mRibbonPanel = findViewById(org.moresbycoffee.stroll.android.R.id.ribbon_panel);
         mRibbonPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +62,7 @@ public class StrollMapActivity extends Activity {
     private void refreshSelectedMarker() {
         if (mSelectedPlace != null) {
             if (mUserService.isPlaceCaptured(mSelectedPlace.mId)) {
-                mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
+                mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(org.moresbycoffee.stroll.android.R.drawable.pink_flag));
             }
         }
         mSelectedMarker.showInfoWindow();
@@ -92,7 +92,7 @@ public class StrollMapActivity extends Activity {
 
     private void setUpMapIfNecessary() {
         if (mMap == null) {
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            mMap = ((MapFragment) getFragmentManager().findFragmentById(org.moresbycoffee.stroll.android.R.id.map)).getMap();
             mMap.setMyLocationEnabled(true);
             mMap.setOnInfoWindowClickListener(onInfoWindowClickListener);
             mMap.setOnMarkerClickListener(mOnMarkerClickListener);
@@ -105,9 +105,9 @@ public class StrollMapActivity extends Activity {
     private void addPlaceToMap(Place place) {
         BitmapDescriptor bitmapDescriptor;
         if (mUserService.isPlaceCaptured(place.mId)) {
-            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(org.moresbycoffee.stroll.android.R.drawable.pink_flag);
         } else {
-            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(org.moresbycoffee.stroll.android.R.drawable.azure_flag);
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()
@@ -178,7 +178,7 @@ public class StrollMapActivity extends Activity {
     };
 
     private void displayRibbon(Place place) {
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right);
+        Animation anim = AnimationUtils.loadAnimation(this, org.moresbycoffee.stroll.android.R.anim.slide_in_from_right);
         mRibbonPanel.setVisibility(View.VISIBLE);
         mPlaceImage.setImageBitmap(place.getBitmap());
         mPlaceTitle.setText(place.mTitle.toUpperCase());
@@ -187,7 +187,7 @@ public class StrollMapActivity extends Activity {
 
     private void hideRibbon() {
         if (mSelectedPlace != null) {
-            Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left);
+            Animation anim = AnimationUtils.loadAnimation(this, org.moresbycoffee.stroll.android.R.anim.slide_out_to_left);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {

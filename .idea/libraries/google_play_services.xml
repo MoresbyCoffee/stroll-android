@@ -2,7 +2,7 @@
   <library name="google-play-services">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/libraries/google-play-services_lib/libs/google-play-services.jar!/" />
-      <root url="jar://$PROJECT_DIR$/stroll/build/exploded-bundles/google-play-services_lib.aar/libs/google-play-services.jar!/" />
+      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/google-play-services_lib.aar/libs/google-play-services.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
