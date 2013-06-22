@@ -11,14 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import jim.h.common.android.lib.zxing.config.ZXingLibConfig;
-import jim.h.common.android.lib.zxing.integrator.IntentIntegrator;
-import jim.h.common.android.lib.zxing.integrator.IntentResult;
+import com.google.zxing.client.android.CaptureActivity;
+import com.google.zxing.client.android.Intents;
+import com.google.zxing.config.ZXingLibConfig;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.strollimo.android.dialog.TreasureFoundDialog;
 import com.strollimo.android.dialog.TreasureNotFoundDialog;
 
 public class DetailsActivity extends Activity {
-
+    public static final int REQUEST_CODE = 0x0ba7c0de;
     public static final String PLACE_ID_EXTRA = "place_id";
     private ZXingLibConfig zxingLibConfig;
     private PlacesService mPlacesService;
@@ -31,7 +33,7 @@ public class DetailsActivity extends Activity {
     private View.OnClickListener onCaptureButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            IntentIntegrator.initiateScan(DetailsActivity.this, zxingLibConfig);
+            initiateScan(DetailsActivity.this, null, null, zxingLibConfig);
         }
     };
     private ImageView mDetailsPhoto;
@@ -40,6 +42,15 @@ public class DetailsActivity extends Activity {
         Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra(PLACE_ID_EXTRA, placeId);
         return intent;
+    }
+
+    public static void initiateScan(Activity activity, String scanFormatsString,
+                                    String characterSet, ZXingLibConfig config) {
+        Intent intent = new Intent(activity, CaptureActivity.class);
+        intent.putExtra(Intents.Scan.FORMATS, scanFormatsString);
+        intent.putExtra(Intents.Scan.CHARACTER_SET, characterSet);
+        intent.putExtra(ZXingLibConfig.INTENT_KEY, config);
+        activity.startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override

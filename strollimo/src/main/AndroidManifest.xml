@@ -7,6 +7,11 @@
     <uses-sdk
             android:minSdkVersion="13"
             android:targetSdkVersion="16"/>
+    <supports-screens android:xlargeScreens="true"
+                      android:largeScreens="true"
+                      android:normalScreens="true"
+                      android:smallScreens="true"
+                      android:anyDensity="true"/>
 
     <uses-feature
             android:glEsVersion="0x00020000"
@@ -23,12 +28,6 @@
                 android:value="AIzaSyCvyVayQO8ke2bPQZ3RVwhAqwhcx7aIG7s"/>
 
         <activity android:name=".MainActivity"/>
-        <activity
-                android:name="jim.h.common.android.lib.zxing.CaptureActivity"
-                android:configChanges="orientation|keyboardHidden"
-                android:screenOrientation="landscape"
-                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-                android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
                 android:name=".StrollMapActivity"
                 android:screenOrientation="portrait"

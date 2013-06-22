@@ -9,7 +9,7 @@ buildscript {
 apply plugin: 'android-library'
 
 dependencies {
-    compile files('libs/core.jar')
+    compile files('libs/core-2.3-SNAPSHOT.jar')
 }
 
 android {
@@ -17,7 +17,7 @@ android {
     buildToolsVersion "17.0.0"
 
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 10
         targetSdkVersion 16
     }
     sourceSets {

@@ -1,0 +1,216 @@
+diff -u ./AndroidManifest.xml ./AndroidManifest.xml
+--- ./AndroidManifest.xml	2013-04-04 15:24:34.000000000 -0400
++++ ./AndroidManifest.xml	2013-04-11 20:24:55.000000000 -0400
+@@ -30,7 +30,7 @@
+   <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+ 
+-  <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"/>
++  <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="14"/>
+ 
+   <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
+   <uses-feature android:name="android.hardware.camera" android:required="false"/>
+@@ -51,7 +51,7 @@
+   <application android:icon="@drawable/launcher_icon"
+                android:label="@string/app_name">
+     <activity android:name=".CaptureActivity"
+-              android:screenOrientation="landscape"
++              android:screenOrientation="sensor"
+               android:clearTaskOnLaunch="true"
+               android:stateNotNeeded="true"
+               android:configChanges="orientation|keyboardHidden"
+diff -u ./bin/classes/com/google/zxing/client/android/camera/CameraConfigurationManager.java ./bin/classes/com/google/zxing/client/android/camera/CameraConfigurationManager.java
+diff -u ./bin/classes/com/google/zxing/client/android/camera/CameraManager.java ./bin/classes/com/google/zxing/client/android/camera/CameraManager.java
+diff -u ./bin/classes/com/google/zxing/client/android/DecodeHandler.java ./bin/classes/com/google/zxing/client/android/DecodeHandler.java
+diff -u ./src/com/google/zxing/client/android/camera/CameraConfigurationManager.java ./src/com/google/zxing/client/android/camera/CameraConfigurationManager.java
+--- ./src/com/google/zxing/client/android/camera/CameraConfigurationManager.java	2013-04-04 15:24:34.000000000 -0400
++++ ./src/com/google/zxing/client/android/camera/CameraConfigurationManager.java	2013-04-11 20:23:11.000000000 -0400
+@@ -18,6 +18,7 @@
+ 
+ import android.content.Context;
+ import android.content.SharedPreferences;
++import android.content.res.Configuration;
+ import android.graphics.Point;
+ import android.hardware.Camera;
+ import android.preference.PreferenceManager;
+@@ -64,6 +65,8 @@
+     Display display = manager.getDefaultDisplay();
+     int width = display.getWidth();
+     int height = display.getHeight();
++
++    if (this.context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_PORTRAIT) {
+     // We're landscape-only, and have apparently seen issues with display thinking it's portrait 
+     // when waking from sleep. If it's not landscape, assume it's mistaken and reverse them:
+     if (width < height) {
+@@ -72,6 +75,8 @@
+       width = height;
+       height = temp;
+     }
++    }
++
+     screenResolution = new Point(width, height);
+     Log.i(TAG, "Screen resolution: " + screenResolution);
+     cameraResolution = findBestPreviewSizeValue(parameters, screenResolution);
+@@ -118,7 +123,10 @@
+       parameters.setFocusMode(focusMode);
+     }
+ 
+-    parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
++    parameters.setPreviewSize(cameraResolution.x, cameraResolution.y); // Default to Landscape
++    if (this.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++    	camera.setDisplayOrientation(90);
++    }
+     camera.setParameters(parameters);
+   }
+ 
+@@ -219,7 +227,11 @@
+       if (pixels < MIN_PREVIEW_PIXELS || pixels > MAX_PREVIEW_PIXELS) {
+         continue;
+       }
+-      boolean isCandidatePortrait = realWidth < realHeight;
++
++      boolean isCandidatePortrait = realWidth < realHeight; // Default to Landscape
++      if (this.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++          isCandidatePortrait = realWidth < realHeight ^ screenResolution.x < screenResolution.y;
++      }
+       int maybeFlippedWidth = isCandidatePortrait ? realHeight : realWidth;
+       int maybeFlippedHeight = isCandidatePortrait ? realWidth : realHeight;
+       if (maybeFlippedWidth == screenResolution.x && maybeFlippedHeight == screenResolution.y) {
+@@ -228,7 +240,11 @@
+         return exactPoint;
+       }
+       float aspectRatio = (float) maybeFlippedWidth / (float) maybeFlippedHeight;
+-      float newDiff = Math.abs(aspectRatio - screenAspectRatio);
++
++      float newDiff = Math.abs(aspectRatio - screenAspectRatio); // Default to Landscape
++      if (this.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++    	  newDiff = Math.abs(screenResolution.y * realHeight - realWidth * screenResolution.x);
++      }
+       if (newDiff < diff) {
+         bestSize = new Point(realWidth, realHeight);
+         diff = newDiff;
+diff -u ./src/com/google/zxing/client/android/camera/CameraManager.java ./src/com/google/zxing/client/android/camera/CameraManager.java
+--- ./src/com/google/zxing/client/android/camera/CameraManager.java	2013-04-04 15:24:34.000000000 -0400
++++ ./src/com/google/zxing/client/android/camera/CameraManager.java	2013-04-11 20:23:07.000000000 -0400
+@@ -17,6 +17,7 @@
+ package com.google.zxing.client.android.camera;
+ 
+ import android.content.Context;
++import android.content.res.Configuration;
+ import android.graphics.Point;
+ import android.graphics.Rect;
+ import android.hardware.Camera;
+@@ -41,8 +42,10 @@
+ 
+   private static final int MIN_FRAME_WIDTH = 240;
+   private static final int MIN_FRAME_HEIGHT = 240;
+-  private static final int MAX_FRAME_WIDTH = 600;
+-  private static final int MAX_FRAME_HEIGHT = 400;
++  private static final int MAX_FRAME_WIDTH_LANDSCAPE = 600;
++  private static final int MAX_FRAME_HEIGHT_LANDSCAPE = 400;
++  private static final int MAX_FRAME_WIDTH_PORTRAIT = 800;
++  private static final int MAX_FRAME_HEIGHT_PORTRAIT = 600;
+ 
+   private final Context context;
+   private final CameraConfigurationManager configManager;
+@@ -50,6 +53,7 @@
+   private AutoFocusManager autoFocusManager;
+   private Rect framingRect;
+   private Rect framingRectInPreview;
++  private Point framingViewSize;
+   private boolean initialized;
+   private boolean previewing;
+   private int requestedFramingRectWidth;
+@@ -210,13 +214,28 @@
+         // Called early, before init even finished
+         return null;
+       }
+-      int width = screenResolution.x * 3 / 4;
++
++      int width = screenResolution.x * 3 / 4; // Default to Landscape
++      int MAX_FRAME_WIDTH = MAX_FRAME_WIDTH_LANDSCAPE;
++      int MAX_FRAME_HEIGHT = MAX_FRAME_WIDTH_LANDSCAPE;
++     
++      if (this.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++    	  width = screenResolution.x * 9 / 10;
++          MAX_FRAME_WIDTH = MAX_FRAME_WIDTH_PORTRAIT;
++          MAX_FRAME_HEIGHT = MAX_FRAME_WIDTH_PORTRAIT;
++      }
++
+       if (width < MIN_FRAME_WIDTH) {
+         width = MIN_FRAME_WIDTH;
+       } else if (width > MAX_FRAME_WIDTH) {
+         width = MAX_FRAME_WIDTH;
+       }
+-      int height = screenResolution.y * 3 / 4;
++
++      int height = screenResolution.y * 3 / 4; // Default to Landscape
++      if (this.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++    	  height = width * 3 / 4;
++      }
++      
+       if (height < MIN_FRAME_HEIGHT) {
+         height = MIN_FRAME_HEIGHT;
+       } else if (height > MAX_FRAME_HEIGHT) {
+@@ -247,11 +266,21 @@
+         // Called early, before init even finished
+         return null;
+       }
++
++      if (this.context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++          rect.left = rect.left * cameraResolution.y / framingViewSize.x;
++          rect.right = rect.right * cameraResolution.y / framingViewSize.x;
++          rect.top = rect.top * cameraResolution.x / framingViewSize.y;
++          rect.bottom = rect.bottom * cameraResolution.x / framingViewSize.y;
++      } else {  // Default to Landscape
+       rect.left = rect.left * cameraResolution.x / screenResolution.x;
+       rect.right = rect.right * cameraResolution.x / screenResolution.x;
+       rect.top = rect.top * cameraResolution.y / screenResolution.y;
+       rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
++      }
+       framingRectInPreview = rect;
++      Log.d(TAG, "framing rect: " + framingRect);
++      Log.d(TAG, "framing prvw: " + framingRectInPreview);
+     }
+     return framingRectInPreview;
+   }
+@@ -302,4 +331,7 @@
+                                         rect.width(), rect.height(), false);
+   }
+ 
++  public void setFramingViewSize(Point framingViewSize) {
++    this.framingViewSize = framingViewSize;
++  }
+ }
+diff -u ./src/com/google/zxing/client/android/DecodeHandler.java ./src/com/google/zxing/client/android/DecodeHandler.java
+--- ./src/com/google/zxing/client/android/DecodeHandler.java	2013-04-04 15:24:34.000000000 -0400
++++ ./src/com/google/zxing/client/android/DecodeHandler.java	2013-04-11 20:16:24.000000000 -0400
+@@ -16,6 +16,7 @@
+ 
+ package com.google.zxing.client.android;
+ 
++import android.content.res.Configuration;
+ import android.graphics.Bitmap;
+ import com.google.zxing.BinaryBitmap;
+ import com.google.zxing.DecodeHintType;
+@@ -72,6 +73,20 @@
+   private void decode(byte[] data, int width, int height) {
+     long start = System.currentTimeMillis();
+     Result rawResult = null;
++
++    if (this.activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
++    	// hack: rotate the image
++    	byte[] rotatedData = new byte[data.length];
++    	for (int y = 0; y < height; y++) {
++    		for (int x = 0; x < width; x++)
++    			rotatedData[x * height + height - y - 1] = data[x + y * width];
++    	}
++    	int tmp = width; // Here we are swapping, that's the difference to #11
++    	width = height;
++    	height = tmp;
++    	data = rotatedData;
++    	// end of rotation
++    }
+     PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, width, height);
+     if (source != null) {
+       BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));

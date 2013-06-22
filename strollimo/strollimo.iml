@@ -71,6 +71,7 @@
     <orderEntry type="library" name="google-play-services" level="project" />
     <orderEntry type="library" name="ZXingLib.aar" level="project" />
     <orderEntry type="library" name="core" level="project" />
+    <orderEntry type="library" name="core-2.3-SNAPSHOT" level="project" />
   </component>
 </module>
 

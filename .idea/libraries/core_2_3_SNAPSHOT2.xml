@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="core-2.3-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/ZXingLib.aar/libs/core-2.3-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/ZXingLib/libs/core-2.3-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
