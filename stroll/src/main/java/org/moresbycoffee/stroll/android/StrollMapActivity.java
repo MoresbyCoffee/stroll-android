@@ -3,6 +3,7 @@ package org.moresbycoffee.stroll.android;
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,20 +23,20 @@ import java.util.Map;
 public class StrollMapActivity extends Activity {
     private GoogleMap mMap;
     private LocationClient mLocationClient;
-    private Map<String, Integer> mMarkers = new HashMap<String, Integer>();
+    private Map<String, Integer> mMarkers;
     private PlacesService mPlacesService;
     private UserService mUserService;
     private boolean firstStart = true;
     private ImageView mPlaceImage;
     private TextView mPlaceTitle;
     private View mRibbonPanel;
-    private Place mCurrentPlace;
+    private Place mSelectedPlace;
+    private Marker mSelectedMarker;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firstStart = true;
         setContentView(R.layout.stroll_map_layout);
-        getActionBar().setDisplayUseLogoEnabled(false);
         mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
         mPlaceImage = (ImageView)findViewById(R.id.place_image);
@@ -44,6 +45,7 @@ public class StrollMapActivity extends Activity {
         mRibbonPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("BB", "on click");
                 launchDetailsActivity();
             }
         });
@@ -52,18 +54,40 @@ public class StrollMapActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mMap.clear();
-        for (Place place : mPlacesService.getAllPlaces()) {
-            addPlaceToMap(place);
+        if (mSelectedMarker != null) {
+            refreshSelectedMarker();
         }
+    }
+
+    private void refreshSelectedMarker() {
+        if (mSelectedPlace != null) {
+            if (mUserService.isPlaceCaptured(mSelectedPlace.mId)) {
+                mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
+            }
+        }
+        mSelectedMarker.showInfoWindow();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i("BB", "onStart");
         setUpMapIfNecessary();
 
         setUpLocationClientIfNecessary();
+        setUpMapMarkersIfNecessary();
+    }
+
+    private void setUpMapMarkersIfNecessary() {
+        if (mMarkers != null) {
+            return;
+        }
+
+        mMarkers = new HashMap<String, Integer>();
+        mMap.clear();
+        for (Place place : mPlacesService.getAllPlaces()) {
+            addPlaceToMap(place);
+        }
     }
 
     private void setUpMapIfNecessary() {
@@ -101,15 +125,14 @@ public class StrollMapActivity extends Activity {
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
-            Integer placeId = mMarkers.get(marker.getId());
-            mCurrentPlace = mPlacesService.getPlaceById(placeId);
+            Log.i("BB", "on info window selected");
             launchDetailsActivity();
         }
     };
 
     private void launchDetailsActivity() {
-        if (mCurrentPlace != null) {
-            this.startActivity(DetailsActivity.createDetailsIntent(this, mCurrentPlace.mId));
+        if (mSelectedPlace != null) {
+            this.startActivity(DetailsActivity.createDetailsIntent(this, mSelectedPlace.mId));
         }
     }
 
@@ -147,8 +170,9 @@ public class StrollMapActivity extends Activity {
         @Override
         public boolean onMarkerClick(Marker marker) {
             Integer placeId = mMarkers.get(marker.getId());
-            mCurrentPlace = mPlacesService.getPlaceById(placeId);
-            displayRibbon(mCurrentPlace);
+            mSelectedPlace = mPlacesService.getPlaceById(placeId);
+            mSelectedMarker = marker;
+            displayRibbon(mSelectedPlace);
             return false;
         }
     };
@@ -162,7 +186,7 @@ public class StrollMapActivity extends Activity {
     }
 
     private void hideRibbon() {
-        if (mCurrentPlace != null) {
+        if (mSelectedPlace != null) {
             Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -182,7 +206,10 @@ public class StrollMapActivity extends Activity {
             });
             mRibbonPanel.startAnimation(anim);
         }
-        mCurrentPlace = null;
+        mSelectedPlace = null;
+        if (mSelectedMarker != null) {
+            mSelectedMarker = null;
+        }
     }
 
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {

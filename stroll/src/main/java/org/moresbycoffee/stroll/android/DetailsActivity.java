@@ -47,7 +47,6 @@ public class DetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayUseLogoEnabled(false);
         mPlacesService = ((StrollApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollApplication) getApplication()).getService(UserService.class);
         zxingLibConfig = new ZXingLibConfig();
@@ -108,10 +107,7 @@ public class DetailsActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // app icon in action bar clicked; go home
-                Intent intent = new Intent(this, StrollMapActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
