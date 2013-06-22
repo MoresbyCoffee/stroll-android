@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import org.moresbycoffee.stroll.android.R;
+import com.strollimo.android.R;
 
 public class TreasureFoundDialog extends DialogFragment {
 

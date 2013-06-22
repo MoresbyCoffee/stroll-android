@@ -19,11 +19,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(org.moresbycoffee.stroll.android.R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         zxingLibConfig = new ZXingLibConfig();
         zxingLibConfig.useFrontLight = true;
         handler = new Handler();
-        textView = (TextView)findViewById(org.moresbycoffee.stroll.android.R.id.textView);
+        textView = (TextView)findViewById(R.id.textView);
     }
 
     @Override

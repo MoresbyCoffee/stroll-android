@@ -41,34 +41,48 @@
                         android:background="@drawable/drop_shadow_top"
                         />
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/stroll_panel_bg"
-                        >
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    >
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:background="@color/stroll_panel_bg"
+                            >
 
-                    <ImageView
-                            android:id="@+id/place_image"
-                            android:layout_width="120dp"
-                            android:layout_height="70dp"
-                            android:src="@drawable/canary2"
-                            android:scaleType="centerCrop"/>
+                        <ImageView
+                                android:id="@+id/place_image"
+                                android:layout_width="120dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/canary2"
+                                android:scaleType="centerCrop"/>
 
-                    <TextView
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="[place title placeholder]"
+                                android:id="@+id/place_title"
+                                android:typeface="sans"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/title_text_color"
+                                android:layout_marginBottom="15dp"
+                                android:layout_marginLeft="10dp"/>
+
+                    </LinearLayout>
+                    <View
+                            android:id="@+id/ribbon_touch_view"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="[place title placeholder]"
-                            android:id="@+id/place_title"
-                            android:typeface="sans"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/title_text_color"
-                            android:layout_marginBottom="15dp"
-                            android:layout_marginLeft="10dp"/>
+                            android:layout_height="match_parent"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:clickable="true"
+                            android:background="@drawable/ribbon_state_bg"
+                            />
 
-                </LinearLayout>
-
+                    </FrameLayout>
                 <View
                         android:layout_height="3dp"
                         android:layout_width="match_parent"

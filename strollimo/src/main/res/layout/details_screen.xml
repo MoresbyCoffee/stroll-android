@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="Open treasure"
                 android:textStyle="bold"
-                android:background="@drawable/dialog_bg"
+                android:background="@drawable/button_state_bg"
                 android:textColor="@android:color/white"
                 />
 
