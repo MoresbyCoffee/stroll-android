@@ -16,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.*;
+import com.strollimo.android.dialog.DemoFinishedDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +57,9 @@ public class StrollMapActivity extends Activity {
         super.onResume();
         if (mSelectedMarker != null) {
             refreshSelectedMarker();
+        }
+        if (mUserService.getFoundPlacesNum() == mPlacesService.getPlacesCount()) {
+            new DemoFinishedDialog().show(getFragmentManager(), "dialog");
         }
     }
 
