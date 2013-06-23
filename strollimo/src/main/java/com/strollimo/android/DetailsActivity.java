@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -63,6 +64,17 @@ public class DetailsActivity extends Activity {
         mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.mTitle.toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
         mDetailsPhoto.setImageBitmap(mCurrentPlace.getBitmap());
+        mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getPointerCount() >= 3) {
+                    mUserService.reset();
+                }
+                Intent intent = new Intent(DetailsActivity.this, StrollMapActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
     }
 
     @Override
