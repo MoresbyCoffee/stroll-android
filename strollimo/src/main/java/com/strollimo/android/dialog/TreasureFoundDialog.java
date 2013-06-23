@@ -6,9 +6,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.strollimo.android.R;
 
 public class TreasureFoundDialog extends DialogFragment {
+
+    private final int mPlacesFound;
+    private final int mAllPlaces;
+
+    public TreasureFoundDialog(int placesFound, int allPlaces) {
+        mPlacesFound = placesFound;
+        mAllPlaces = allPlaces;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +34,8 @@ public class TreasureFoundDialog extends DialogFragment {
                 dismiss();
             }
         });
+        TextView placesFound = (TextView)view.findViewById(R.id.places_discovered_text);
+        placesFound.setText(getString(R.string.places_discovered_text, mPlacesFound, mAllPlaces));
         return view;
     }
 

@@ -20,7 +20,7 @@ public class UserService {
     public void loadPlaces() {
         mCapturedPlaces = new HashSet<Integer>();
         mCapturedPlaceNum = mPrefs.getInt(CAPTURED_PLACES_NUM_KEY, 0);
-        for (int i = 0; i < mCapturedPlaceNum; i++) {
+        for (int i = 1; i < mCapturedPlaceNum + 1; i++) {
             int placeId = mPrefs.getInt(CAPTURE_PLACE_KEY + i, -1);
             if (placeId != -1) {
                 mCapturedPlaces.add(placeId);
@@ -36,12 +36,16 @@ public class UserService {
 
     public void capturePlace(int placeId) {
         mCapturedPlaces.add(placeId);
-        mPrefs.edit().putInt(CAPTURE_PLACE_KEY + mCapturedPlaceNum, placeId).commit();
         mCapturedPlaceNum++;
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, mCapturedPlaceNum).commit();
+        mPrefs.edit().putInt(CAPTURE_PLACE_KEY + mCapturedPlaceNum, placeId).commit();
     }
 
     public boolean isPlaceCaptured(int placeId) {
         return mCapturedPlaces.contains(placeId);
+    }
+
+    public int getFoundPlacesNum() {
+        return mCapturedPlaceNum;
     }
 }

@@ -102,10 +102,10 @@ public class DetailsActivity extends Activity {
                 }
                 final String result = scanResult.getContents();
                 Log.i("BB", "" + result);
-                String title = "";
                 if (mCurrentPlace.isScannedCodeValid(result)) {
-                    new TreasureFoundDialog().show(getFragmentManager(), "dialog");
                     mUserService.capturePlace(mCurrentPlace.mId);
+                    TreasureFoundDialog dialog = new TreasureFoundDialog(mUserService.getFoundPlacesNum(), mPlacesService.getPlacesCount());
+                    dialog.show(getFragmentManager(), "dialog");
                 } else {
                     new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
                 }

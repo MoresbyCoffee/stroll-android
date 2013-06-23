@@ -28,4 +28,8 @@ public class PlacesService {
     public Collection<Place> getAllPlaces() {
         return mPlaces.values();
     }
+
+    public int getPlacesCount() {
+        return mPlaces.size();
+    }
 }
