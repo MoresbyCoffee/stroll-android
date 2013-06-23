@@ -13,10 +13,12 @@ public class TreasureFoundDialog extends DialogFragment {
 
     private final int mPlacesFound;
     private final int mAllPlaces;
+    private final int mCoins;
 
-    public TreasureFoundDialog(int placesFound, int allPlaces) {
+    public TreasureFoundDialog(int placesFound, int allPlaces, int coins) {
         mPlacesFound = placesFound;
         mAllPlaces = allPlaces;
+        mCoins = coins;
     }
 
     @Override
@@ -36,6 +38,9 @@ public class TreasureFoundDialog extends DialogFragment {
         });
         TextView placesFound = (TextView)view.findViewById(R.id.places_discovered_text);
         placesFound.setText(getString(R.string.places_discovered_text, mPlacesFound, mAllPlaces));
+        TextView coinValue = (TextView)view.findViewById(R.id.coins_found_text);
+        coinValue.setText(getString(R.string.coin_value, mCoins));
+
         return view;
     }
 
