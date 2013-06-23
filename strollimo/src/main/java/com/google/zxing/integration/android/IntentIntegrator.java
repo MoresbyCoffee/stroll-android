@@ -16,13 +16,6 @@
 
 package com.google.zxing.integration.android;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -33,6 +26,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+
+import java.util.*;
 
 /**
  * <p>A utility class which helps ease integration with Barcode Scanner via {@link Intent}s. This is a simple
@@ -117,7 +112,7 @@ public class IntentIntegrator {
   public static final String DEFAULT_YES = "Yes";
   public static final String DEFAULT_NO = "No";
 
-  private static final String BS_PACKAGE = "com.google.zxing.client.android";
+  private static final String BS_PACKAGE = "com.strollimo.android";
   private static final String BSPLUS_PACKAGE = "com.srowen.bs.android";
 
   // supported barcode formats
@@ -259,11 +254,11 @@ public class IntentIntegrator {
       intentScan.putExtra("SCAN_FORMATS", joinedByComma.toString());
     }
 
-    String targetAppPackage = findTargetAppPackage(intentScan);
-    if (targetAppPackage == null) {
-      return showDownloadDialog();
-    }
-    intentScan.setPackage(targetAppPackage);
+//    String targetAppPackage = findTargetAppPackage(intentScan);
+//    if (targetAppPackage == null) {
+//      return showDownloadDialog();
+//    }
+//    intentScan.setPackage(targetAppPackage);
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
     attachMoreExtras(intentScan);
