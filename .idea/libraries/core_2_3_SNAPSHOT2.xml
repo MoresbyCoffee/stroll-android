@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="core-2.3-SNAPSHOT">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libraries/ZXingLib/libs/core-2.3-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

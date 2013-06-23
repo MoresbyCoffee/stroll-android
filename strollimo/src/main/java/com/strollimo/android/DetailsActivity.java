@@ -83,10 +83,12 @@ public class DetailsActivity extends Activity {
         if (mUserService.isPlaceCaptured(mCurrentPlace.mId)) {
             mStatusTextView.setText("Opened");
             mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
+            mCaptureButton.setVisibility(View.GONE);
 
         } else {
             mStatusTextView.setText("Closed");
             mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.closed_padlock));
+            mCaptureButton.setVisibility(View.VISIBLE);
         }
     }
 
