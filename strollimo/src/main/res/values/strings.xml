@@ -6,6 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_details">Details</string>
     <string name="places_discovered_text">Discovered places: %1$d of %2$d</string>
-    <string name="coin_value">You found %1$d copper coins!</string>
+    <string name="coin_value">You have found %1$d copper coins!</string>
 
 </resources>

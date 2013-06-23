@@ -14,11 +14,15 @@ public class TreasureFoundDialog extends DialogFragment {
     private final int mPlacesFound;
     private final int mAllPlaces;
     private final int mCoins;
+    private final String mLevel;
+    private final boolean mLevelUp;
 
-    public TreasureFoundDialog(int placesFound, int allPlaces, int coins) {
+    public TreasureFoundDialog(int placesFound, int allPlaces, int coins, boolean levelUp, String level) {
         mPlacesFound = placesFound;
         mAllPlaces = allPlaces;
         mCoins = coins;
+        mLevel = level;
+        mLevelUp = levelUp;
     }
 
     @Override
@@ -39,8 +43,18 @@ public class TreasureFoundDialog extends DialogFragment {
         TextView placesFound = (TextView)view.findViewById(R.id.places_discovered_text);
         placesFound.setText(getString(R.string.places_discovered_text, mPlacesFound, mAllPlaces));
         TextView coinValue = (TextView)view.findViewById(R.id.coins_found_text);
+        TextView levelTextView = (TextView)view.findViewById(R.id.level_text_view);
+        TextView levelUpTextView = (TextView) view.findViewById(R.id.text_level_up);
         coinValue.setText(getString(R.string.coin_value, mCoins));
-
+        if (mLevelUp) {
+            levelUpTextView.setVisibility(View.VISIBLE);
+            ((TextView)view.findViewById(R.id.text_level_up)).setText("You have become:");
+            levelTextView.setText(mLevel);
+            levelTextView.setVisibility(View.VISIBLE);
+        } else {
+            levelUpTextView.setVisibility(View.INVISIBLE);
+            levelTextView.setVisibility(View.INVISIBLE);
+        }
         return view;
     }
 

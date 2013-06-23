@@ -103,8 +103,12 @@ public class DetailsActivity extends Activity {
                 final String result = scanResult.getContents();
                 Log.i("BB", "" + result);
                 if (mCurrentPlace.isScannedCodeValid(result)) {
-                    mUserService.capturePlace(mCurrentPlace);
-                    TreasureFoundDialog dialog = new TreasureFoundDialog(mUserService.getFoundPlacesNum(), mPlacesService.getPlacesCount(), mCurrentPlace.mCoinValue);
+                    boolean levelUp = mUserService.capturePlace(mCurrentPlace);
+                    int placesFound = mUserService.getFoundPlacesNum();
+                    int placesCount = mPlacesService.getPlacesCount();
+                    int coinValue = mCurrentPlace.mCoinValue;
+                    String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
+                    TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
                     dialog.show(getFragmentManager(), "dialog");
                 } else {
                     new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
