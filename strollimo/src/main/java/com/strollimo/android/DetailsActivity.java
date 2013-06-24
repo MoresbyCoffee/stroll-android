@@ -69,10 +69,12 @@ public class DetailsActivity extends Activity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getPointerCount() >= 3) {
                     mUserService.reset();
+                    Intent intent = new Intent(DetailsActivity.this, StrollMapActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else {
+                    return false;
                 }
-                Intent intent = new Intent(DetailsActivity.this, StrollMapActivity.class);
-                startActivity(intent);
-                return true;
             }
         });
     }
