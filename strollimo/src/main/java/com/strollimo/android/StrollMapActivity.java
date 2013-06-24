@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,38 +20,106 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.*;
 import com.strollimo.android.dialog.DemoFinishedDialog;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StrollMapActivity extends Activity {
+    private final int MAJOR_MOVE = 10;
     private GoogleMap mMap;
     private LocationClient mLocationClient;
-    private Map<String, Integer> mMarkers;
     private PlacesService mPlacesService;
     private UserService mUserService;
     private boolean firstStart = true;
     private ImageView mPlaceImage;
     private TextView mPlaceTitle;
     private View mRibbonPanel;
-    private Place mSelectedPlace;
+    private GestureDetector mGestureDetector;
+    private View mRibbonTouchView;
+    private boolean mSwipeInProgress;
+    private MapPlacesModel mMapPlacesModel;
     private Marker mSelectedMarker;
+    private Place mSelectedPlace;
+    private MapPlace mSelectedMapPlace;
+    private List<MapPlace> mMapPlaces;
+
+    private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+            Log.i("BB", "on info window selected");
+            launchDetailsActivity();
+        }
+    };
+    private GoogleMap.OnMarkerClickListener mOnMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            mMapPlacesModel.onMarkerClick(marker);
+            displayRibbon(mMapPlacesModel.getSelectedPlace());
+            return false;
+        }
+    };
+    private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
+        @Override
+        public void onMapClick(LatLng latLng) {
+            hideRibbon();
+        }
+    };
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firstStart = true;
+        mMapPlaces = new ArrayList<MapPlace>();
         setContentView(R.layout.stroll_map_layout);
         mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
-        mPlaceImage = (ImageView)findViewById(R.id.place_image);
-        mPlaceTitle = (TextView)findViewById(R.id.place_title);
+        mPlaceImage = (ImageView) findViewById(R.id.place_image);
+        mPlaceTitle = (TextView) findViewById(R.id.place_title);
         mRibbonPanel = findViewById(R.id.ribbon_panel);
+        mRibbonTouchView = findViewById(R.id.ribbon_touch_view);
+
         findViewById(R.id.ribbon_touch_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("BB", "on click");
-                launchDetailsActivity();
+                if (!mSwipeInProgress) {
+                    Log.i("BB", "on click");
+                    launchDetailsActivity();
+                }
             }
         });
+        mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                Log.i("BB", "two");
+                int dx = (int) (e2.getX() - e1.getX());
+                // don't accept the fling if it's too short
+                // as it may conflict with a button push
+                if (Math.abs(dx) > MAJOR_MOVE && Math.abs(velocityX) > Math.abs(velocityY)) {
+                    Log.i("BB", "three " + velocityX);
+                    if (velocityX > 0) {
+                        moveRight();
+                    } else {
+                        moveLeft();
+                    }
+                    mSwipeInProgress = true;
+                }
+                return false;
+            }
+        });
+        mRibbonTouchView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.i("BB", "one");
+                return mGestureDetector.onTouchEvent(motionEvent);
+            }
+        });
+    }
+
+    private void moveLeft() {
+
+        mSwipeInProgress = false;
+    }
+
+    private void moveRight() {
+        mSwipeInProgress = false;
     }
 
     @Override
@@ -64,10 +134,8 @@ public class StrollMapActivity extends Activity {
     }
 
     private void refreshSelectedMarker() {
-        if (mSelectedPlace != null) {
-            if (mUserService.isPlaceCaptured(mSelectedPlace.mId)) {
-                mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
-            }
+        if (mMapPlacesModel.isSelectedPlaceCaptured()) {
+            mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
         }
         mSelectedMarker.showInfoWindow();
     }
@@ -83,11 +151,11 @@ public class StrollMapActivity extends Activity {
     }
 
     private void setUpMapMarkersIfNecessary() {
-        if (mMarkers != null) {
+        if (mMapPlaces != null) {
             return;
         }
 
-        mMarkers = new HashMap<String, Integer>();
+        mMapPlaces = new ArrayList<MapPlace>();
         mMap.clear();
         for (Place place : mPlacesService.getAllPlaces()) {
             addPlaceToMap(place);
@@ -117,7 +185,7 @@ public class StrollMapActivity extends Activity {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(place.mLat, place.mLon))
                 .title(place.mTitle).icon(bitmapDescriptor));
-        mMarkers.put(marker.getId(), place.mId);
+        mMapPlaces.add(new MapPlace(place, marker));
     }
 
     @Override
@@ -125,14 +193,6 @@ public class StrollMapActivity extends Activity {
         mLocationClient.disconnect();
         super.onStop();
     }
-
-    private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
-        @Override
-        public void onInfoWindowClick(Marker marker) {
-            Log.i("BB", "on info window selected");
-            launchDetailsActivity();
-        }
-    };
 
     private void launchDetailsActivity() {
         if (mSelectedPlace != null) {
@@ -170,16 +230,6 @@ public class StrollMapActivity extends Activity {
             mLocationClient.connect();
         }
     }
-    private GoogleMap.OnMarkerClickListener mOnMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
-        @Override
-        public boolean onMarkerClick(Marker marker) {
-            Integer placeId = mMarkers.get(marker.getId());
-            mSelectedPlace = mPlacesService.getPlaceById(placeId);
-            mSelectedMarker = marker;
-            displayRibbon(mSelectedPlace);
-            return false;
-        }
-    };
 
     private void displayRibbon(Place place) {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right);
@@ -216,10 +266,46 @@ public class StrollMapActivity extends Activity {
         }
     }
 
-    private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
-        @Override
-        public void onMapClick(LatLng latLng) {
-            hideRibbon();
+    private static class MapPlace {
+        public Place mPlace;
+        public Marker mMarker;
+        public MapPlace(Place place, Marker marker) {
+            mPlace = place;
+            mMarker = marker;
         }
-    };
+    }
+
+    private Place getPlaceForMarker(Marker marker) {
+        if (marker == null) {
+            return null;
+        }
+
+        for (MapPlace mapPlace : mMapPlaces) {
+            if (marker.equals(mapPlace.mMarker)) {
+                return mapPlace.mPlace;
+            }
+        }
+        return null;
+    }
+
+    private class MapPlacesModel {
+
+        public void onMarkerClick(Marker marker) {
+            Place place = getPlaceForMarker(marker);
+            mSelectedPlace = mPlacesService.getPlaceById(place.mId);
+            mSelectedMarker = marker;
+        }
+
+        public Place getSelectedPlace() {
+            return mSelectedPlace;
+        }
+
+        public boolean isSelectedPlaceCaptured() {
+            if (mMapPlacesModel.getSelectedPlace() != null && mUserService.isPlaceCaptured(mMapPlacesModel.getSelectedPlace().mId)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }
