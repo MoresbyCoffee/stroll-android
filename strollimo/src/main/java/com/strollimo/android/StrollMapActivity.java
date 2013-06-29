@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,11 +18,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.*;
 import com.strollimo.android.dialog.DemoFinishedDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StrollMapActivity extends Activity {
-    private final int MAJOR_MOVE = 10;
     private GoogleMap mMap;
     private LocationClient mLocationClient;
     private PlacesService mPlacesService;
@@ -33,14 +27,8 @@ public class StrollMapActivity extends Activity {
     private ImageView mPlaceImage;
     private TextView mPlaceTitle;
     private View mRibbonPanel;
-    private GestureDetector mGestureDetector;
     private View mRibbonTouchView;
-    private boolean mSwipeInProgress;
     private MapPlacesModel mMapPlacesModel;
-    private Marker mSelectedMarker;
-    private Place mSelectedPlace;
-    private MapPlace mSelectedMapPlace;
-    private List<MapPlace> mMapPlaces;
 
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
@@ -67,7 +55,6 @@ public class StrollMapActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firstStart = true;
-        mMapPlaces = new ArrayList<MapPlace>();
         setContentView(R.layout.stroll_map_layout);
         mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
@@ -76,68 +63,22 @@ public class StrollMapActivity extends Activity {
         mRibbonPanel = findViewById(R.id.ribbon_panel);
         mRibbonTouchView = findViewById(R.id.ribbon_touch_view);
 
-        findViewById(R.id.ribbon_touch_view).setOnClickListener(new View.OnClickListener() {
+        mRibbonTouchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mSwipeInProgress) {
-                    Log.i("BB", "on click");
-                    launchDetailsActivity();
-                }
+                Log.i("BB", "on click");
+                launchDetailsActivity();
             }
         });
-        mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
-
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                Log.i("BB", "two");
-                int dx = (int) (e2.getX() - e1.getX());
-                // don't accept the fling if it's too short
-                // as it may conflict with a button push
-                if (Math.abs(dx) > MAJOR_MOVE && Math.abs(velocityX) > Math.abs(velocityY)) {
-                    Log.i("BB", "three " + velocityX);
-                    if (velocityX > 0) {
-                        moveRight();
-                    } else {
-                        moveLeft();
-                    }
-                    mSwipeInProgress = true;
-                }
-                return false;
-            }
-        });
-        mRibbonTouchView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.i("BB", "one");
-                return mGestureDetector.onTouchEvent(motionEvent);
-            }
-        });
-    }
-
-    private void moveLeft() {
-
-        mSwipeInProgress = false;
-    }
-
-    private void moveRight() {
-        mSwipeInProgress = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSelectedMarker != null) {
-            refreshSelectedMarker();
-        }
+            mMapPlacesModel.refreshSelectedMarker();
         if (mUserService.getFoundPlacesNum() == mPlacesService.getPlacesCount()) {
             new DemoFinishedDialog().show(getFragmentManager(), "dialog");
         }
-    }
-
-    private void refreshSelectedMarker() {
-        if (mMapPlacesModel.isSelectedPlaceCaptured()) {
-            mSelectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
-        }
-        mSelectedMarker.showInfoWindow();
     }
 
     @Override
@@ -148,18 +89,6 @@ public class StrollMapActivity extends Activity {
 
         setUpLocationClientIfNecessary();
         setUpMapMarkersIfNecessary();
-    }
-
-    private void setUpMapMarkersIfNecessary() {
-        if (mMapPlaces != null) {
-            return;
-        }
-
-        mMapPlaces = new ArrayList<MapPlace>();
-        mMap.clear();
-        for (Place place : mPlacesService.getAllPlaces()) {
-            addPlaceToMap(place);
-        }
     }
 
     private void setUpMapIfNecessary() {
@@ -174,6 +103,18 @@ public class StrollMapActivity extends Activity {
         }
     }
 
+    public void setUpMapMarkersIfNecessary() {
+        if (mMapPlacesModel != null) {
+            return;
+        }
+
+        mMapPlacesModel = new MapPlacesModel(mUserService);
+        mMap.clear();
+        for (Place place : mPlacesService.getAllPlaces()) {
+            addPlaceToMap(place);
+        }
+    }
+
     private void addPlaceToMap(Place place) {
         BitmapDescriptor bitmapDescriptor;
         if (mUserService.isPlaceCaptured(place.mId)) {
@@ -185,7 +126,7 @@ public class StrollMapActivity extends Activity {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(place.mLat, place.mLon))
                 .title(place.mTitle).icon(bitmapDescriptor));
-        mMapPlaces.add(new MapPlace(place, marker));
+        mMapPlacesModel.add(place, marker);
     }
 
     @Override
@@ -195,8 +136,9 @@ public class StrollMapActivity extends Activity {
     }
 
     private void launchDetailsActivity() {
-        if (mSelectedPlace != null) {
-            this.startActivity(DetailsActivity.createDetailsIntent(this, mSelectedPlace.mId));
+        Place selectedPlace = mMapPlacesModel.getSelectedPlace();
+        if (selectedPlace != null) {
+            this.startActivity(DetailsActivity.createDetailsIntent(this, selectedPlace.mId));
         }
     }
 
@@ -240,7 +182,7 @@ public class StrollMapActivity extends Activity {
     }
 
     private void hideRibbon() {
-        if (mSelectedPlace != null) {
+        if (mMapPlacesModel.getSelectedPlace() != null) {
             Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -260,52 +202,7 @@ public class StrollMapActivity extends Activity {
             });
             mRibbonPanel.startAnimation(anim);
         }
-        mSelectedPlace = null;
-        if (mSelectedMarker != null) {
-            mSelectedMarker = null;
-        }
+        mMapPlacesModel.hideSelectedPlace();
     }
 
-    private static class MapPlace {
-        public Place mPlace;
-        public Marker mMarker;
-        public MapPlace(Place place, Marker marker) {
-            mPlace = place;
-            mMarker = marker;
-        }
-    }
-
-    private Place getPlaceForMarker(Marker marker) {
-        if (marker == null) {
-            return null;
-        }
-
-        for (MapPlace mapPlace : mMapPlaces) {
-            if (marker.equals(mapPlace.mMarker)) {
-                return mapPlace.mPlace;
-            }
-        }
-        return null;
-    }
-
-    private class MapPlacesModel {
-
-        public void onMarkerClick(Marker marker) {
-            Place place = getPlaceForMarker(marker);
-            mSelectedPlace = mPlacesService.getPlaceById(place.mId);
-            mSelectedMarker = marker;
-        }
-
-        public Place getSelectedPlace() {
-            return mSelectedPlace;
-        }
-
-        public boolean isSelectedPlaceCaptured() {
-            if (mMapPlacesModel.getSelectedPlace() != null && mUserService.isPlaceCaptured(mMapPlacesModel.getSelectedPlace().mId)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 }
