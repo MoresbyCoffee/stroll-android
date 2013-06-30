@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,8 @@ public class DetailsActivity extends Activity {
     private ZXingLibConfig zxingLibConfig;
     private PlacesService mPlacesService;
     private UserService mUserService;
+    private StrollimoPreferences mPrefs;
+
     private TextView mStatusTextView;
     private TextView mTitleTextView;
     private Place mCurrentPlace;
@@ -31,10 +34,10 @@ public class DetailsActivity extends Activity {
     private View.OnClickListener onCaptureButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            IntentIntegrator integrator = new IntentIntegrator(DetailsActivity.this);
-            integrator.initiateScan();
+            launchPickupActivity();
         }
     };
+
     private ImageView mDetailsPhoto;
 
     public static Intent createDetailsIntent(Context context, int placeId) {
@@ -50,6 +53,7 @@ public class DetailsActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
+        mPrefs = ((StrollimoApplication) getApplication()).getService(StrollimoPreferences.class);
         zxingLibConfig = new ZXingLibConfig();
         zxingLibConfig.useFrontLight = true;
 
@@ -69,7 +73,7 @@ public class DetailsActivity extends Activity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getPointerCount() >= 3) {
                     mUserService.reset();
-                    Intent intent = new Intent(DetailsActivity.this, StrollMapActivity.class);
+                    Intent intent = new Intent(DetailsActivity.this, MapActivity.class);
                     startActivity(intent);
                     return true;
                 } else {
@@ -124,13 +128,40 @@ public class DetailsActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.use_barcode).setChecked(mPrefs.isUseBarcode());
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.use_barcode:
+                boolean checked = item.isChecked();
+                mPrefs.setUseBarcode(!checked);
+                item.setChecked(!checked);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void launchPickupActivity() {
+        if (mPrefs.isUseBarcode()) {
+            IntentIntegrator integrator = new IntentIntegrator(this);
+            integrator.initiateScan();
+        } else {
+            PhotoCaptureActivity.initiatePhotoCapture(this);
+        }
+    }
+
 }

@@ -5,7 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_details">Details</string>
+    <string name="title_activity_photo_capture">Capture</string>
     <string name="places_discovered_text">Discovered places: %1$d of %2$d</string>
     <string name="coin_value">You have found %1$d copper coins!</string>
+    <string name="menu_barcode">Use barcode</string>
 
 </resources>

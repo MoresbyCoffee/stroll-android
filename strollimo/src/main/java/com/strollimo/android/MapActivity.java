@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,10 +19,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.*;
 import com.strollimo.android.dialog.DemoFinishedDialog;
 
-public class StrollMapActivity extends Activity {
+public class MapActivity extends Activity {
     private GoogleMap mMap;
     private LocationClient mLocationClient;
     private PlacesService mPlacesService;
+    private StrollimoPreferences mPrefs;
+
     private UserService mUserService;
     private boolean firstStart = true;
     private ImageView mPlaceImage;
@@ -54,6 +57,7 @@ public class StrollMapActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPrefs = ((StrollimoApplication)getApplication()).getService(StrollimoPreferences.class);
         firstStart = true;
         setContentView(R.layout.stroll_map_layout);
         mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
