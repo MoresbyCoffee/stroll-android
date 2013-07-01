@@ -43,7 +43,7 @@ public class MapActivity extends Activity {
         @Override
         public boolean onMarkerClick(Marker marker) {
             mMapPlacesModel.onMarkerClick(marker);
-            displayRibbon(mMapPlacesModel.getSelectedPlace());
+            displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
             return false;
         }
     };
@@ -64,15 +64,45 @@ public class MapActivity extends Activity {
         mPlaceImage = (ImageView) findViewById(R.id.place_image);
         mPlaceTitle = (TextView) findViewById(R.id.place_title);
         mRibbonPanel = findViewById(R.id.ribbon_panel);
-        mRibbonTouchView = findViewById(R.id.ribbon_touch_view);
+        //mRibbonTouchView = findViewById(R.id.ribbon_touch_view);
 
-        mRibbonTouchView.setOnClickListener(new View.OnClickListener() {
+        mRibbonPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i("BB", "on click");
                 launchDetailsActivity();
             }
         });
+
+        setSwipeToChangePlace(mRibbonPanel);
+    }
+
+    private void setSwipeToChangePlace(View dismissableRibbon) {
+        dismissableRibbon.setOnTouchListener(new SwipeDismissTouchListener(
+                dismissableRibbon,
+                null,
+                new SwipeDismissTouchListener.OnDirectionalDismissCallback() {
+                    @Override
+                    public void onDismiss(View view, Object token, DismissDirectionType dismissDirectionType) {
+                        Place toPlace;
+                        if (dismissDirectionType == DismissDirectionType.RIGHT) {
+                            toPlace = mMapPlacesModel.getNextPlaceFor(MapActivity.this, mMapPlacesModel.getSelectedPlace());
+                        } else {
+                            toPlace = mMapPlacesModel.getPreviousPlaceFor(MapActivity.this, mMapPlacesModel.getSelectedPlace());
+                        }
+                        if (toPlace != null) {
+                            Marker marker = mMapPlacesModel.getMarkerForPlace(toPlace);
+                            marker.showInfoWindow();
+                            mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
+                            mMapPlacesModel.selectMapPlaceByPlace(toPlace);
+                            displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
+                        } else {
+                            mMapPlacesModel.getSelectedMarker().hideInfoWindow();
+                            mRibbonPanel.setVisibility(View.GONE);
+                            mMapPlacesModel.hideSelectedPlace();
+                        }
+                    }
+                }));
     }
 
     @Override
@@ -176,8 +206,9 @@ public class MapActivity extends Activity {
         }
     }
 
-    private void displayRibbon(Place place) {
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right);
+
+    private void displayRibbon(Place place, boolean fromRight) {
+        Animation anim = AnimationUtils.loadAnimation(this, fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
         mRibbonPanel.setVisibility(View.VISIBLE);
         mPlaceImage.setImageBitmap(place.getBitmap());
         mPlaceTitle.setText(place.getmTitle().toUpperCase());

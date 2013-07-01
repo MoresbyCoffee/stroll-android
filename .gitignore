@@ -4,3 +4,5 @@ build
 gen
 .idea/workspace.xml
 .idea/tasks.xml
+strollimo-release-key.keystore
+strollimo/build.gradle
