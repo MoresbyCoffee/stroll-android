@@ -36,10 +36,10 @@ public class UserService {
     }
 
     public boolean capturePlace(Place place) {
-        mCapturedPlaces.add(place.mId);
+        mCapturedPlaces.add(place.getmId());
         mCapturedPlaceNum++;
         String currentLevel = getCurrentLevel();
-        mAllCoins += place.mCoinValue;
+        mAllCoins += place.getmCoinValue();
         String updatedLevel = getCurrentLevel();
 
         mPrefs.saveNewPlace(mCapturedPlaceNum, place);

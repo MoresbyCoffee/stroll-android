@@ -50,8 +50,8 @@ public class StrollimoPreferences {
 
     public void saveNewPlace(int capturedPlaces, Place place) {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, capturedPlaces).commit();
-        mPrefs.edit().putInt(CAPTURE_PLACE_KEY + capturedPlaces, place.mId).commit();
-        mPrefs.edit().putInt(COIN_VALUE_KEY + capturedPlaces, place.mId).commit();
+        mPrefs.edit().putInt(CAPTURE_PLACE_KEY + capturedPlaces, place.getmId()).commit();
+        mPrefs.edit().putInt(COIN_VALUE_KEY + capturedPlaces, place.getmId()).commit();
 
     }
 

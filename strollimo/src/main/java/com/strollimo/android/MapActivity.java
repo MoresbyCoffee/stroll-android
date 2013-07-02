@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -121,15 +120,15 @@ public class MapActivity extends Activity {
 
     private void addPlaceToMap(Place place) {
         BitmapDescriptor bitmapDescriptor;
-        if (mUserService.isPlaceCaptured(place.mId)) {
+        if (mUserService.isPlaceCaptured(place.getmId())) {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(place.mLat, place.mLon))
-                .title(place.mTitle).icon(bitmapDescriptor));
+                .position(new LatLng(place.getmLat(), place.getmLon()))
+                .title(place.getmTitle()).icon(bitmapDescriptor));
         mMapPlacesModel.add(place, marker);
     }
 
@@ -142,7 +141,7 @@ public class MapActivity extends Activity {
     private void launchDetailsActivity() {
         Place selectedPlace = mMapPlacesModel.getSelectedPlace();
         if (selectedPlace != null) {
-            this.startActivity(DetailsActivity.createDetailsIntent(this, selectedPlace.mId));
+            this.startActivity(DetailsActivity.createDetailsIntent(this, selectedPlace.getmId()));
         }
     }
 
@@ -154,7 +153,7 @@ public class MapActivity extends Activity {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
                         Place place = mPlacesService.getPlaceById(1);
-                        CameraPosition pos = CameraPosition.builder().target(new LatLng(place.mLat, place.mLon)).zoom(16f).tilt(45).build();
+                        CameraPosition pos = CameraPosition.builder().target(new LatLng(place.getmLat(), place.getmLon())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }
@@ -181,7 +180,7 @@ public class MapActivity extends Activity {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right);
         mRibbonPanel.setVisibility(View.VISIBLE);
         mPlaceImage.setImageBitmap(place.getBitmap());
-        mPlaceTitle.setText(place.mTitle.toUpperCase());
+        mPlaceTitle.setText(place.getmTitle().toUpperCase());
         mRibbonPanel.startAnimation(anim);
     }
 

@@ -65,7 +65,7 @@ public class DetailsActivity extends Activity {
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
 
         mCurrentPlace = mPlacesService.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
-        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.mTitle.toUpperCase());
+        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.getmTitle().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
         mDetailsPhoto.setImageBitmap(mCurrentPlace.getBitmap());
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
@@ -88,7 +88,7 @@ public class DetailsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mUserService.isPlaceCaptured(mCurrentPlace.mId)) {
+        if (mUserService.isPlaceCaptured(mCurrentPlace.getmId())) {
             mStatusTextView.setText("Opened");
             mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
             mCaptureButton.setVisibility(View.GONE);
@@ -125,7 +125,7 @@ public class DetailsActivity extends Activity {
             boolean levelUp = mUserService.capturePlace(mCurrentPlace);
             int placesFound = mUserService.getFoundPlacesNum();
             int placesCount = mPlacesService.getPlacesCount();
-            int coinValue = mCurrentPlace.mCoinValue;
+            int coinValue = mCurrentPlace.getmCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
             dialog.show(getFragmentManager(), "dialog");
@@ -167,7 +167,7 @@ public class DetailsActivity extends Activity {
             IntentIntegrator integrator = new IntentIntegrator(this);
             integrator.initiateScan();
         } else {
-            PhotoCaptureActivity.initiatePhotoCapture(this);
+            PhotoCaptureActivity.initiatePhotoCapture(this, mCurrentPlace.getmId());
         }
     }
 

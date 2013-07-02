@@ -17,19 +17,29 @@ import java.util.Random;
 public class PhotoCaptureActivity extends Activity {
     public static final int REQUEST_CODE = 1;
     public static final String PHOTO_CAPTURE_RESULT = "PHOTO_CAPTURE_RESULT";
+    public static final String PLACE_ID_EXTRA = "place_id";
+
     private Button mCaptureButton;
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView mRefImageView;
+    private PlacesService mPlacesService;
+    private Place mSelectedPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_capture);
+        mPlacesService = ((StrollimoApplication)getApplication()).getService(PlacesService.class);
+        mSelectedPlace = getSelectedPlace();
+        if (mSelectedPlace == null) {
+            // TODO: error handling, should send handled exception to crittercism
+        }
+
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_native_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
-        mRefImageView.setImageDrawable(getResources().getDrawable(R.drawable.canary2));
-        mRefImageView.setAlpha(0.5f);
+        mRefImageView.setImageDrawable(mSelectedPlace.getmImage());
+        mRefImageView.setAlpha(0.3f);
         mCaptureButton = (Button)findViewById(R.id.photo_capture_button);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +52,15 @@ public class PhotoCaptureActivity extends Activity {
         });
     }
 
+    private Place getSelectedPlace() {
+        int placeId = getIntent().getIntExtra(PLACE_ID_EXTRA, -1);
+        if (placeId >= 0) {
+            return mPlacesService.getPlaceById(placeId);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -52,11 +71,12 @@ public class PhotoCaptureActivity extends Activity {
         return new Random().nextBoolean();
     }
 
-    public static void initiatePhotoCapture(Activity activity) {
+    public static void initiatePhotoCapture(Activity activity, int placeId) {
         if (activity == null) {
             return;
         }
         Intent intent = new Intent(activity, PhotoCaptureActivity.class);
+        intent.putExtra(PLACE_ID_EXTRA, placeId);
         activity.startActivityForResult(intent, REQUEST_CODE);
     }
 

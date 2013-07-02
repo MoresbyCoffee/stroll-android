@@ -53,7 +53,7 @@ public class MapPlacesModel {
     }
 
     public boolean isSelectedPlaceCaptured() {
-        if (getSelectedPlace() != null && mUserService.isPlaceCaptured(getSelectedPlace().mId)) {
+        if (getSelectedPlace() != null && mUserService.isPlaceCaptured(getSelectedPlace().getmId())) {
             return true;
         } else {
             return false;
