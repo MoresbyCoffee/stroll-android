@@ -1,8 +1,10 @@
 package com.strollimo.android;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
@@ -44,12 +46,29 @@ public class PhotoCaptureActivity extends Activity {
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent result = getIntent();
-                result.putExtra(PHOTO_CAPTURE_RESULT, getRandomResult());
-                setResult(RESULT_OK, result);
-                finish();
+                mOpenCvCameraView.disableView();
+                displayMockProgress();
             }
         });
+    }
+
+    private void displayMockProgress() {
+        final ProgressDialog myProgressDialog = ProgressDialog.show(this, null, "Comparing images...", true);
+        (new Handler()).postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                myProgressDialog.dismiss();
+                sendResult();
+            }
+        }, 3000);
+    }
+
+    private void sendResult() {
+        Intent result = getIntent();
+        result.putExtra(PHOTO_CAPTURE_RESULT, getRandomResult());
+        setResult(RESULT_OK, result);
+        finish();
     }
 
     private Place getSelectedPlace() {
