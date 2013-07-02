@@ -3,6 +3,9 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
+        <option name="SELECTED_BUILD_VARIANT" value="debug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleTest" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -70,8 +73,8 @@
     <orderEntry type="library" name="google-play-services_lib.aar" level="project" />
     <orderEntry type="library" name="google-play-services" level="project" />
     <orderEntry type="library" name="ZXingLib.aar" level="project" />
-    <orderEntry type="library" name="core" level="project" />
     <orderEntry type="library" name="core-2.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="OpenCV.aar" level="project" />
   </component>
 </module>
 

@@ -71,7 +71,9 @@ public class DetailsActivity extends Activity {
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.i("BB", "resetting");
                 if (motionEvent.getPointerCount() >= 3) {
+                    Log.i("BB", "resetting - really");
                     mUserService.reset();
                     Intent intent = new Intent(DetailsActivity.this, MapActivity.class);
                     startActivity(intent);
@@ -108,22 +110,27 @@ public class DetailsActivity extends Activity {
                 if (scanResult == null) {
                     return;
                 }
-                final String result = scanResult.getContents();
-                Log.i("BB", "" + result);
-                if (mCurrentPlace.isScannedCodeValid(result)) {
-                    boolean levelUp = mUserService.capturePlace(mCurrentPlace);
-                    int placesFound = mUserService.getFoundPlacesNum();
-                    int placesCount = mPlacesService.getPlacesCount();
-                    int coinValue = mCurrentPlace.mCoinValue;
-                    String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
-                    TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
-                    dialog.show(getFragmentManager(), "dialog");
-                } else {
-                    new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
-                }
-
+                String result = scanResult.getContents();
+                handleResult(mCurrentPlace.isScannedCodeValid(result));
+                break;
+            case PhotoCaptureActivity.REQUEST_CODE:
+                handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
                 break;
             default:
+        }
+    }
+
+    private void handleResult(boolean captureSuccessful) {
+        if (captureSuccessful) {
+            boolean levelUp = mUserService.capturePlace(mCurrentPlace);
+            int placesFound = mUserService.getFoundPlacesNum();
+            int placesCount = mPlacesService.getPlacesCount();
+            int coinValue = mCurrentPlace.mCoinValue;
+            String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
+            TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
+            dialog.show(getFragmentManager(), "dialog");
+        } else {
+            new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
         }
     }
 

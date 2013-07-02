@@ -9,5 +9,6 @@
     <string name="places_discovered_text">Discovered places: %1$d of %2$d</string>
     <string name="coin_value">You have found %1$d copper coins!</string>
     <string name="menu_barcode">Use barcode</string>
+    <string name="photo_capture_button">Capture</string>
 
 </resources>
