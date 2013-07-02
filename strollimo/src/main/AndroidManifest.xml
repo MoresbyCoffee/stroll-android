@@ -47,6 +47,7 @@
                 android:screenOrientation="landscape"
                 android:configChanges="keyboardHidden|orientation|screenSize"
                 android:name=".PhotoCaptureActivity"
+                android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
                 android:label="@string/title_activity_details"/>
     </application>
 
