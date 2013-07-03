@@ -2,8 +2,6 @@
   <library name="google-play-services_lib.aar">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/google-play-services_lib.aar/classes.jar!/" />
-      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/google-play-services_lib.aar/classes.jar!/" />
-      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/google-play-services_lib.aar/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
