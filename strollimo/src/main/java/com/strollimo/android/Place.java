@@ -37,7 +37,7 @@ public class Place {
         }
     }
 
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 

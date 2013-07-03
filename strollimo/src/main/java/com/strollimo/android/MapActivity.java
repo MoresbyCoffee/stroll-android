@@ -150,7 +150,7 @@ public class MapActivity extends Activity {
 
     private void addPlaceToMap(Place place) {
         BitmapDescriptor bitmapDescriptor;
-        if (mUserService.isPlaceCaptured(place.getmId())) {
+        if (mUserService.isPlaceCaptured(place.getId())) {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);
@@ -171,7 +171,7 @@ public class MapActivity extends Activity {
     private void launchDetailsActivity() {
         Place selectedPlace = mMapPlacesModel.getSelectedPlace();
         if (selectedPlace != null) {
-            this.startActivity(DetailsActivity.createDetailsIntent(this, selectedPlace.getmId()));
+            this.startActivity(DetailsActivity.createDetailsIntent(this, selectedPlace.getId()));
         }
     }
 

@@ -65,7 +65,7 @@ public class MapPlacesModel {
         }
 
         for (MapPlace mapPlace : mMapPlaces) {
-            if (place.mId == mapPlace.getPlace().mId) {
+            if (place.getId() == mapPlace.getPlace().getId()) {
                 return mapPlace.getMarker();
             }
         }
@@ -73,7 +73,7 @@ public class MapPlacesModel {
     }
 
     public boolean isSelectedPlaceCaptured() {
-        if (getSelectedPlace() != null && mUserService.isPlaceCaptured(getSelectedPlace().getmId())) {
+        if (getSelectedPlace() != null && mUserService.isPlaceCaptured(getSelectedPlace().getId())) {
             return true;
         } else {
             return false;
@@ -93,7 +93,7 @@ public class MapPlacesModel {
             return null;
         }
 
-        int currentId = place.mId;
+        int currentId = place.getId();
         PlacesService placesService = ((StrollimoApplication) activity.getApplication()).getService(PlacesService.class);
         if (currentId >= placesService.getPlacesCount()) {
             return null;
@@ -106,7 +106,7 @@ public class MapPlacesModel {
             return null;
         }
 
-        int currentId = place.mId;
+        int currentId = place.getId();
         PlacesService placesService = ((StrollimoApplication) activity.getApplication()).getService(PlacesService.class);
         if (currentId <= 1) {
             return null;

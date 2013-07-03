@@ -88,7 +88,7 @@ public class DetailsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mUserService.isPlaceCaptured(mCurrentPlace.getmId())) {
+        if (mUserService.isPlaceCaptured(mCurrentPlace.getId())) {
             mStatusTextView.setText("Opened");
             mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
             mCaptureButton.setVisibility(View.GONE);
@@ -170,7 +170,7 @@ public class DetailsActivity extends Activity {
             IntentIntegrator integrator = new IntentIntegrator(this);
             integrator.initiateScan();
         } else {
-            PhotoCaptureActivity.initiatePhotoCapture(this, mCurrentPlace.getmId());
+            PhotoCaptureActivity.initiatePhotoCapture(this, mCurrentPlace.getId());
         }
     }
 

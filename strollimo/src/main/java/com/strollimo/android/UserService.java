@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public boolean capturePlace(Place place) {
-        mCapturedPlaces.add(place.getmId());
+        mCapturedPlaces.add(place.getId());
         mCapturedPlaceNum++;
         String currentLevel = getCurrentLevel();
         mAllCoins += place.getmCoinValue();
