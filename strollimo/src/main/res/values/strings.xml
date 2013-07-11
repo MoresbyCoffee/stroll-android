@@ -10,5 +10,8 @@
     <string name="coin_value">You have found %1$d copper coins!</string>
     <string name="menu_barcode">Use barcode</string>
     <string name="photo_capture_button">Capture</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Open close</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

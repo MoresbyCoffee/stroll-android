@@ -2,6 +2,8 @@ package com.strollimo.android;
 
 import android.content.SharedPreferences;
 
+import com.strollimo.android.model.Place;
+
 import java.util.HashSet;
 
 public class StrollimoPreferences {

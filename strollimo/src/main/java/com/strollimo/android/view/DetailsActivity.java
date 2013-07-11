@@ -1,4 +1,4 @@
-package com.strollimo.android;
+package com.strollimo.android.view;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -16,13 +16,19 @@ import android.widget.TextView;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.strollimo.android.dialog.TreasureFoundDialog;
-import com.strollimo.android.dialog.TreasureNotFoundDialog;
+import com.strollimo.android.model.Place;
+import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.StrollimoPreferences;
+import com.strollimo.android.UserService;
+import com.strollimo.android.view.dialog.TreasureFoundDialog;
+import com.strollimo.android.view.dialog.TreasureNotFoundDialog;
 
 public class DetailsActivity extends Activity {
     public static final String PLACE_ID_EXTRA = "place_id";
     private ZXingLibConfig zxingLibConfig;
-    private PlacesService mPlacesService;
+    private PlacesController mPlacesController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
 
@@ -51,7 +57,7 @@ public class DetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
+        mPlacesController = ((StrollimoApplication) getApplication()).getService(PlacesController.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
         mPrefs = ((StrollimoApplication) getApplication()).getService(StrollimoPreferences.class);
         zxingLibConfig = new ZXingLibConfig();
@@ -64,8 +70,8 @@ public class DetailsActivity extends Activity {
         mCaptureButton = (Button) findViewById(R.id.capture_button);
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
 
-        mCurrentPlace = mPlacesService.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
-        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.getmTitle().toUpperCase());
+        mCurrentPlace = mPlacesController.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
+        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.getTitle().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
         mDetailsPhoto.setImageBitmap(mCurrentPlace.getBitmap());
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
@@ -75,7 +81,7 @@ public class DetailsActivity extends Activity {
                 if (motionEvent.getPointerCount() >= 3) {
                     Log.i("BB", "resetting - really");
                     mUserService.reset();
-                    Intent intent = new Intent(DetailsActivity.this, MapActivity.class);
+                    Intent intent = new Intent(DetailsActivity.this, MapFragment.class);
                     startActivity(intent);
                     return true;
                 } else {
@@ -127,8 +133,8 @@ public class DetailsActivity extends Activity {
         if (captureSuccessful) {
             boolean levelUp = mUserService.capturePlace(mCurrentPlace);
             int placesFound = mUserService.getFoundPlacesNum();
-            int placesCount = mPlacesService.getPlacesCount();
-            int coinValue = mCurrentPlace.getmCoinValue();
+            int placesCount = mPlacesController.getPlacesCount();
+            int coinValue = mCurrentPlace.getCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
             dialog.show(getFragmentManager(), "dialog");

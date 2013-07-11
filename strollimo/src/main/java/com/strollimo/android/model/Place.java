@@ -1,4 +1,4 @@
-package com.strollimo.android;
+package com.strollimo.android.model;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,55 +41,55 @@ public class Place {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setId(int mId) {
         this.mId = mId;
     }
 
-    public double getmLat() {
+    public double getLat() {
         return mLat;
     }
 
-    public void setmLat(double mLat) {
+    public void setLat(double mLat) {
         this.mLat = mLat;
     }
 
-    public double getmLon() {
+    public double getLon() {
         return mLon;
     }
 
-    public void setmLon(double mLon) {
+    public void setLon(double mLon) {
         this.mLon = mLon;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
+    public void setTitle(String mTitle) {
         this.mTitle = mTitle;
     }
 
-    public String getmCode() {
+    public String getCode() {
         return mCode;
     }
 
-    public void setmCode(String mCode) {
+    public void setCode(String mCode) {
         this.mCode = mCode;
     }
 
-    public Drawable getmImage() {
+    public Drawable getImage() {
         return mImage;
     }
 
-    public void setmImage(Drawable mImage) {
+    public void setImage(Drawable mImage) {
         this.mImage = mImage;
     }
 
-    public int getmCoinValue() {
+    public int getCoinValue() {
         return mCoinValue;
     }
 
-    public void setmCoinValue(int mCoinValue) {
+    public void setCoinValue(int mCoinValue) {
         this.mCoinValue = mCoinValue;
     }
 }

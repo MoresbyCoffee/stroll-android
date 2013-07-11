@@ -1,5 +1,7 @@
 package com.strollimo.android;
 
+import com.strollimo.android.model.Place;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +41,7 @@ public class UserService {
         mCapturedPlaces.add(place.getId());
         mCapturedPlaceNum++;
         String currentLevel = getCurrentLevel();
-        mAllCoins += place.getmCoinValue();
+        mAllCoins += place.getCoinValue();
         String updatedLevel = getCurrentLevel();
 
         mPrefs.saveNewPlace(mCapturedPlaceNum, place);

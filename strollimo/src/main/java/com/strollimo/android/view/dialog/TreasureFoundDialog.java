@@ -1,4 +1,4 @@
-package com.strollimo.android.dialog;
+package com.strollimo.android.view.dialog;
 
 
 import android.app.DialogFragment;

@@ -1,6 +1,7 @@
 package com.strollimo.android;
 
 import com.google.android.gms.maps.model.Marker;
+import com.strollimo.android.model.Place;
 
 public class MapPlace {
     private Marker mMarker;

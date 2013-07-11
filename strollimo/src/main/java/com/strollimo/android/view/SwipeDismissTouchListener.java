@@ -1,4 +1,4 @@
-package com.strollimo.android;
+package com.strollimo.android.view;
 
 // THIS IS A BETA! I DON'T RECOMMEND USING IT IN PRODUCTION CODE JUST YET
 
@@ -21,7 +21,6 @@ package com.strollimo.android;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;

@@ -2,8 +2,10 @@ package com.strollimo.android;
 
 import android.app.Application;
 
+import com.strollimo.android.controller.PlacesController;
+
 public class StrollimoApplication extends Application {
-    private PlacesService mPlacesService;
+    private PlacesController mPlacesController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
 
@@ -11,14 +13,14 @@ public class StrollimoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mPrefs = new StrollimoPreferences(getSharedPreferences("StrollimoPreferences", 0));
-        mPlacesService = new PlacesService(this);
+        mPlacesController = new PlacesController(this);
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
     }
 
     public <T> T getService(Class<T> serviceClass) {
-        if (serviceClass == PlacesService.class) {
-            return (T) mPlacesService;
+        if (serviceClass == PlacesController.class) {
+            return (T) mPlacesController;
         } else if (serviceClass == UserService.class) {
             return (T) mUserService;
         } else if (serviceClass == StrollimoPreferences.class) {

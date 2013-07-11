@@ -1,10 +1,12 @@
-package com.strollimo.android;
+package com.strollimo.android.view;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -14,14 +16,21 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.*;
-import com.strollimo.android.dialog.DemoFinishedDialog;
+import com.strollimo.android.MapPlacesModel;
+import com.strollimo.android.model.Place;
+import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.StrollimoPreferences;
+import com.strollimo.android.UserService;
+import com.strollimo.android.view.dialog.DemoFinishedDialog;
 
-public class MapActivity extends Activity {
+public class MapFragment extends Fragment {
+    private View mView;
     private GoogleMap mMap;
     private LocationClient mLocationClient;
-    private PlacesService mPlacesService;
+    private PlacesController mPlacesController;
     private StrollimoPreferences mPrefs;
 
     private UserService mUserService;
@@ -54,28 +63,39 @@ public class MapActivity extends Activity {
         }
     };
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPrefs = ((StrollimoApplication)getApplication()).getService(StrollimoPreferences.class);
-        firstStart = true;
-        setContentView(R.layout.stroll_map_layout);
-        mPlacesService = ((StrollimoApplication) getApplication()).getService(PlacesService.class);
-        mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
-        mPlaceImage = (ImageView) findViewById(R.id.place_image);
-        mPlaceTitle = (TextView) findViewById(R.id.place_title);
-        mRibbonPanel = findViewById(R.id.ribbon_panel);
-        //mRibbonTouchView = findViewById(R.id.ribbon_touch_view);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mRibbonPanel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("BB", "on click");
-                launchDetailsActivity();
+        if (mView == null) {
+            mPrefs = ((StrollimoApplication)getActivity().getApplication()).getService(StrollimoPreferences.class);
+            firstStart = true;
+            View view = inflater.inflate(R.layout.stroll_map_layout, container);
+
+
+            mPlacesController = ((StrollimoApplication) getActivity().getApplication()).getService(PlacesController.class);
+            mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
+            mPlaceImage = (ImageView) view.findViewById(R.id.place_image);
+            mPlaceTitle = (TextView) view.findViewById(R.id.place_title);
+            mRibbonPanel = view.findViewById(R.id.ribbon_panel);
+
+            mRibbonPanel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("BB", "on click");
+                    launchDetailsActivity();
+                }
+            });
+
+            setSwipeToChangePlace(mRibbonPanel);
+        } else {
+            ViewGroup parentViewGroup = (ViewGroup) mView.getParent();
+            if (parentViewGroup != null) {
+                parentViewGroup.removeAllViews();
             }
-        });
-
-        setSwipeToChangePlace(mRibbonPanel);
+        }
+        return mView;
     }
+
 
     private void setSwipeToChangePlace(View dismissableRibbon) {
         dismissableRibbon.setOnTouchListener(new SwipeDismissTouchListener(
@@ -86,9 +106,9 @@ public class MapActivity extends Activity {
                     public void onDismiss(View view, Object token, DismissDirectionType dismissDirectionType) {
                         Place toPlace;
                         if (dismissDirectionType == DismissDirectionType.RIGHT) {
-                            toPlace = mMapPlacesModel.getNextPlaceFor(MapActivity.this, mMapPlacesModel.getSelectedPlace());
+                            toPlace = mMapPlacesModel.getNextPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
                         } else {
-                            toPlace = mMapPlacesModel.getPreviousPlaceFor(MapActivity.this, mMapPlacesModel.getSelectedPlace());
+                            toPlace = mMapPlacesModel.getPreviousPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
                         }
                         if (toPlace != null) {
                             Marker marker = mMapPlacesModel.getMarkerForPlace(toPlace);
@@ -106,16 +126,16 @@ public class MapActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-            mMapPlacesModel.refreshSelectedMarker();
-        if (mUserService.getFoundPlacesNum() == mPlacesService.getPlacesCount()) {
-            new DemoFinishedDialog().show(getFragmentManager(), "dialog");
+        mMapPlacesModel.refreshSelectedMarker();
+        if (mUserService.getFoundPlacesNum() == mPlacesController.getPlacesCount()) {
+            new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
         }
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         Log.i("BB", "onStart");
         setUpMapIfNecessary();
@@ -126,7 +146,7 @@ public class MapActivity extends Activity {
 
     private void setUpMapIfNecessary() {
         if (mMap == null) {
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            mMap = ((com.google.android.gms.maps.SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             mMap.setMyLocationEnabled(true);
             mMap.setOnInfoWindowClickListener(onInfoWindowClickListener);
             mMap.setOnMarkerClickListener(mOnMarkerClickListener);
@@ -143,7 +163,7 @@ public class MapActivity extends Activity {
 
         mMapPlacesModel = new MapPlacesModel(mUserService);
         mMap.clear();
-        for (Place place : mPlacesService.getAllPlaces()) {
+        for (Place place : mPlacesController.getAllPlaces()) {
             addPlaceToMap(place);
         }
     }
@@ -157,13 +177,13 @@ public class MapActivity extends Activity {
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(place.getmLat(), place.getmLon()))
-                .title(place.getmTitle()).icon(bitmapDescriptor));
+                .position(new LatLng(place.getLat(), place.getLon()))
+                .title(place.getTitle()).icon(bitmapDescriptor));
         mMapPlacesModel.add(place, marker);
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         mLocationClient.disconnect();
         super.onStop();
     }
@@ -171,19 +191,19 @@ public class MapActivity extends Activity {
     private void launchDetailsActivity() {
         Place selectedPlace = mMapPlacesModel.getSelectedPlace();
         if (selectedPlace != null) {
-            this.startActivity(DetailsActivity.createDetailsIntent(this, selectedPlace.getId()));
+            this.startActivity(DetailsActivity.createDetailsIntent(getActivity(), selectedPlace.getId()));
         }
     }
 
     private void setUpLocationClientIfNecessary() {
         if (mLocationClient == null) {
-            mLocationClient = new LocationClient(this, new GooglePlayServicesClient.ConnectionCallbacks() {
+            mLocationClient = new LocationClient(getActivity(), new GooglePlayServicesClient.ConnectionCallbacks() {
                 @Override
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Place place = mPlacesService.getPlaceById(1);
-                        CameraPosition pos = CameraPosition.builder().target(new LatLng(place.getmLat(), place.getmLon())).zoom(16f).tilt(45).build();
+                        Place place = mPlacesController.getPlaceById(1);
+                        CameraPosition pos = CameraPosition.builder().target(new LatLng(place.getLat(), place.getLon())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }
@@ -208,16 +228,16 @@ public class MapActivity extends Activity {
 
 
     private void displayRibbon(Place place, boolean fromRight) {
-        Animation anim = AnimationUtils.loadAnimation(this, fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
         mRibbonPanel.setVisibility(View.VISIBLE);
         mPlaceImage.setImageBitmap(place.getBitmap());
-        mPlaceTitle.setText(place.getmTitle().toUpperCase());
+        mPlaceTitle.setText(place.getTitle().toUpperCase());
         mRibbonPanel.startAnimation(anim);
     }
 
     private void hideRibbon() {
         if (mMapPlacesModel.getSelectedPlace() != null) {
-            Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left);
+            Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_to_left);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {

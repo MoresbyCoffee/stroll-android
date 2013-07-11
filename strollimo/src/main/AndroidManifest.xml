@@ -1,77 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.strollimo.android"
-          android:versionCode="3"
-          android:versionName="0.0.3">
+    package="com.strollimo.android"
+    android:versionCode="3"
+    android:versionName="0.0.3" >
 
     <uses-sdk
-            android:minSdkVersion="13"
-            android:targetSdkVersion="16"/>
-    <supports-screens android:xlargeScreens="true"
-                      android:largeScreens="true"
-                      android:normalScreens="true"
-                      android:smallScreens="true"
-                      android:anyDensity="true"/>
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <uses-feature
-            android:glEsVersion="0x00020000"
-            android:required="true"/>
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
-            android:allowBackup="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/CustomActivityTheme"
-            android:name=".StrollimoApplication">
+        android:name="com.strollimo.android.StrollimoApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/CustomActivityTheme" >
         <meta-data
-                android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyCvyVayQO8ke2bPQZ3RVwhAqwhcx7aIG7s"/>
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCvyVayQO8ke2bPQZ3RVwhAqwhcx7aIG7s" />
 
         <activity
-                android:name=".MapActivity"
-                android:screenOrientation="portrait"
-                android:configChanges="keyboardHidden|orientation|screenSize"
-                android:label="@string/app_name">
+            android:name="com.strollimo.android.view.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-                android:screenOrientation="portrait"
-                android:configChanges="keyboardHidden|orientation|screenSize"
-                android:name=".DetailsActivity"
-                android:label="@string/title_activity_details"/>
+            android:name="com.strollimo.android.view.DetailsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_details"
+            android:screenOrientation="portrait" />
         <activity
-                android:screenOrientation="landscape"
-                android:configChanges="keyboardHidden|orientation|screenSize"
-                android:name=".PhotoCaptureActivity"
-                android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
-                android:label="@string/title_activity_details"/>
+            android:name="com.strollimo.android.view.PhotoCaptureActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_details"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
     </application>
 
     <permission
-            android:name="com.example.mapdemo.permission.MAPS_RECEIVE"
-            android:protectionLevel="signature"/>
+        android:name="com.example.mapdemo.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!--
          The following two permissions are not required to use
          Google Maps Android API v2, but are recommended.
     -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

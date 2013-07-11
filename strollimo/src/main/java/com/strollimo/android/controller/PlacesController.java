@@ -1,16 +1,19 @@
-package com.strollimo.android;
+package com.strollimo.android.controller;
 
 import android.content.Context;
+
+import com.strollimo.android.R;
+import com.strollimo.android.model.Place;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlacesService {
+public class PlacesController {
     private Map<Integer, Place> mPlaces;
     private Context mContext;
 
-    public PlacesService(Context context) {
+    public PlacesController(Context context) {
         mContext = context;
         mPlaces = new HashMap<Integer, Place>();
         mPlaces.put(1, new Place(1, "Lost in time", 51.504055, -0.019859, "id:1", context.getResources().getDrawable(R.drawable.canary2)));

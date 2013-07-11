@@ -1,4 +1,4 @@
-package com.strollimo.android;
+package com.strollimo.android.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,6 +9,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.strollimo.android.model.Place;
+import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
@@ -24,14 +30,14 @@ public class PhotoCaptureActivity extends Activity {
     private Button mCaptureButton;
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView mRefImageView;
-    private PlacesService mPlacesService;
+    private PlacesController mPlacesController;
     private Place mSelectedPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_capture);
-        mPlacesService = ((StrollimoApplication)getApplication()).getService(PlacesService.class);
+        mPlacesController = ((StrollimoApplication)getApplication()).getService(PlacesController.class);
         mSelectedPlace = getSelectedPlace();
         if (mSelectedPlace == null) {
             // TODO: error handling, should send handled exception to crittercism
@@ -40,7 +46,7 @@ public class PhotoCaptureActivity extends Activity {
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_native_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
-        mRefImageView.setImageDrawable(mSelectedPlace.getmImage());
+        mRefImageView.setImageDrawable(mSelectedPlace.getImage());
         mRefImageView.setAlpha(0.3f);
         mCaptureButton = (Button)findViewById(R.id.photo_capture_button);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +80,7 @@ public class PhotoCaptureActivity extends Activity {
     private Place getSelectedPlace() {
         int placeId = getIntent().getIntExtra(PLACE_ID_EXTRA, -1);
         if (placeId >= 0) {
-            return mPlacesService.getPlaceById(placeId);
+            return mPlacesController.getPlaceById(placeId);
         } else {
             return null;
         }

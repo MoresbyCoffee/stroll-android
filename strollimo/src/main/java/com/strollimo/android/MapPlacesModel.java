@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,11 +96,11 @@ public class MapPlacesModel {
         }
 
         int currentId = place.getId();
-        PlacesService placesService = ((StrollimoApplication) activity.getApplication()).getService(PlacesService.class);
-        if (currentId >= placesService.getPlacesCount()) {
+        PlacesController placesController = ((StrollimoApplication) activity.getApplication()).getService(PlacesController.class);
+        if (currentId >= placesController.getPlacesCount()) {
             return null;
         }
-        return placesService.getPlaceById(currentId + 1);
+        return placesController.getPlaceById(currentId + 1);
     }
 
     public Place getPreviousPlaceFor(Activity activity, Place place) {
@@ -107,10 +109,10 @@ public class MapPlacesModel {
         }
 
         int currentId = place.getId();
-        PlacesService placesService = ((StrollimoApplication) activity.getApplication()).getService(PlacesService.class);
+        PlacesController placesController = ((StrollimoApplication) activity.getApplication()).getService(PlacesController.class);
         if (currentId <= 1) {
             return null;
         }
-        return placesService.getPlaceById(currentId - 1);
+        return placesController.getPlaceById(currentId - 1);
     }
 }
