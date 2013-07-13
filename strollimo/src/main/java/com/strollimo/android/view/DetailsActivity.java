@@ -16,12 +16,12 @@ import android.widget.TextView;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.strollimo.android.model.Place;
+import com.strollimo.android.model.Mission;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.UserService;
+import com.strollimo.android.controller.UserService;
 import com.strollimo.android.view.dialog.TreasureFoundDialog;
 import com.strollimo.android.view.dialog.TreasureNotFoundDialog;
 
@@ -34,7 +34,7 @@ public class DetailsActivity extends Activity {
 
     private TextView mStatusTextView;
     private TextView mTitleTextView;
-    private Place mCurrentPlace;
+    private Mission mCurrentMission;
     private Button mCaptureButton;
     private ImageView mStatusImageView;
     private View.OnClickListener onCaptureButtonClickListener = new View.OnClickListener() {
@@ -70,10 +70,10 @@ public class DetailsActivity extends Activity {
         mCaptureButton = (Button) findViewById(R.id.capture_button);
         mCaptureButton.setOnClickListener(onCaptureButtonClickListener);
 
-        mCurrentPlace = mPlacesController.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
-        mTitleTextView.setText(mCurrentPlace == null ? "Error" : mCurrentPlace.getTitle().toUpperCase());
+        mCurrentMission = mPlacesController.getPlaceById(getIntent().getIntExtra(PLACE_ID_EXTRA, 0));
+        mTitleTextView.setText(mCurrentMission == null ? "Error" : mCurrentMission.getTitle().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
-        mDetailsPhoto.setImageBitmap(mCurrentPlace.getBitmap());
+        mDetailsPhoto.setImageBitmap(mCurrentMission.getBitmap());
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -94,7 +94,7 @@ public class DetailsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mUserService.isPlaceCaptured(mCurrentPlace.getId())) {
+        if (mUserService.isPlaceCaptured(mCurrentMission.getId())) {
             mStatusTextView.setText("Opened");
             mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
             mCaptureButton.setVisibility(View.GONE);
@@ -120,7 +120,7 @@ public class DetailsActivity extends Activity {
                     return;
                 }
                 String result = scanResult.getContents();
-                handleResult(mCurrentPlace.isScannedCodeValid(result));
+                handleResult(mCurrentMission.isScannedCodeValid(result));
                 break;
             case PhotoCaptureActivity.REQUEST_CODE:
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
@@ -131,10 +131,10 @@ public class DetailsActivity extends Activity {
 
     private void handleResult(boolean captureSuccessful) {
         if (captureSuccessful) {
-            boolean levelUp = mUserService.capturePlace(mCurrentPlace);
+            boolean levelUp = mUserService.capturePlace(mCurrentMission);
             int placesFound = mUserService.getFoundPlacesNum();
             int placesCount = mPlacesController.getPlacesCount();
-            int coinValue = mCurrentPlace.getCoinValue();
+            int coinValue = mCurrentMission.getCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
             dialog.show(getFragmentManager(), "dialog");
@@ -176,7 +176,7 @@ public class DetailsActivity extends Activity {
             IntentIntegrator integrator = new IntentIntegrator(this);
             integrator.initiateScan();
         } else {
-            PhotoCaptureActivity.initiatePhotoCapture(this, mCurrentPlace.getId());
+            PhotoCaptureActivity.initiatePhotoCapture(this, mCurrentMission.getId());
         }
     }
 

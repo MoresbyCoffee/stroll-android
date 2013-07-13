@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.strollimo.android.model.Place;
+import com.strollimo.android.model.Mission;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -31,22 +31,22 @@ public class PhotoCaptureActivity extends Activity {
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView mRefImageView;
     private PlacesController mPlacesController;
-    private Place mSelectedPlace;
+    private Mission mSelectedMission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_capture);
         mPlacesController = ((StrollimoApplication)getApplication()).getService(PlacesController.class);
-        mSelectedPlace = getSelectedPlace();
-        if (mSelectedPlace == null) {
+        mSelectedMission = getSelectedPlace();
+        if (mSelectedMission == null) {
             // TODO: error handling, should send handled exception to crittercism
         }
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_native_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
-        mRefImageView.setImageDrawable(mSelectedPlace.getImage());
+        mRefImageView.setImageDrawable(mSelectedMission.getImage());
         mRefImageView.setAlpha(0.3f);
         mCaptureButton = (Button)findViewById(R.id.photo_capture_button);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +77,7 @@ public class PhotoCaptureActivity extends Activity {
         finish();
     }
 
-    private Place getSelectedPlace() {
+    private Mission getSelectedPlace() {
         int placeId = getIntent().getIntExtra(PLACE_ID_EXTRA, -1);
         if (placeId >= 0) {
             return mPlacesController.getPlaceById(placeId);

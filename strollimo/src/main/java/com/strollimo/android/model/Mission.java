@@ -4,9 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import java.util.List;
 import java.util.Random;
 
-public class Place {
+public class Mission {
     private int mId;
     private double mLat;
     private double mLon;
@@ -14,8 +15,9 @@ public class Place {
     private String mCode;
     private Drawable mImage;
     private int mCoinValue;
+    private List<Pickupable> mPickupables;
 
-    public Place(int id, String title, double lat, double lon, String code, Drawable image) {
+    public Mission(int id, String title, double lat, double lon, String code, Drawable image) {
         mId = id;
         mTitle = title;
         mLat = lat;
@@ -92,4 +94,13 @@ public class Place {
     public void setCoinValue(int mCoinValue) {
         this.mCoinValue = mCoinValue;
     }
+
+    public List<Pickupable> getPickupables() {
+        return mPickupables;
+    }
+
+    public void addPickupable(Pickupable pickupable) {
+        mPickupables.add(pickupable);
+    }
+
 }

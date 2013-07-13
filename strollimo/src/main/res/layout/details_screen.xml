@@ -35,7 +35,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="[place title placeholder]"
+                android:text="[mission title placeholder]"
                 android:id="@+id/title"
                 android:typeface="sans"
                 android:textSize="20sp"

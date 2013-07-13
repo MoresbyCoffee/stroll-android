@@ -3,6 +3,7 @@ package com.strollimo.android;
 import android.app.Application;
 
 import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.UserService;
 
 public class StrollimoApplication extends Application {
     private PlacesController mPlacesController;

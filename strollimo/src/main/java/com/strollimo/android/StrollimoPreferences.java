@@ -2,7 +2,7 @@ package com.strollimo.android;
 
 import android.content.SharedPreferences;
 
-import com.strollimo.android.model.Place;
+import com.strollimo.android.model.Mission;
 
 import java.util.HashSet;
 
@@ -50,10 +50,10 @@ public class StrollimoPreferences {
 
     }
 
-    public void saveNewPlace(int capturedPlaces, Place place) {
+    public void saveNewPlace(int capturedPlaces, Mission mission) {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, capturedPlaces).commit();
-        mPrefs.edit().putInt(CAPTURE_PLACE_KEY + capturedPlaces, place.getId()).commit();
-        mPrefs.edit().putInt(COIN_VALUE_KEY + capturedPlaces, place.getId()).commit();
+        mPrefs.edit().putInt(CAPTURE_PLACE_KEY + capturedPlaces, mission.getId()).commit();
+        mPrefs.edit().putInt(COIN_VALUE_KEY + capturedPlaces, mission.getId()).commit();
 
     }
 
