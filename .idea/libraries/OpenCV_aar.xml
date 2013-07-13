@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="OpenCV.aar">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/OpenCV.aar/classes.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

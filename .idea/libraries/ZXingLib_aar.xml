@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ZXingLib.aar">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/strollimo/build/exploded-bundles/ZXingLib.aar/classes.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -2,7 +2,7 @@
 bin
 build
 gen
-.idea/workspace.xml
-.idea/tasks.xml
+.idea/*
 strollimo-release-key.keystore
 strollimo/build.gradle
+*.iml
