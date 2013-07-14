@@ -19,6 +19,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -31,9 +32,40 @@ public class AwsActivity extends Activity {
     private final static String AWSAccessKeyId = "AKIAIO5MQ5HJN3NINXVQ";
     private final static String AWSSecretKey = "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";
     public static Drawable drawable = null;
+    File mImage;
     private Bitmap mImageBitmap;
     private ImageView mImageView;
     private Handler mHandler = new Handler();
+    private File mScaledImageFile;
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        int height = 0;
+        int width = 0;
+        if (options.outHeight > options.outWidth) {
+            height = options.outHeight;
+            width = options.outWidth;
+        } else {
+            width = options.outHeight;
+            height = options.outWidth;
+        }
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+
+        return inSampleSize;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +81,6 @@ public class AwsActivity extends Activity {
         return true;
     }
 
-    File mImage;
     public void pickPhoto(View view) {
         try {
             File storageDir = getExternalCacheDir();
@@ -78,7 +109,7 @@ public class AwsActivity extends Activity {
             @Override
             public void run() {
                 AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
-                PutObjectRequest por = new PutObjectRequest("strollimo1", mImage.getName(), mImage);
+                PutObjectRequest por = new PutObjectRequest("strollimo1", mScaledImageFile.getName(), mScaledImageFile);
                 s3Client.putObject(por);
             }
         }).start();
@@ -126,8 +157,27 @@ public class AwsActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap myBitmap = BitmapFactory.decodeFile(mImage.getAbsolutePath());
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mImage.getAbsolutePath(), options);
+        options.inSampleSize = calculateInSampleSize(options, 800, 600);
+        options.inJustDecodeBounds = false;
+        Bitmap myBitmap = BitmapFactory.decodeFile(mImage.getAbsolutePath(), options);
         mImageView.setImageBitmap(myBitmap);
+        saveBitmap(myBitmap);
     }
 
+    private void saveBitmap(Bitmap bitmap) {
+        mScaledImageFile = new File(mImage.getAbsolutePath().replace(".jpeg", "_scaled.jpeg"));
+        if (mScaledImageFile.exists()) mScaledImageFile.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(mScaledImageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+        }
+    }
 }
