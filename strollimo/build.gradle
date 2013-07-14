@@ -9,6 +9,7 @@ buildscript {
 apply plugin: 'android'
 dependencies {
     compile files('libs/android-support-v4.jar')
+    compile files('libs/aws-android-sdk-1.6.0.jar')
     compile project(':libraries:google-play-services_lib')
     compile project(':libraries:ZXingLib')
     compile project(':libraries:OpenCV')
