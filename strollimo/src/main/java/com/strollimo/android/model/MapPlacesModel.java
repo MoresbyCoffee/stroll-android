@@ -1,15 +1,13 @@
 package com.strollimo.android.model;
 
 import android.app.Activity;
-
+import android.content.Context;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
-import com.strollimo.android.model.MapPlace;
-import com.strollimo.android.model.Mission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +98,7 @@ public class MapPlacesModel {
         }
 
         int currentId = mission.getId();
-        PlacesController placesController = ((StrollimoApplication) activity.getApplication()).getService(PlacesController.class);
+        PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
         if (currentId >= placesController.getPlacesCount()) {
             return null;
         }
@@ -113,7 +111,7 @@ public class MapPlacesModel {
         }
 
         int currentId = mission.getId();
-        PlacesController placesController = ((StrollimoApplication) activity.getApplication()).getService(PlacesController.class);
+        PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
         if (currentId <= 1) {
             return null;
         }
