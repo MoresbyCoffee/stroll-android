@@ -13,17 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.*;
-import com.strollimo.android.model.MapPlacesModel;
-import com.strollimo.android.model.Mission;
-import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
+import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.model.MapPlacesModel;
+import com.strollimo.android.model.Mission;
 import com.strollimo.android.view.dialog.DemoFinishedDialog;
 
 public class MapFragment extends Fragment {
@@ -40,6 +43,7 @@ public class MapFragment extends Fragment {
     private View mRibbonPanel;
     private View mRibbonTouchView;
     private MapPlacesModel mMapPlacesModel;
+    private MapView mMapView;
 
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
@@ -65,18 +69,21 @@ public class MapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        try {
+            MapsInitializer.initialize(getActivity());
+        } catch (GooglePlayServicesNotAvailableException ex) {
+            Log.e("BB", "Error", ex);
+        }
         if (mView == null) {
             mPrefs = ((StrollimoApplication)getActivity().getApplication()).getService(StrollimoPreferences.class);
             firstStart = true;
-            View view = inflater.inflate(R.layout.stroll_map_layout, container);
-
-
+            mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
+            mMapView = (MapView)mView.findViewById(R.id.map);
             mPlacesController = ((StrollimoApplication) getActivity().getApplication()).getService(PlacesController.class);
             mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
-            mPlaceImage = (ImageView) view.findViewById(R.id.place_image);
-            mPlaceTitle = (TextView) view.findViewById(R.id.place_title);
-            mRibbonPanel = view.findViewById(R.id.ribbon_panel);
+            mPlaceImage = (ImageView) mView.findViewById(R.id.place_image);
+            mPlaceTitle = (TextView) mView.findViewById(R.id.place_title);
+            mRibbonPanel = mView.findViewById(R.id.ribbon_panel);
 
             mRibbonPanel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,6 +94,7 @@ public class MapFragment extends Fragment {
             });
 
             setSwipeToChangePlace(mRibbonPanel);
+            mMapView.onCreate(savedInstanceState);
         } else {
             ViewGroup parentViewGroup = (ViewGroup) mView.getParent();
             if (parentViewGroup != null) {
@@ -128,6 +136,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mMapView.onResume();
         mMapPlacesModel.refreshSelectedMarker();
         if (mUserService.getFoundPlacesNum() == mPlacesController.getPlacesCount()) {
             new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
@@ -144,9 +153,15 @@ public class MapFragment extends Fragment {
         setUpMapMarkersIfNecessary();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
     private void setUpMapIfNecessary() {
         if (mMap == null) {
-            mMap = ((com.google.android.gms.maps.SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            mMap = mMapView.getMap();
             mMap.setMyLocationEnabled(true);
             mMap.setOnInfoWindowClickListener(onInfoWindowClickListener);
             mMap.setOnMarkerClickListener(mOnMarkerClickListener);

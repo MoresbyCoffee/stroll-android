@@ -16,13 +16,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.strollimo.android.R;
+
+import java.util.HashMap;
 
 public class MainActivity extends FragmentActivity {
 
     public enum MenuItemFragment {
-        DEBUG("Debug", null),
+        MAP("Map", MapFragment.class),
+        DEBUG("Debug", DebugFragment.class),
         PROFILE("Profile", null),
         QUESTS("Quests", null),
         ACHIEVEMENTS("Achievements", null),
@@ -62,6 +64,7 @@ public class MainActivity extends FragmentActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+    private HashMap<Class<Fragment>, Fragment> mFragmentCache = new HashMap<Class<Fragment>, Fragment>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +73,6 @@ public class MainActivity extends FragmentActivity {
 
         mActionBar = getActionBar();
         mActionBar.setTitle(mTitle);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_content, new MapFragment())
-                .commit();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -88,12 +86,10 @@ public class MainActivity extends FragmentActivity {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                mActionBar.setTitle(mTitle);
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                mActionBar.setTitle(mDrawerTitle);
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -102,7 +98,7 @@ public class MainActivity extends FragmentActivity {
                 R.layout.menu_item, MenuItemFragment.getLabels()));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
+        selectItem(this, 0);
     }
 
 
@@ -148,18 +144,27 @@ public class MainActivity extends FragmentActivity {
     /** Swaps fragments in the main content view */
     private void selectItem(Context context, int position) {
         // Create a new fragment and specify the planet to show based on position
-//        String fragmentName = MenuItemFragment.values()[position].getFragment().getName();
-//        Fragment fragment = Fragment.instantiate(context, fragmentName);
-//
-//
-//        // Insert the fragment by replacing any existing fragment
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.main_content, fragment)
-//                .commit();
+        Class<Fragment> fragmentClass = (Class<Fragment>) MenuItemFragment.values()[position].getFragment();
+        if (fragmentClass != null) {
+            Fragment fragment;
+            if (mFragmentCache.containsKey(fragmentClass)) {
+                fragment = mFragmentCache.get(fragmentClass);
+            } else {
+                String fragmentName = fragmentClass.getName();
+                fragment = Fragment.instantiate(context, fragmentName);
+                mFragmentCache.put(fragmentClass, fragment);
+            }
 
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_content, fragment)
+                    .commit();
+
+            // Highlight the selected item, update the title, and close the drawer
+            mDrawerList.setItemChecked(position, true);
+        }
         //setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
