@@ -41,7 +41,6 @@ public class MapFragment extends Fragment {
     private ImageView mPlaceImage;
     private TextView mPlaceTitle;
     private View mRibbonPanel;
-    private View mRibbonTouchView;
     private MapPlacesModel mMapPlacesModel;
     private MapView mMapView;
 

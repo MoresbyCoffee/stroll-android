@@ -11,6 +11,7 @@ public class StrollimoPreferences {
     private static final String CAPTURE_PLACE_KEY = "CAPTURED_PLACE_";
     private static final String CAPTURED_PLACES_NUM_KEY = "CAPTURED_PLACES_NUM";
     public static final String USE_BARCODE_KEY = "USE_BARCODE";
+    public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
     private SharedPreferences mPrefs;
 
     public StrollimoPreferences(SharedPreferences prefs) {
@@ -46,15 +47,21 @@ public class StrollimoPreferences {
     }
 
     public void clearCapturedPlaces() {
-        mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, 0).commit();
-
+        mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, 0).apply();
     }
 
     public void saveNewPlace(int capturedPlaces, Mission mission) {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, capturedPlaces).commit();
         mPrefs.edit().putInt(CAPTURE_PLACE_KEY + capturedPlaces, mission.getId()).commit();
         mPrefs.edit().putInt(COIN_VALUE_KEY + capturedPlaces, mission.getId()).commit();
+    }
 
+    public void setDebugModeOn(boolean debugModeOn) {
+        mPrefs.edit().putBoolean(DEBUG_MODE_ON, debugModeOn).apply();
+    }
+
+    public boolean isDebugModeOn() {
+        return mPrefs.getBoolean(DEBUG_MODE_ON, false);
     }
 
 

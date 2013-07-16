@@ -6,14 +6,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import com.strollimo.android.AwsActivity;
 import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.StrollimoPreferences;
 
 public class DebugFragment extends Fragment {
     private View mView;
+    private Switch mSwitch;
+    private StrollimoPreferences mPrefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
 
         if (mView == null) {
             mView = inflater.inflate(R.layout.debug_layout, container, false);
@@ -23,10 +30,19 @@ public class DebugFragment extends Fragment {
                 parentViewGroup.removeAllViews();
             }
         }
+
         mView.findViewById(R.id.aws_test_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().startActivity(new Intent(getActivity(), AwsActivity.class));
+            }
+        });
+        mSwitch = (Switch)mView.findViewById(R.id.debug_mode_switch);
+        mSwitch.setSelected(mPrefs.isDebugModeOn());
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                mPrefs.setDebugModeOn(checked);
             }
         });
         return mView;
