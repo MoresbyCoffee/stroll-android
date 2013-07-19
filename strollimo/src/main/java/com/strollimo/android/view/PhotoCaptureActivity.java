@@ -30,11 +30,13 @@ public class PhotoCaptureActivity extends Activity {
     private ImageView mRefImageView;
     private PlacesController mPlacesController;
     private Secret mSelectedSecret;
+    private boolean mCameraOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_capture);
+        mCameraOn = false;
         mPlacesController = ((StrollimoApplication)getApplication()).getService(PlacesController.class);
         mSelectedSecret = getSelectedPlace();
         if (mSelectedSecret == null) {
@@ -45,7 +47,13 @@ public class PhotoCaptureActivity extends Activity {
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
         mRefImageView.setImageBitmap(mSelectedSecret.getImageBitmap());
-        mRefImageView.setAlpha(0.3f);
+        mRefImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCameraOn = !mCameraOn;
+                switchMode(mCameraOn);
+            }
+        });
         mCaptureButton = (Button)findViewById(R.id.photo_capture_button);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +95,8 @@ public class PhotoCaptureActivity extends Activity {
     }
 
     private boolean getRandomResult() {
-        return new Random().nextBoolean();
+        int result = new Random().nextInt(100);
+        return result < 90;
     }
 
     public static void initiatePhotoCapture(Activity activity, String secretId) {
@@ -112,7 +121,7 @@ public class PhotoCaptureActivity extends Activity {
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-                    mOpenCvCameraView.enableView();
+                    switchMode(false);
                 }
                 break;
                 default: {
@@ -122,4 +131,15 @@ public class PhotoCaptureActivity extends Activity {
             }
         }
     };
+
+
+    private void switchMode(boolean cameraOn) {
+        if (cameraOn) {
+            mOpenCvCameraView.enableView();
+            mRefImageView.setAlpha(0.3f);
+        } else {
+            mOpenCvCameraView.disableView();
+            mRefImageView.setAlpha(1f);
+        }
+    }
 }
