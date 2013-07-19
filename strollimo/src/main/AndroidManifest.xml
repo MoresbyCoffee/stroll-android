@@ -50,11 +50,20 @@
             android:label="@string/title_activity_details"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.strollimo.android.view.Details2Activity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_details"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.strollimo.android.view.PhotoCaptureActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_details"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
+        <activity
+            android:name=".view.AddSecretActivity"
+            android:label="@string/title_activity_add_secret" >
+        </activity>
     </application>
 
     <permission

@@ -1,17 +1,27 @@
 package com.strollimo.android.model;
 
+import android.graphics.Bitmap;
+import com.strollimo.android.util.BitmapUtils;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pickupable {
+public class Secret {
     private String mType;
     private String mId;
-    private String mName;
+    private String mTitle;
     private String mShortDesc;
     private String mImageUrl;
+    private File mImageFile;
     private List<PickupMode> mPickupModes = new ArrayList<PickupMode>();
 
-    public String getmType() {
+    public Secret(String id, String name) {
+        mId = id;
+        mTitle = name;
+    }
+
+    public String getType() {
         return mType;
     }
 
@@ -27,12 +37,12 @@ public class Pickupable {
         this.mId = mId;
     }
 
-    public String getName() {
-        return mName;
+    public String getTitle() {
+        return mTitle;
     }
 
-    public void setName(String mName) {
-        this.mName = mName;
+    public void setTitle(String title) {
+        this.mTitle = title;
     }
 
     public String getShortDesc() {
@@ -57,5 +67,17 @@ public class Pickupable {
 
     public void addPickupMode(PickupMode pickupMode) {
         mPickupModes.add(pickupMode);
+    }
+
+    public File getImageFile() {
+        return mImageFile;
+    }
+
+    public void setImageFile(File imageFile) {
+        this.mImageFile = imageFile;
+    }
+
+    public Bitmap getImageBitmap() {
+        return BitmapUtils.getBitmapFromFile(mImageFile, 800, 600);
     }
 }

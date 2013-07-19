@@ -147,13 +147,13 @@ public class MainActivity extends FragmentActivity {
         Class<Fragment> fragmentClass = (Class<Fragment>) MenuItemFragment.values()[position].getFragment();
         if (fragmentClass != null) {
             Fragment fragment;
-            if (mFragmentCache.containsKey(fragmentClass)) {
-                fragment = mFragmentCache.get(fragmentClass);
-            } else {
+//            if (mFragmentCache.containsKey(fragmentClass)) {
+//                fragment = mFragmentCache.get(fragmentClass);
+//            } else {
                 String fragmentName = fragmentClass.getName();
                 fragment = Fragment.instantiate(context, fragmentName);
                 mFragmentCache.put(fragmentClass, fragment);
-            }
+//            }
 
 
             // Insert the fragment by replacing any existing fragment
@@ -174,6 +174,5 @@ public class MainActivity extends FragmentActivity {
 //        mTitle = title;
 //        getActionBar().setTitle(mTitle);
 //    }
-
 
 }

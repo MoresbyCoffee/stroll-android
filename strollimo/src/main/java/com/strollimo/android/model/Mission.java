@@ -4,20 +4,28 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Mission {
-    private int mId;
+    private String mId;
     private double mLat;
     private double mLon;
     private String mTitle;
     private String mCode;
     private Drawable mImage;
     private int mCoinValue;
-    private List<Pickupable> mPickupables;
+    private List<Secret> mSecrets = new ArrayList<Secret>();
 
-    public Mission(int id, String title, double lat, double lon, String code, Drawable image) {
+    public Mission(String id, String title, double lat, double lon) {
+        mId = id;
+        mTitle = title;
+        mLat = lat;
+        mLon = lon;
+    }
+
+    public Mission(String id, String title, double lat, double lon, String code, Drawable image) {
         mId = id;
         mTitle = title;
         mLat = lat;
@@ -39,11 +47,11 @@ public class Mission {
         }
     }
 
-    public int getId() {
+    public String getId() {
         return mId;
     }
 
-    public void setId(int mId) {
+    public void setId(String mId) {
         this.mId = mId;
     }
 
@@ -95,12 +103,12 @@ public class Mission {
         this.mCoinValue = mCoinValue;
     }
 
-    public List<Pickupable> getPickupables() {
-        return mPickupables;
+    public List<Secret> getSecrets() {
+        return mSecrets;
     }
 
-    public void addPickupable(Pickupable pickupable) {
-        mPickupables.add(pickupable);
+    public void addSecret(Secret secret) {
+        mSecrets.add(secret);
     }
 
 }

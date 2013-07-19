@@ -1,21 +1,35 @@
 package com.strollimo.android.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class BitmapUtils {
-    public static Bitmap saveResizedBitmap(File inFile, int reqWidth, int mreqHeight) throws IOException {
+    private final static String TAG = BitmapUtils.class.getSimpleName();
+
+    public static Bitmap saveResizedBitmap(File inFile, int reqWidth, int reqHeight) throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(inFile.getAbsolutePath(), options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, mreqHeight);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         options.inJustDecodeBounds = false;
         Bitmap myBitmap = BitmapFactory.decodeFile(inFile.getAbsolutePath(), options);
         saveBitmap(inFile, myBitmap);
+        return myBitmap;
+    }
+
+    public static Bitmap getBitmapFromFile(File inFile, int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(inFile.getAbsolutePath(), options);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        Bitmap myBitmap = BitmapFactory.decodeFile(inFile.getAbsolutePath(), options);
         return myBitmap;
     }
 
@@ -57,5 +71,21 @@ public class BitmapUtils {
         }
 
         return inSampleSize;
+    }
+
+    public static File saveImageToFile(Context context, String filename, Bitmap bitmap) {
+        File storageDir = context.getFilesDir();
+        File imageFile = null;
+        try {
+            imageFile = File.createTempFile(
+                    filename,
+                    ".jpeg",
+                    storageDir
+            );
+            saveBitmap(imageFile, bitmap);
+        } catch (IOException e) {
+            Log.e(TAG, "IOException saving file: " + filename, e);
+        }
+        return imageFile;
     }
 }

@@ -10,14 +10,14 @@ import java.util.Set;
 
 public class UserService {
     private final StrollimoPreferences mPrefs;
-    private Set<Integer> mCapturedPlaces;
+    private Set<String> mCapturedPlaces;
     private int mCapturedPlaceNum;
     private int mAllCoins;
     private List<Level> mLevels;
 
     public UserService(StrollimoPreferences prefs) {
         mPrefs = prefs;
-        mCapturedPlaces = new HashSet<Integer>();
+        mCapturedPlaces = new HashSet<String>();
         mLevels = new ArrayList<Level>();
         mLevels.add(new Level(5, "novice explorer"));
         mLevels.add(new Level(10, "explorer"));
@@ -45,7 +45,7 @@ public class UserService {
         mAllCoins += mission.getCoinValue();
         String updatedLevel = getCurrentLevel();
 
-        mPrefs.saveNewPlace(mCapturedPlaceNum, mission);
+        mPrefs.saveMission(mCapturedPlaceNum, mission);
         if (currentLevel.equals(updatedLevel)) {
             return false;
         } else {
@@ -71,7 +71,7 @@ public class UserService {
         return "";
     }
 
-    public boolean isPlaceCaptured(int placeId) {
+    public boolean isPlaceCaptured(String placeId) {
         return mCapturedPlaces.contains(placeId);
     }
 

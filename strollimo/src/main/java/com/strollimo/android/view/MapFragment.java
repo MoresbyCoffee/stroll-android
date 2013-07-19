@@ -205,7 +205,7 @@ public class MapFragment extends Fragment {
     private void launchDetailsActivity() {
         Mission selectedMission = mMapPlacesModel.getSelectedPlace();
         if (selectedMission != null) {
-            this.startActivity(DetailsActivity.createDetailsIntent(getActivity(), selectedMission.getId()));
+            this.startActivity(Details2Activity.createDetailsIntent(getActivity(), selectedMission.getId()));
         }
     }
 
@@ -216,7 +216,7 @@ public class MapFragment extends Fragment {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Mission mission = mPlacesController.getPlaceById(1);
+                        Mission mission = mPlacesController.getPlaceById("1");
                         CameraPosition pos = CameraPosition.builder().target(new LatLng(mission.getLat(), mission.getLon())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;

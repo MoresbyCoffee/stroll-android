@@ -97,12 +97,9 @@ public class MapPlacesModel {
             return null;
         }
 
-        int currentId = mission.getId();
+        String currentId = mission.getId();
         PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
-        if (currentId >= placesController.getPlacesCount()) {
-            return null;
-        }
-        return placesController.getPlaceById(currentId + 1);
+        return placesController.getPlaceById(currentId);
     }
 
     public Mission getPreviousPlaceFor(Activity activity, Mission mission) {
@@ -110,11 +107,8 @@ public class MapPlacesModel {
             return null;
         }
 
-        int currentId = mission.getId();
+        String currentId = mission.getId();
         PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
-        if (currentId <= 1) {
-            return null;
-        }
-        return placesController.getPlaceById(currentId - 1);
+        return placesController.getPlaceById(currentId);
     }
 }

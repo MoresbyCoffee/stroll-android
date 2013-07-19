@@ -9,12 +9,10 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-
-import com.strollimo.android.model.Mission;
-import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
-
+import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.model.Secret;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
@@ -31,22 +29,22 @@ public class PhotoCaptureActivity extends Activity {
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView mRefImageView;
     private PlacesController mPlacesController;
-    private Mission mSelectedMission;
+    private Secret mSelectedSecret;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_capture);
         mPlacesController = ((StrollimoApplication)getApplication()).getService(PlacesController.class);
-        mSelectedMission = getSelectedPlace();
-        if (mSelectedMission == null) {
+        mSelectedSecret = getSelectedPlace();
+        if (mSelectedSecret == null) {
             // TODO: error handling, should send handled exception to crittercism
         }
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_native_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
-        mRefImageView.setImageDrawable(mSelectedMission.getImage());
+        mRefImageView.setImageBitmap(mSelectedSecret.getImageBitmap());
         mRefImageView.setAlpha(0.3f);
         mCaptureButton = (Button)findViewById(R.id.photo_capture_button);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +75,9 @@ public class PhotoCaptureActivity extends Activity {
         finish();
     }
 
-    private Mission getSelectedPlace() {
-        int placeId = getIntent().getIntExtra(PLACE_ID_EXTRA, -1);
-        if (placeId >= 0) {
-            return mPlacesController.getPlaceById(placeId);
-        } else {
-            return null;
-        }
+    private Secret getSelectedPlace() {
+        String secretId = getIntent().getStringExtra(PLACE_ID_EXTRA);
+        return mPlacesController.getSecretById(secretId);
     }
 
     @Override
@@ -96,12 +90,12 @@ public class PhotoCaptureActivity extends Activity {
         return new Random().nextBoolean();
     }
 
-    public static void initiatePhotoCapture(Activity activity, int placeId) {
+    public static void initiatePhotoCapture(Activity activity, String secretId) {
         if (activity == null) {
             return;
         }
         Intent intent = new Intent(activity, PhotoCaptureActivity.class);
-        intent.putExtra(PLACE_ID_EXTRA, placeId);
+        intent.putExtra(PLACE_ID_EXTRA, secretId);
         activity.startActivityForResult(intent, REQUEST_CODE);
     }
 

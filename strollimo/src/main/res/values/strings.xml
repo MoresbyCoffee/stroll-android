@@ -14,5 +14,6 @@
     <string name="drawer_close">Open close</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_aws">AwsTest</string>
+    <string name="title_activity_add_secret">AddSecret</string>
 
 </resources>
