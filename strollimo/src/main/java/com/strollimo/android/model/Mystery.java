@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Mission {
+public class Mystery {
     private String mId;
     private double mLat;
     private double mLon;
@@ -18,14 +18,14 @@ public class Mission {
     private int mCoinValue;
     private List<Secret> mSecrets = new ArrayList<Secret>();
 
-    public Mission(String id, String title, double lat, double lon) {
+    public Mystery(String id, String title, double lat, double lon) {
         mId = id;
         mTitle = title;
         mLat = lat;
         mLon = lon;
     }
 
-    public Mission(String id, String title, double lat, double lon, String code, Drawable image) {
+    public Mystery(String id, String title, double lat, double lon, String code, Drawable image) {
         mId = id;
         mTitle = title;
         mLat = lat;

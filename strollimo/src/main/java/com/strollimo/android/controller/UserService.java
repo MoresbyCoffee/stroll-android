@@ -1,7 +1,7 @@
 package com.strollimo.android.controller;
 
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.model.Mission;
+import com.strollimo.android.model.Mystery;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,14 +38,14 @@ public class UserService {
         mPrefs.saveCoins(0);
     }
 
-    public boolean capturePlace(Mission mission) {
-        mCapturedPlaces.add(mission.getId());
+    public boolean capturePlace(Mystery mystery) {
+        mCapturedPlaces.add(mystery.getId());
         mCapturedPlaceNum++;
         String currentLevel = getCurrentLevel();
-        mAllCoins += mission.getCoinValue();
+        mAllCoins += mystery.getCoinValue();
         String updatedLevel = getCurrentLevel();
 
-        mPrefs.saveMission(mCapturedPlaceNum, mission);
+        mPrefs.saveMission(mCapturedPlaceNum, mystery);
         if (currentLevel.equals(updatedLevel)) {
             return false;
         } else {

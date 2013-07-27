@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.strollimo.android.model.Mission;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -34,7 +34,7 @@ public class DetailsActivity extends Activity {
 
     private TextView mStatusTextView;
     private TextView mTitleTextView;
-    private Mission mCurrentMission;
+    private Mystery mCurrentMystery;
     private Button mCaptureButton;
     private ImageView mStatusImageView;
 
@@ -64,10 +64,10 @@ public class DetailsActivity extends Activity {
         mTitleTextView = (TextView) findViewById(R.id.title);
         mCaptureButton = (Button) findViewById(R.id.capture_button);
 
-        mCurrentMission = mPlacesController.getPlaceById(getIntent().getStringExtra(PLACE_ID_EXTRA));
-        mTitleTextView.setText(mCurrentMission == null ? "Error" : mCurrentMission.getTitle().toUpperCase());
+        mCurrentMystery = mPlacesController.getPlaceById(getIntent().getStringExtra(PLACE_ID_EXTRA));
+        mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getTitle().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
-        mDetailsPhoto.setImageBitmap(mCurrentMission.getBitmap());
+        mDetailsPhoto.setImageBitmap(mCurrentMystery.getBitmap());
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -88,7 +88,7 @@ public class DetailsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mUserService.isPlaceCaptured(mCurrentMission.getId())) {
+        if (mUserService.isPlaceCaptured(mCurrentMystery.getId())) {
             mStatusTextView.setText("Opened");
             mStatusImageView.setImageDrawable(getResources().getDrawable(R.drawable.open_padlock));
             mCaptureButton.setVisibility(View.GONE);
@@ -114,7 +114,7 @@ public class DetailsActivity extends Activity {
                     return;
                 }
                 String result = scanResult.getContents();
-                handleResult(mCurrentMission.isScannedCodeValid(result));
+                handleResult(mCurrentMystery.isScannedCodeValid(result));
                 break;
             case PhotoCaptureActivity.REQUEST_CODE:
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
@@ -125,10 +125,10 @@ public class DetailsActivity extends Activity {
 
     private void handleResult(boolean captureSuccessful) {
         if (captureSuccessful) {
-            boolean levelUp = mUserService.capturePlace(mCurrentMission);
+            boolean levelUp = mUserService.capturePlace(mCurrentMystery);
             int placesFound = mUserService.getFoundPlacesNum();
             int placesCount = mPlacesController.getPlacesCount();
-            int coinValue = mCurrentMission.getCoinValue();
+            int coinValue = mCurrentMystery.getCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
             dialog.show(getFragmentManager(), "dialog");

@@ -26,7 +26,7 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.MapPlacesModel;
-import com.strollimo.android.model.Mission;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.view.dialog.DemoFinishedDialog;
 
 public class MapFragment extends Fragment {
@@ -111,17 +111,17 @@ public class MapFragment extends Fragment {
                 new SwipeDismissTouchListener.OnDirectionalDismissCallback() {
                     @Override
                     public void onDismiss(View view, Object token, DismissDirectionType dismissDirectionType) {
-                        Mission toMission;
+                        Mystery toMystery;
                         if (dismissDirectionType == DismissDirectionType.RIGHT) {
-                            toMission = mMapPlacesModel.getNextPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
+                            toMystery = mMapPlacesModel.getNextPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
                         } else {
-                            toMission = mMapPlacesModel.getPreviousPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
+                            toMystery = mMapPlacesModel.getPreviousPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
                         }
-                        if (toMission != null) {
-                            Marker marker = mMapPlacesModel.getMarkerForPlace(toMission);
+                        if (toMystery != null) {
+                            Marker marker = mMapPlacesModel.getMarkerForPlace(toMystery);
                             marker.showInfoWindow();
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
-                            mMapPlacesModel.selectMapPlaceByPlace(toMission);
+                            mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
                         } else {
                             mMapPlacesModel.getSelectedMarker().hideInfoWindow();
@@ -177,23 +177,23 @@ public class MapFragment extends Fragment {
 
         mMapPlacesModel = new MapPlacesModel(mUserService);
         mMap.clear();
-        for (Mission mission : mPlacesController.getAllPlaces()) {
-            addPlaceToMap(mission);
+        for (Mystery mystery : mPlacesController.getAllPlaces()) {
+            addPlaceToMap(mystery);
         }
     }
 
-    private void addPlaceToMap(Mission mission) {
+    private void addPlaceToMap(Mystery mystery) {
         BitmapDescriptor bitmapDescriptor;
-        if (mUserService.isPlaceCaptured(mission.getId())) {
+        if (mUserService.isPlaceCaptured(mystery.getId())) {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(mission.getLat(), mission.getLon()))
-                .title(mission.getTitle()).icon(bitmapDescriptor));
-        mMapPlacesModel.add(mission, marker);
+                .position(new LatLng(mystery.getLat(), mystery.getLon()))
+                .title(mystery.getTitle()).icon(bitmapDescriptor));
+        mMapPlacesModel.add(mystery, marker);
     }
 
     @Override
@@ -203,9 +203,9 @@ public class MapFragment extends Fragment {
     }
 
     private void launchDetailsActivity() {
-        Mission selectedMission = mMapPlacesModel.getSelectedPlace();
-        if (selectedMission != null) {
-            this.startActivity(Details2Activity.createDetailsIntent(getActivity(), selectedMission.getId()));
+        Mystery selectedMystery = mMapPlacesModel.getSelectedPlace();
+        if (selectedMystery != null) {
+            this.startActivity(Details2Activity.createDetailsIntent(getActivity(), selectedMystery.getId()));
         }
     }
 
@@ -216,8 +216,8 @@ public class MapFragment extends Fragment {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Mission mission = mPlacesController.getPlaceById("1");
-                        CameraPosition pos = CameraPosition.builder().target(new LatLng(mission.getLat(), mission.getLon())).zoom(16f).tilt(45).build();
+                        Mystery mystery = mPlacesController.getPlaceById("1");
+                        CameraPosition pos = CameraPosition.builder().target(new LatLng(mystery.getLat(), mystery.getLon())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }
@@ -241,11 +241,11 @@ public class MapFragment extends Fragment {
     }
 
 
-    private void displayRibbon(Mission mission, boolean fromRight) {
+    private void displayRibbon(Mystery mystery, boolean fromRight) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(), fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
         mRibbonPanel.setVisibility(View.VISIBLE);
-        mPlaceImage.setImageBitmap(mission.getBitmap());
-        mPlaceTitle.setText(mission.getTitle().toUpperCase());
+        mPlaceImage.setImageBitmap(mystery.getBitmap());
+        mPlaceTitle.setText(mystery.getTitle().toUpperCase());
         mRibbonPanel.startAnimation(anim);
     }
 

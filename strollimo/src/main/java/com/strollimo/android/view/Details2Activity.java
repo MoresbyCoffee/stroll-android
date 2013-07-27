@@ -22,7 +22,7 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
-import com.strollimo.android.model.Mission;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.view.dialog.TreasureFoundDialog;
 import com.strollimo.android.view.dialog.TreasureNotFoundDialog;
@@ -44,7 +44,7 @@ public class Details2Activity extends Activity {
     private StrollimoPreferences mPrefs;
 
     private TextView mTitleTextView;
-    private Mission mCurrentMission;
+    private Mystery mCurrentMystery;
 
     private ImageView mDetailsPhoto;
     private ListView mCaptureListView;
@@ -72,8 +72,8 @@ public class Details2Activity extends Activity {
         mCaptureListView = (ListView)findViewById(R.id.capture_list);
         mTitleTextView = (TextView) findViewById(R.id.title);
 
-        mCurrentMission = mPlacesController.getPlaceById(getIntent().getStringExtra(PLACE_ID_EXTRA));
-        mSecretListAdapter = new SecretListAdapter(getApplicationContext(), mCurrentMission);
+        mCurrentMystery = mPlacesController.getPlaceById(getIntent().getStringExtra(PLACE_ID_EXTRA));
+        mSecretListAdapter = new SecretListAdapter(getApplicationContext(), mCurrentMystery);
         mCaptureListView.setAdapter(mSecretListAdapter);
         mCaptureListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,9 +83,9 @@ public class Details2Activity extends Activity {
             }
         });
 
-        mTitleTextView.setText(mCurrentMission == null ? "Error" : mCurrentMission.getTitle().toUpperCase());
+        mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getTitle().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
-        mDetailsPhoto.setImageBitmap(mCurrentMission.getBitmap());
+        mDetailsPhoto.setImageBitmap(mCurrentMystery.getBitmap());
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -125,7 +125,7 @@ public class Details2Activity extends Activity {
                     return;
                 }
                 String result = scanResult.getContents();
-                handleResult(mCurrentMission.isScannedCodeValid(result));
+                handleResult(mCurrentMystery.isScannedCodeValid(result));
                 break;
             case PhotoCaptureActivity.REQUEST_CODE:
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
@@ -134,7 +134,7 @@ public class Details2Activity extends Activity {
                 int randomId = new Random().nextInt();
                 Secret secret = new Secret(Integer.toString(randomId), "test");
                 secret.setImageFile(mPhotoFile);
-                mCurrentMission.addSecret(secret);
+                mCurrentMystery.addSecret(secret);
                 mSecretListAdapter.notifyDataSetChanged();
                 mPhotoFile = null;
                 break;
@@ -144,10 +144,10 @@ public class Details2Activity extends Activity {
 
     private void handleResult(boolean captureSuccessful) {
         if (captureSuccessful) {
-            boolean levelUp = mUserService.capturePlace(mCurrentMission);
+            boolean levelUp = mUserService.capturePlace(mCurrentMystery);
             int placesFound = mUserService.getFoundPlacesNum();
             int placesCount = mPlacesController.getPlacesCount();
-            int coinValue = mCurrentMission.getCoinValue();
+            int coinValue = mCurrentMystery.getCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
             dialog.show(getFragmentManager(), "dialog");
@@ -194,7 +194,7 @@ public class Details2Activity extends Activity {
 
     private void launchAddSecret() {
         Intent intent = new Intent(this, AddSecretActivity.class);
-        intent.putExtra(PLACE_ID_EXTRA, mCurrentMission.getId());
+        intent.putExtra(PLACE_ID_EXTRA, mCurrentMystery.getId());
         startActivity(intent);
     }
 

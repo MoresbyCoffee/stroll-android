@@ -1,7 +1,7 @@
 package com.strollimo.android;
 
 import android.content.SharedPreferences;
-import com.strollimo.android.model.Mission;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 
 import java.io.File;
@@ -62,10 +62,10 @@ public class StrollimoPreferences {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, 0).apply();
     }
 
-    public void saveMission(int capturedPlaces, Mission mission) {
+    public void saveMission(int capturedPlaces, Mystery mystery) {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, capturedPlaces).commit();
-        mPrefs.edit().putString(CAPTURE_PLACE_KEY + capturedPlaces, mission.getId()).commit();
-        mPrefs.edit().putString(COIN_VALUE_KEY + capturedPlaces, mission.getId()).commit();
+        mPrefs.edit().putString(CAPTURE_PLACE_KEY + capturedPlaces, mystery.getId()).commit();
+        mPrefs.edit().putString(COIN_VALUE_KEY + capturedPlaces, mystery.getId()).commit();
     }
 
     public void setDebugModeOn(boolean debugModeOn) {
@@ -95,49 +95,49 @@ public class StrollimoPreferences {
         return secret;
     }
 
-    public Mission getMission(String id) {
+    public Mystery getMission(String id) {
         double lat = Double.parseDouble(mPrefs.getString(MLAT + id, "0"));
         double lon = Double.parseDouble(mPrefs.getString(MLON + id, "0"));
         String title = mPrefs.getString(MTITLE + id, "");
         int i = 0;
-        Mission mission = new Mission(id, title, lat, lon);
+        Mystery mystery = new Mystery(id, title, lat, lon);
         while (mPrefs.getString(MSECRET +id+"_"+i, "") != "") {
             String secretId = mPrefs.getString(MSECRET +id+"_"+i, "");
             Secret secret = getSecret(secretId);
-            mission.addSecret(secret);
+            mystery.addSecret(secret);
             i++;
         }
-        return mission;
+        return mystery;
     }
 
-    public List<Mission> getMissions() {
-        ArrayList<Mission> missions = new ArrayList<Mission>();
+    public List<Mystery> getMissions() {
+        ArrayList<Mystery> mysteries = new ArrayList<Mystery>();
         int i = 0;
         while (mPrefs.getString(MMISSIONS +i, "") != "") {
             String missionId = mPrefs.getString(MMISSIONS+i, "");
-            missions.add(getMission(missionId));
+            mysteries.add(getMission(missionId));
             i++;
         }
-        return missions;
+        return mysteries;
     }
 
-    public void saveMission2(int order, Mission mission) {
+    public void saveMission2(int order, Mystery mystery) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(MMISSIONS +order, mission.getId());
-        editor.putString(MLAT +mission.getId(), Double.toString(mission.getLat()));
-        editor.putString(MLON +mission.getId(), Double.toString(mission.getLon()));
-        editor.putString(MTITLE +mission.getId(), mission.getTitle());
-        for (int i=0; i<mission.getSecrets().size(); i++) {
-            editor.putString(MSECRET +mission.getId() + "_" + i, mission.getSecrets().get(i).getId());
-            saveSecret(mission.getSecrets().get(i));
+        editor.putString(MMISSIONS +order, mystery.getId());
+        editor.putString(MLAT + mystery.getId(), Double.toString(mystery.getLat()));
+        editor.putString(MLON + mystery.getId(), Double.toString(mystery.getLon()));
+        editor.putString(MTITLE + mystery.getId(), mystery.getTitle());
+        for (int i=0; i< mystery.getSecrets().size(); i++) {
+            editor.putString(MSECRET + mystery.getId() + "_" + i, mystery.getSecrets().get(i).getId());
+            saveSecret(mystery.getSecrets().get(i));
         }
         editor.apply();
 
     }
 
-    public void saveMissions(List<Mission> missions) {
-        for (int i=0; i<missions.size(); i++) {
-            saveMission2(i, missions.get(i));
+    public void saveMissions(List<Mystery> mysteries) {
+        for (int i=0; i< mysteries.size(); i++) {
+            saveMission2(i, mysteries.get(i));
         }
     }
 

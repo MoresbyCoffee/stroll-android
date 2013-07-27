@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.strollimo.android.R;
-import com.strollimo.android.model.Mission;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.util.BitmapUtils;
 
@@ -19,8 +19,8 @@ public class SecretListAdapter extends BaseAdapter {
     private final Context mContext;
     private List<Secret> mSecrets;
 
-    public SecretListAdapter(Context context, Mission mission) {
-        mSecrets = mission.getSecrets();
+    public SecretListAdapter(Context context, Mystery mystery) {
+        mSecrets = mystery.getSecrets();
         mContext = context;
     }
 

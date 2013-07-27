@@ -1,7 +1,6 @@
 package com.strollimo.android.model;
 
 import android.app.Activity;
-import android.content.Context;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.strollimo.android.R;
@@ -33,16 +32,16 @@ public class MapPlacesModel {
     }
 
     public void onMarkerClick(Marker marker) {
-        Mission mission = getPlaceForMarker(marker);
-        mSelectedMapPlace = new MapPlace(mission, marker);
+        Mystery mystery = getPlaceForMarker(marker);
+        mSelectedMapPlace = new MapPlace(mystery, marker);
     }
 
-    public void selectMapPlaceByPlace(Mission mission) {
-        Marker marker = getMarkerForPlace(mission);
-        mSelectedMapPlace = new MapPlace(mission, marker);
+    public void selectMapPlaceByPlace(Mystery mystery) {
+        Marker marker = getMarkerForPlace(mystery);
+        mSelectedMapPlace = new MapPlace(mystery, marker);
     }
 
-    public Mission getSelectedPlace() {
+    public Mystery getSelectedPlace() {
         return mSelectedMapPlace == null ? null : mSelectedMapPlace.getPlace();
     }
 
@@ -50,7 +49,7 @@ public class MapPlacesModel {
         return mSelectedMapPlace == null ? null : mSelectedMapPlace.getMarker();
     }
 
-    public Mission getPlaceForMarker(Marker marker) {
+    public Mystery getPlaceForMarker(Marker marker) {
         if (marker == null) {
             return null;
         }
@@ -63,13 +62,13 @@ public class MapPlacesModel {
         return null;
     }
 
-    public Marker getMarkerForPlace(Mission mission) {
-        if (mission == null) {
+    public Marker getMarkerForPlace(Mystery mystery) {
+        if (mystery == null) {
             return null;
         }
 
         for (MapPlace mapPlace : mMapPlaces) {
-            if (mission.getId() == mapPlace.getPlace().getId()) {
+            if (mystery.getId() == mapPlace.getPlace().getId()) {
                 return mapPlace.getMarker();
             }
         }
@@ -88,26 +87,26 @@ public class MapPlacesModel {
         mSelectedMapPlace = null;
     }
 
-    public void add(Mission mission, Marker marker) {
-        mMapPlaces.add(new MapPlace(mission, marker));
+    public void add(Mystery mystery, Marker marker) {
+        mMapPlaces.add(new MapPlace(mystery, marker));
     }
 
-    public Mission getNextPlaceFor(Activity activity, Mission mission) {
-        if (mission == null) {
+    public Mystery getNextPlaceFor(Activity activity, Mystery mystery) {
+        if (mystery == null) {
             return null;
         }
 
-        String currentId = mission.getId();
+        String currentId = mystery.getId();
         PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
         return placesController.getPlaceById(currentId);
     }
 
-    public Mission getPreviousPlaceFor(Activity activity, Mission mission) {
-        if (mission == null) {
+    public Mystery getPreviousPlaceFor(Activity activity, Mystery mystery) {
+        if (mystery == null) {
             return null;
         }
 
-        String currentId = mission.getId();
+        String currentId = mystery.getId();
         PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
         return placesController.getPlaceById(currentId);
     }
