@@ -2,6 +2,7 @@ package com.strollimo.android.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +11,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import com.novoda.imageloader.core.ImageManager;
+import com.novoda.imageloader.core.model.ImageTag;
+import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.util.BitmapUtils;
 
 import java.io.File;
@@ -31,10 +37,14 @@ public class AddSecretActivity extends Activity {
     private PlacesController mPlacesController;
     private ImageView mPhotoImageView;
     private File mPhotoFile;
+    private ImageManager mImageManager;
+    private PhotoUploadController mPhotoUploadController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
+        mImageManager = StrollimoApplication.getService(ImageManager.class);
         setContentView(R.layout.add_secret_activity);
         mPlacesController = StrollimoApplication.getService(PlacesController.class);
         mCurrentMystery = getSelectedPlace();
@@ -67,8 +77,12 @@ public class AddSecretActivity extends Activity {
         String name = mNameEditText.getText().toString();
         Secret secret = new Secret(id, name);
         secret.setShortDesc(mShortDescEditText.getText().toString());
-        secret.setImageFile(BitmapUtils.saveImageToFile(this, id, ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap()));
+        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", id + ".jpeg");
+        secret.setImageUrl(amazonUrl.getUrl());
+        Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
+        mImageManager.getCacheManager().put(secret.getImageUrl(), photo);
         mPlacesController.addSecret(secret, mCurrentMystery);
+        mPhotoUploadController.uploadPhotoToAmazon(amazonUrl, photo);
         finish();
     }
 
@@ -101,7 +115,13 @@ public class AddSecretActivity extends Activity {
         }
         switch (requestCode) {
             case PHOTO_REQUEST_CODE:
-                mPhotoImageView.setImageBitmap(BitmapUtils.getBitmapFromFile(mPhotoFile, 800, 600));
+                Bitmap b = BitmapUtils.getBitmapFromFile(mPhotoFile, 800, 600);
+                mImageManager.getCacheManager().put(mPhotoFile.getAbsolutePath(), b);
+                ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(mPhotoImageView.getWidth(), mPhotoImageView.getHeight(), R.drawable.closed);
+                ImageTag tag = imageTagFactory.build(mPhotoFile.getAbsolutePath(), this);
+                mPhotoImageView.setTag(tag);
+                mImageManager.getLoader().load(mPhotoImageView);
+                mPhotoImageView.setImageBitmap(b);
                 mPhotoFile = null;
                 break;
             default:

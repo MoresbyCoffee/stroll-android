@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.AwsActivity;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -51,6 +52,12 @@ public class DebugFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mPrefs.saveMissions(mPlacesController.getAllPlaces());
+            }
+        });
+        mView.findViewById(R.id.clear_image_cache_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StrollimoApplication.getService(ImageManager.class).getCacheManager().clean();
             }
         });
         return mView;

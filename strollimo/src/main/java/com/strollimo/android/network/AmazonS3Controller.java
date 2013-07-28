@@ -1,4 +1,4 @@
-package com.strollimo.android.controller;
+package com.strollimo.android.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,19 +25,37 @@ public class AmazonS3Controller {
         s3Client.putObject(por);
     }
 
-    public Bitmap downloadImage(String bucket, String file) throws IOException {
+    public void uploadFile(String bucket, String key, File file) {
         AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
-        ResponseHeaderOverrides override = new ResponseHeaderOverrides();
-        override.setContentType("image/jpeg");
-        GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucket, file);
-        urlRequest.setExpiration(new Date(System.currentTimeMillis() + 3600000));  // Added an hour's worth of milliseconds to the current time.
-        urlRequest.setResponseHeaders(override);
-        URL url = s3Client.generatePresignedUrl(urlRequest);
+        PutObjectRequest por = new PutObjectRequest(bucket, key, file);
+        s3Client.putObject(por);
+    }
+
+    public Bitmap downloadImage(AmazonUrl amazonUrl) throws IOException {
+        return downloadImage(amazonUrl.getBucket(), amazonUrl.getFile());
+    }
+
+    public Bitmap downloadImage(String bucket, String file) throws IOException {
+        URL url = getUrl(bucket, file);
         InputStream is = null;
         URLConnection urlConn = new URL(url.toString()).openConnection();
         is = urlConn.getInputStream();
         Bitmap bitmap = BitmapFactory.decodeStream(is);
         is.close();
         return bitmap;
+    }
+
+    public URL getUrl(String bucket, String file) {
+        AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
+        ResponseHeaderOverrides override = new ResponseHeaderOverrides();
+        override.setContentType("image/jpeg");
+        GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucket, file);
+        urlRequest.setExpiration(new Date(System.currentTimeMillis() + 3600000));  // Added an hour's worth of milliseconds to the current time.
+        urlRequest.setResponseHeaders(override);
+        return s3Client.generatePresignedUrl(urlRequest);
+    }
+
+    public URL getUrl(AmazonUrl amazonUrl) {
+        return getUrl(amazonUrl.getBucket(), amazonUrl.getFile());
     }
 }

@@ -27,16 +27,11 @@ import com.strollimo.android.model.Secret;
 import com.strollimo.android.view.dialog.TreasureFoundDialog;
 import com.strollimo.android.view.dialog.TreasureNotFoundDialog;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 public class Details2Activity extends Activity {
     public static final String PLACE_ID_EXTRA = "place_id";
-    public static final int PHOTO_REQUEST_CODE = 51;
-
-    private File mPhotoFile;
 
     private ZXingLibConfig zxingLibConfig;
     private PlacesController mPlacesController;
@@ -73,7 +68,7 @@ public class Details2Activity extends Activity {
         mTitleTextView = (TextView) findViewById(R.id.title);
 
         mCurrentMystery = mPlacesController.getPlaceById(getIntent().getStringExtra(PLACE_ID_EXTRA));
-        mSecretListAdapter = new SecretListAdapter(getApplicationContext(), mCurrentMystery);
+        mSecretListAdapter = new SecretListAdapter(this, mCurrentMystery);
         mCaptureListView.setAdapter(mSecretListAdapter);
         mCaptureListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -114,9 +109,9 @@ public class Details2Activity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
-            mPhotoFile = null;
             return;
         }
+
         switch (requestCode) {
             case IntentIntegrator.REQUEST_CODE:
                 IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode,
@@ -129,14 +124,6 @@ public class Details2Activity extends Activity {
                 break;
             case PhotoCaptureActivity.REQUEST_CODE:
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
-                break;
-            case PHOTO_REQUEST_CODE:
-                int randomId = new Random().nextInt();
-                Secret secret = new Secret(Integer.toString(randomId), "test");
-                secret.setImageFile(mPhotoFile);
-                mCurrentMystery.addSecret(secret);
-                mSecretListAdapter.notifyDataSetChanged();
-                mPhotoFile = null;
                 break;
             default:
         }

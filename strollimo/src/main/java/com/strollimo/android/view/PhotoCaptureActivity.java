@@ -9,6 +9,9 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import com.novoda.imageloader.core.ImageManager;
+import com.novoda.imageloader.core.model.ImageTag;
+import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PlacesController;
@@ -24,6 +27,8 @@ public class PhotoCaptureActivity extends Activity {
     public static final int REQUEST_CODE = 1;
     public static final String PHOTO_CAPTURE_RESULT = "PHOTO_CAPTURE_RESULT";
     public static final String PLACE_ID_EXTRA = "place_id";
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
 
     private Button mCaptureButton;
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -46,7 +51,13 @@ public class PhotoCaptureActivity extends Activity {
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_native_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
-        mRefImageView.setImageBitmap(mSelectedSecret.getImageBitmap());
+
+        ImageManager imageManager = StrollimoApplication.getService(ImageManager.class);
+        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
+        ImageTag tag = imageTagFactory.build(mSelectedSecret.getImageUrl(), this);
+        mRefImageView.setTag(tag);
+        imageManager.getLoader().load(mRefImageView);
+
         mRefImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -2,7 +2,11 @@ package com.strollimo.android;
 
 import android.app.Application;
 import android.content.Context;
-import com.strollimo.android.controller.AmazonS3Controller;
+import com.novoda.imageloader.core.ImageManager;
+import com.novoda.imageloader.core.LoaderSettings;
+import com.strollimo.android.controller.PhotoUploadController;
+import com.strollimo.android.network.AmazonNetworkManager;
+import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
 
@@ -12,6 +16,8 @@ public class StrollimoApplication extends Application {
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
     private AmazonS3Controller mAmazonS3Controller;
+    private ImageManager mImageManager;
+    private PhotoUploadController mPhotoUploadController;
 
     @Override
     public void onCreate() {
@@ -22,6 +28,11 @@ public class StrollimoApplication extends Application {
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
         mAmazonS3Controller = new AmazonS3Controller();
+        LoaderSettings settings = new LoaderSettings.SettingsBuilder()
+                .withDisconnectOnEveryCall(true).build(this);
+        settings.setNetworkManager(new AmazonNetworkManager(settings));
+        mImageManager = new ImageManager(this, settings);
+        mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
     }
 
     public static <T> T getService(Class<T> serviceClass) {
@@ -37,6 +48,10 @@ public class StrollimoApplication extends Application {
             return (T) mPrefs;
         } else if (serviceClass == AmazonS3Controller.class) {
             return (T) mAmazonS3Controller;
+        } else if (serviceClass == ImageManager.class) {
+            return (T) mImageManager;
+        } else if (serviceClass == PhotoUploadController.class) {
+            return (T) mPhotoUploadController;
         }
         return null;
 

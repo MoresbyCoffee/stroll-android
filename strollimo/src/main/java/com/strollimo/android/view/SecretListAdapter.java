@@ -7,21 +7,27 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.novoda.imageloader.core.ImageManager;
+import com.novoda.imageloader.core.model.ImageTag;
+import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.util.BitmapUtils;
 
-import java.io.File;
 import java.util.List;
 
 public class SecretListAdapter extends BaseAdapter {
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
     private final Context mContext;
     private List<Secret> mSecrets;
+    private ImageManager mImageManager;
 
     public SecretListAdapter(Context context, Mystery mystery) {
         mSecrets = mystery.getSecrets();
         mContext = context;
+        mImageManager = StrollimoApplication.getService(ImageManager.class);
     }
 
     @Override
@@ -49,10 +55,12 @@ public class SecretListAdapter extends BaseAdapter {
         TextView secretTitle = ((TextView)view.findViewById(R.id.secret_title));
         secretTitle.setText(mSecrets.get(i).getTitle());
         ImageView secretPhoto = ((ImageView)view.findViewById(R.id.secret_photo));
-        File imageFile = mSecrets.get(i).getImageFile();
-        if (imageFile != null) {
-            secretPhoto.setImageBitmap(BitmapUtils.getBitmapFromFile(imageFile, 800, 600));
-        }
+
+        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
+        ImageTag tag = imageTagFactory.build(mSecrets.get(i).getImageUrl(), mContext);
+        secretPhoto.setTag(tag);
+        mImageManager.getLoader().load(secretPhoto);
+
         return view;
     }
 

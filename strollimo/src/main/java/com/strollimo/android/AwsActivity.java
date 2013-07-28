@@ -12,11 +12,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
-import com.strollimo.android.controller.AmazonS3Controller;
+import com.strollimo.android.network.AmazonS3Controller;
+import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.util.BitmapUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -82,7 +84,10 @@ public class AwsActivity extends Activity {
             public void run() {
                 Bitmap bitmap = null;
                 try {
-                    bitmap = mAmazonController.downloadImage("strollimo1", "pic1.png");
+                    bitmap = mAmazonController.downloadImage(AmazonUrl.fromUrl("amazon:strollimo1/pic1.png"));
+                } catch (ParseException ex) {
+                    Log.e(TAG, "Error downloading from amazon", ex);
+                    return;
                 } catch (IOException ex) {
                     Log.e(TAG, "Error downloading from amazon", ex);
                     return;

@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -81,17 +80,17 @@ public class StrollimoPreferences {
         editor.putString(SID +secret.getId(), secret.getId());
         editor.putString(STITLE +secret.getId(), secret.getTitle());
         editor.putString(SDESC +secret.getId(), secret.getShortDesc());
-        editor.putString(SIMAGE +secret.getId(), secret.getImageFile().getAbsolutePath());
+        editor.putString(SIMAGE +secret.getId(), secret.getImageUrl());
         editor.apply();
     }
 
     public Secret getSecret(String id) {
         String title = mPrefs.getString(STITLE+ id, "");
         String desc = mPrefs.getString(SDESC+ id, "");
-        String filename = mPrefs.getString(SIMAGE+ id, "");
+        String imageUrl = mPrefs.getString(SIMAGE+ id, "");
         Secret secret = new Secret(id, title);
         secret.setShortDesc(desc);
-        secret.setImageFile(new File(filename));
+        secret.setImageUrl(imageUrl);
         return secret;
     }
 

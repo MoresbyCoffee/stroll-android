@@ -1,9 +1,5 @@
 package com.strollimo.android.model;
 
-import android.graphics.Bitmap;
-import com.strollimo.android.util.BitmapUtils;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +9,6 @@ public class Secret {
     private String mTitle;
     private String mShortDesc;
     private String mImageUrl;
-    private File mImageFile;
     private List<PickupMode> mPickupModes = new ArrayList<PickupMode>();
 
     public Secret(String id, String name) {
@@ -69,15 +64,4 @@ public class Secret {
         mPickupModes.add(pickupMode);
     }
 
-    public File getImageFile() {
-        return mImageFile;
-    }
-
-    public void setImageFile(File imageFile) {
-        this.mImageFile = imageFile;
-    }
-
-    public Bitmap getImageBitmap() {
-        return BitmapUtils.getBitmapFromFile(mImageFile, 800, 600);
-    }
 }

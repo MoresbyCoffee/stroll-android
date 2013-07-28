@@ -79,7 +79,7 @@ public class BitmapUtils {
         try {
             imageFile = File.createTempFile(
                     filename,
-                    ".jpeg",
+                    "",
                     storageDir
             );
             saveBitmap(imageFile, bitmap);
