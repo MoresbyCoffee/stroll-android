@@ -45,12 +45,7 @@
             android:label="@string/title_activity_aws" >
         </activity>
         <activity
-            android:name="com.strollimo.android.view.DetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_details"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.strollimo.android.view.Details2Activity"
+            android:name=".view.DetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_details"
             android:screenOrientation="portrait" />

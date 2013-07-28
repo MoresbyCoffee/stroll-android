@@ -205,7 +205,7 @@ public class MapFragment extends Fragment {
     private void launchDetailsActivity() {
         Mystery selectedMystery = mMapPlacesModel.getSelectedPlace();
         if (selectedMystery != null) {
-            this.startActivity(Details2Activity.createDetailsIntent(getActivity(), selectedMystery.getId()));
+            this.startActivity(DetailsActivity.createDetailsIntent(getActivity(), selectedMystery.getId()));
         }
     }
 
