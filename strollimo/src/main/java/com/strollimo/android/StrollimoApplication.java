@@ -4,11 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.LoaderSettings;
+import com.novoda.imageloader.core.cache.LruBitmapCache;
 import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.network.AmazonNetworkManager;
-import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.network.AmazonNetworkManager;
+import com.strollimo.android.network.AmazonS3Controller;
 
 public class StrollimoApplication extends Application {
     private static Context mContext;
@@ -28,7 +29,7 @@ public class StrollimoApplication extends Application {
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
         mAmazonS3Controller = new AmazonS3Controller();
-        LoaderSettings settings = new LoaderSettings.SettingsBuilder()
+        LoaderSettings settings = new LoaderSettings.SettingsBuilder().withCacheManager(new LruBitmapCache(this, 50))
                 .withDisconnectOnEveryCall(true).build(this);
         settings.setNetworkManager(new AmazonNetworkManager(settings));
         mImageManager = new ImageManager(this, settings);

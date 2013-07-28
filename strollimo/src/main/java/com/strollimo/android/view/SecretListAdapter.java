@@ -15,29 +15,27 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 
-import java.util.List;
-
 public class SecretListAdapter extends BaseAdapter {
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 150;
     private final Context mContext;
-    private List<Secret> mSecrets;
+    private Mystery mMystery;
     private ImageManager mImageManager;
 
     public SecretListAdapter(Context context, Mystery mystery) {
-        mSecrets = mystery.getSecrets();
+        mMystery = mystery;
         mContext = context;
         mImageManager = StrollimoApplication.getService(ImageManager.class);
     }
 
     @Override
     public int getCount() {
-        return mSecrets.size();
+        return mMystery.getSecrets().size();
     }
 
     @Override
     public Secret getItem(int i) {
-        return mSecrets.get(i);
+        return mMystery.getSecrets().get(i);
     }
 
     @Override
@@ -53,11 +51,12 @@ public class SecretListAdapter extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.secret_list_item, viewGroup, false);
         }
         TextView secretTitle = ((TextView)view.findViewById(R.id.secret_title));
-        secretTitle.setText(mSecrets.get(i).getName());
+        secretTitle.setText(mMystery.getSecrets().get(i).getName());
         ImageView secretPhoto = ((ImageView)view.findViewById(R.id.secret_photo));
 
         ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
-        ImageTag tag = imageTagFactory.build(mSecrets.get(i).getImgUrl(), mContext);
+        imageTagFactory.setAnimation(android.R.anim.fade_in);
+        ImageTag tag = imageTagFactory.build(mMystery.getSecrets().get(i).getImgUrl(), mContext);
         secretPhoto.setTag(tag);
         mImageManager.getLoader().load(secretPhoto);
 
