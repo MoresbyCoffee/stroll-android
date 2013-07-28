@@ -165,14 +165,14 @@ public class MainActivity extends FragmentActivity {
             // Highlight the selected item, update the title, and close the drawer
             mDrawerList.setItemChecked(position, true);
         }
-        //setTitle(mPlanetTitles[position]);
+        //setName(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
 //    @Override
-//    public void setTitle(CharSequence title) {
+//    public void setName(CharSequence title) {
 //        mTitle = title;
-//        getActionBar().setTitle(mTitle);
+//        getActionBar().setName(mTitle);
 //    }
 
 }

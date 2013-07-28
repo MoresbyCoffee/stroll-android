@@ -53,11 +53,11 @@ public class SecretListAdapter extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.secret_list_item, viewGroup, false);
         }
         TextView secretTitle = ((TextView)view.findViewById(R.id.secret_title));
-        secretTitle.setText(mSecrets.get(i).getTitle());
+        secretTitle.setText(mSecrets.get(i).getName());
         ImageView secretPhoto = ((ImageView)view.findViewById(R.id.secret_photo));
 
         ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
-        ImageTag tag = imageTagFactory.build(mSecrets.get(i).getImageUrl(), mContext);
+        ImageTag tag = imageTagFactory.build(mSecrets.get(i).getImgUrl(), mContext);
         secretPhoto.setTag(tag);
         mImageManager.getLoader().load(secretPhoto);
 

@@ -54,7 +54,7 @@ public class PhotoCaptureActivity extends Activity {
 
         ImageManager imageManager = StrollimoApplication.getService(ImageManager.class);
         ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
-        ImageTag tag = imageTagFactory.build(mSelectedSecret.getImageUrl(), this);
+        ImageTag tag = imageTagFactory.build(mSelectedSecret.getImgUrl(), this);
         mRefImageView.setTag(tag);
         imageManager.getLoader().load(mRefImageView);
 

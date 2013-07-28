@@ -78,9 +78,9 @@ public class AddSecretActivity extends Activity {
         Secret secret = new Secret(id, name);
         secret.setShortDesc(mShortDescEditText.getText().toString());
         AmazonUrl amazonUrl = new AmazonUrl("strollimo1", id + ".jpeg");
-        secret.setImageUrl(amazonUrl.getUrl());
+        secret.setImgUrl(amazonUrl.getUrl());
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
-        mImageManager.getCacheManager().put(secret.getImageUrl(), photo);
+        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
         mPlacesController.addSecret(secret, mCurrentMystery);
         mPhotoUploadController.uploadPhotoToAmazon(amazonUrl, photo);
         finish();

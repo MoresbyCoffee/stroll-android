@@ -1,7 +1,11 @@
 package com.strollimo.android;
 
 import android.content.SharedPreferences;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.strollimo.android.model.Mystery;
+import com.strollimo.android.model.PickupMode;
+import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.model.Secret;
 
 import java.util.ArrayList;
@@ -23,10 +27,15 @@ public class StrollimoPreferences {
     public static final String MLON = "mlon_";
     public static final String MTITLE = "mtitle_";
     public static final String MSECRET = "msecret_";
+    public static final String SECRET_KEY = "SECRET";
     private SharedPreferences mPrefs;
+    private final Gson mGsonExt;
 
     public StrollimoPreferences(SharedPreferences prefs) {
         mPrefs = prefs;
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
+        mGsonExt = builder.create();
     }
 
     public boolean isUseBarcode() {
@@ -77,21 +86,24 @@ public class StrollimoPreferences {
 
     public void saveSecret(Secret secret) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(SID +secret.getId(), secret.getId());
-        editor.putString(STITLE +secret.getId(), secret.getTitle());
-        editor.putString(SDESC +secret.getId(), secret.getShortDesc());
-        editor.putString(SIMAGE +secret.getId(), secret.getImageUrl());
+        editor.putString(SECRET_KEY + secret.getId(), mGsonExt.toJson(secret));
+//        editor.putString(SID +secret.getId(), secret.getId());
+//        editor.putString(STITLE +secret.getId(), secret.getName());
+//        editor.putString(SDESC +secret.getId(), secret.getShortDesc());
+//        editor.putString(SIMAGE +secret.getId(), secret.getImgUrl());
         editor.apply();
     }
 
     public Secret getSecret(String id) {
-        String title = mPrefs.getString(STITLE+ id, "");
-        String desc = mPrefs.getString(SDESC+ id, "");
-        String imageUrl = mPrefs.getString(SIMAGE+ id, "");
-        Secret secret = new Secret(id, title);
-        secret.setShortDesc(desc);
-        secret.setImageUrl(imageUrl);
-        return secret;
+        String json = mPrefs.getString(SECRET_KEY+ id, "");
+        return mGsonExt.fromJson(json, Secret.class);
+//        String title = mPrefs.getString(STITLE+ id, "");
+//        String desc = mPrefs.getString(SDESC+ id, "");
+//        String imageUrl = mPrefs.getString(SIMAGE+ id, "");
+//        Secret secret = new Secret(id, title);
+//        secret.setShortDesc(desc);
+//        secret.setImgUrl(imageUrl);
+//        return secret;
     }
 
     public Mystery getMission(String id) {

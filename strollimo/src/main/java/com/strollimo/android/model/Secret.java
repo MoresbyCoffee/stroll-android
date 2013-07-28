@@ -4,64 +4,73 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Secret {
-    private String mType;
-    private String mId;
-    private String mTitle;
-    private String mShortDesc;
-    private String mImageUrl;
-    private List<PickupMode> mPickupModes = new ArrayList<PickupMode>();
+    private String name;
+    private String shortDesc;
+    private List<PickupMode> pickupModes = new ArrayList<PickupMode>();
+    private String imgUrl;
+    private String id;
+    private String type;
+    private Location loc;
 
     public Secret(String id, String name) {
-        mId = id;
-        mTitle = name;
+        this.id = id;
+        this.name = name;
     }
 
     public String getType() {
-        return mType;
+        return type;
     }
 
-    public void setType(String mType) {
-        this.mType = mType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
-    public void setId(String mId) {
-        this.mId = mId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.mTitle = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getShortDesc() {
-        return mShortDesc;
+        return shortDesc;
     }
 
-    public void setShortDesc(String mShortDesc) {
-        this.mShortDesc = mShortDesc;
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImageUrl(String mImageUrl) {
-        this.mImageUrl = mImageUrl;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public List<PickupMode> getPickupModes() {
-        return mPickupModes;
+        return pickupModes;
     }
 
     public void addPickupMode(PickupMode pickupMode) {
-        mPickupModes.add(pickupMode);
+        pickupModes.add(pickupMode);
+    }
+
+    public Location getLoc() {
+        return loc;
+    }
+
+    public void setLoc(Location loc) {
+        this.loc = loc;
     }
 
 }

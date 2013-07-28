@@ -82,6 +82,11 @@
                 android:id="@+id/save_data_button"
                 android:layout_gravity="left|center_vertical"/>
     </LinearLayout>
+    <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="#000000"
+            />
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,7 +105,7 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save"
+                android:text="Clear"
                 android:id="@+id/clear_image_cache_button"
                 android:layout_gravity="left|center_vertical"/>
     </LinearLayout>
