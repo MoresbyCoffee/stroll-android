@@ -7,20 +7,27 @@ import java.util.regex.Pattern;
 public class AmazonUrl {
     private String mBucket;
     private String mFile;
+    private String mFolder;
 
-    public AmazonUrl(String bucket, String file) {
+    public AmazonUrl(String bucket, String folder, String file) {
         this.mBucket = bucket;
         this.mFile = file;
+        this.mFolder = folder;
     }
 
     public static AmazonUrl fromUrl(String url) throws ParseException {
-        Matcher matcher = Pattern.compile("amazon:(.*)/(.*)").matcher(url);
-        if (!matcher.find() || matcher.groupCount() != 2) {
+        Matcher matcher = Pattern.compile("amazon:(.*)/(.*)/(.*)").matcher(url);
+        if (!matcher.find() || matcher.groupCount() != 3) {
             throw new ParseException("Expected format: amazon:bucket/file", 0);
         }
         String bucket = matcher.group(1);
-        String file = matcher.group(2);
-        return new AmazonUrl(bucket, file);
+        String folder = matcher.group(2);
+        String file = matcher.group(3);
+        return new AmazonUrl(bucket, folder, file);
+    }
+
+    public String getFolder() {
+        return mFolder;
     }
 
     public String getBucket() {
@@ -40,6 +47,10 @@ public class AmazonUrl {
     }
 
     public String getUrl() {
-        return "amazon:" + mBucket + "/" + mFile;
+        return "amazon:" + mBucket + "/" + mFolder + "/" + mFile;
+    }
+
+    public String getPath() {
+        return mFolder + "/" + mFile;
     }
 }

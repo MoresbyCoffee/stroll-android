@@ -33,7 +33,7 @@ public class PhotoUploadController {
             @Override
             public void run() {
                 File file = BitmapUtils.saveImageToFile(mContext, amazonUrl.getFile(), photo);
-                mAmazonS3Controller.uploadFile(amazonUrl.getBucket(), amazonUrl.getFile(), file);
+                mAmazonS3Controller.uploadFile(amazonUrl.getBucket(), amazonUrl.getPath(), file);
             }
         });
     }

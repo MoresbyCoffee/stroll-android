@@ -77,7 +77,7 @@ public class AddSecretActivity extends Activity {
         String name = mNameEditText.getText().toString();
         Secret secret = new Secret(id, name);
         secret.setShortDesc(mShortDescEditText.getText().toString());
-        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", id + ".jpeg");
+        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
         secret.setImgUrl(amazonUrl.getUrl());
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
         mImageManager.getCacheManager().put(secret.getImgUrl(), photo);

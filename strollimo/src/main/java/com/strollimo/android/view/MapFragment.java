@@ -216,7 +216,7 @@ public class MapFragment extends Fragment {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Mystery mystery = mPlacesController.getPlaceById("1");
+                        Mystery mystery = mPlacesController.getPlaceById("1_lost_in_time");
                         CameraPosition pos = CameraPosition.builder().target(new LatLng(mystery.getLat(), mystery.getLon())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
