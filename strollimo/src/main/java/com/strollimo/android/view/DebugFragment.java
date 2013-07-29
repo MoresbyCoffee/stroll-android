@@ -51,7 +51,7 @@ public class DebugFragment extends Fragment {
         mView.findViewById(R.id.save_data_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPrefs.saveMissions(mPlacesController.getAllPlaces());
+                mPrefs.saveMissions(mPlacesController.getAllPlaces(), mPlacesController.getAllSecrets());
             }
         });
         mView.findViewById(R.id.clear_image_cache_button).setOnClickListener(new View.OnClickListener() {

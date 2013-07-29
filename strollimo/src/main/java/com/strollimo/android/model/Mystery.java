@@ -101,29 +101,14 @@ public class Mystery {
         this.mCoinValue = mCoinValue;
     }
 
-    public List<Secret> getSecrets() {
-        if (secrets == null) {
-            secrets = new ArrayList<Secret>();
-        }
-        return secrets;
-    }
-
     public void addChild(String secretId) {
-        children.add(secretId);
+        if (!children.contains(secretId)) {
+            children.add(secretId);
+        }
     }
 
     public List<String> getChildren() {
         return this.children;
-    }
-
-    public void addSecret(Secret secret) {
-        if (secrets == null) {
-            secrets = new ArrayList<Secret>();
-        }
-        secrets.add(secret);
-        if (!children.contains(secret.getId())) {
-            children.add(secret.getId());
-        }
     }
 
     public String getShortDesc() {

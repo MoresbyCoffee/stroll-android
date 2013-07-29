@@ -30,16 +30,20 @@ public class PlacesController {
         addMission(new Mystery("4_amsterdam", "Amsterdam", 51.494996, -0.01649, "id:4", context.getResources().getDrawable(R.drawable.dock)));
         addMission(new Mystery("5_floating_chinese", "Floating Chinese", 51.49708, -0.016147, "id:5", context.getResources().getDrawable(R.drawable.lotus)));
         addMission(new Mystery("6_golden_egg", "The Golden Egg", 51.505722, -0.027047, "id:6", context.getResources().getDrawable(R.drawable.westferry_circus)));
-        List<Mystery> mysteries = mPrefs.getMissions();
+        List<Mystery> mysteries = mPrefs.getMysteries();
         if (mysteries != null) {
             for (Mystery mystery : mysteries) {
-                Mystery hardcoded = mPlaces.get(mystery.getId());
-                for (Secret secret : mystery.getSecrets()) {
-                    hardcoded.addSecret(secret);
-                    mSecrets.put(secret.getId(), secret);
+                Mystery myMystery = getPlaceById(mystery.getId());
+                for (String secretId : mystery.getChildren()) {
+                    Secret secret = mPrefs.getSecret(secretId);
+                    myMystery.addChild(secretId);
+                    addSecret(secret, myMystery);
                 }
             }
         }
+    }
+
+    public void start() {
 
     }
 
@@ -50,7 +54,7 @@ public class PlacesController {
 
     public void addSecret(Secret secret, Mystery mystery) {
         mSecrets.put(secret.getId(), secret);
-        mystery.addSecret(secret);
+        mystery.addChild(secret.getId());
     }
 
 
@@ -59,6 +63,10 @@ public class PlacesController {
     }
     public Mystery getPlaceById(String id) {
         return mPlaces.get(id);
+    }
+
+    public Map<String, Secret> getAllSecrets() {
+        return mSecrets;
     }
 
     public List<Mystery> getAllPlaces() {

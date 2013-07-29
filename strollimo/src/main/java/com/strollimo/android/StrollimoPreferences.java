@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class StrollimoPreferences {
     private static final String COIN_VALUE_KEY = "COIN_VALUE_KEY";
@@ -84,23 +85,19 @@ public class StrollimoPreferences {
         return mGson.fromJson(json, Secret.class);
     }
 
-    public List<Mystery> getMissions() {
+    public List<Mystery> getMysteries() {
         String json = mPrefs.getString(MISSIONS_KEY, "");
         Type listType = new TypeToken<ArrayList<Mystery>>() {}.getType();
         List<Mystery> mysteries = mGson.fromJson(json, listType);
-        for (Mystery mystery : mysteries) {
-            for (String secretId : mystery.getChildren()) {
-                mystery.addSecret(getSecret(secretId));
-            }
-        }
         return mysteries;
     }
 
-    public void saveMissions(List<Mystery> mysteries) {
+    public void saveMissions(List<Mystery> mysteries, Map<String, Secret> secrets) {
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putString(MISSIONS_KEY, mGson.toJson(mysteries));
         for (Mystery mystery : mysteries) {
-            for (Secret secret : mystery.getSecrets()) {
+            for (String secretId : mystery.getChildren()) {
+                Secret secret = secrets.get(secretId);
                 saveSecret(secret);
             }
         }

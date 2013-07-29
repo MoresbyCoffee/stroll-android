@@ -12,6 +12,7 @@ import com.novoda.imageloader.core.model.ImageTag;
 import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 
@@ -19,6 +20,7 @@ public class SecretListAdapter extends BaseAdapter {
     public static final int WIDTH = 200;
     public static final int HEIGHT = 150;
     private final Context mContext;
+    private final PlacesController mPlacesController;
     private Mystery mMystery;
     private ImageManager mImageManager;
 
@@ -26,16 +28,18 @@ public class SecretListAdapter extends BaseAdapter {
         mMystery = mystery;
         mContext = context;
         mImageManager = StrollimoApplication.getService(ImageManager.class);
+        mPlacesController = StrollimoApplication.getService(PlacesController.class);
+
     }
 
     @Override
     public int getCount() {
-        return mMystery.getSecrets().size();
+        return mMystery.getChildren().size();
     }
 
     @Override
     public Secret getItem(int i) {
-        return mMystery.getSecrets().get(i);
+        return mPlacesController.getSecretById(mMystery.getChildren().get(i));
     }
 
     @Override
@@ -51,12 +55,13 @@ public class SecretListAdapter extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.secret_list_item, viewGroup, false);
         }
         TextView secretTitle = ((TextView)view.findViewById(R.id.secret_title));
-        secretTitle.setText(mMystery.getSecrets().get(i).getName());
+        Secret secret = mPlacesController.getSecretById(mMystery.getChildren().get(i));
+        secretTitle.setText(secret.getName());
         ImageView secretPhoto = ((ImageView)view.findViewById(R.id.secret_photo));
 
         ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
         imageTagFactory.setAnimation(android.R.anim.fade_in);
-        ImageTag tag = imageTagFactory.build(mMystery.getSecrets().get(i).getImgUrl(), mContext);
+        ImageTag tag = imageTagFactory.build(secret.getImgUrl(), mContext);
         secretPhoto.setTag(tag);
         mImageManager.getLoader().load(secretPhoto);
 
