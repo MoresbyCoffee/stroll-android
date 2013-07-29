@@ -45,7 +45,6 @@ public class UserService {
         mAllCoins += mystery.getCoinValue();
         String updatedLevel = getCurrentLevel();
 
-        mPrefs.saveMission(mCapturedPlaceNum, mystery);
         if (currentLevel.equals(updatedLevel)) {
             return false;
         } else {

@@ -1,15 +1,24 @@
 package com.strollimo.android.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Secret {
+    @Expose
     private String name;
+    @Expose
     private String shortDesc;
+    @Expose
     private List<PickupMode> pickupModes = new ArrayList<PickupMode>();
+    @Expose
     private String imgUrl;
+    @Expose
     private String id;
+    @Expose
     private String type;
+    @Expose
     private Location loc;
 
     public Secret(String id, String name) {

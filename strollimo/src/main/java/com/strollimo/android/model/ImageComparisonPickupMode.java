@@ -1,12 +1,16 @@
 package com.strollimo.android.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageComparisonPickupMode implements PickupMode {
     public final static String TYPE = "imgComp";
 
+    @Expose
     private String type = TYPE;
+    @Expose
     private List<String> urls = new ArrayList<String>();
 
     public List<String> getUrls() {

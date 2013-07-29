@@ -78,7 +78,7 @@ public class DetailsActivity extends Activity {
             }
         });
 
-        mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getTitle().toUpperCase());
+        mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
         mDetailsPhoto.setImageBitmap(mCurrentMystery.getBitmap());
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {

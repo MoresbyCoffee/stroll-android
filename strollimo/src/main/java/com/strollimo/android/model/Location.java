@@ -1,7 +1,11 @@
 package com.strollimo.android.model;
 
+import com.google.gson.annotations.Expose;
+
 public class Location {
+    @Expose
     private double lat;
+    @Expose
     private double lng;
 
     public Location(double lat, double lng) {

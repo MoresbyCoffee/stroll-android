@@ -32,7 +32,7 @@ public class AmazonS3Controller {
     }
 
     public Bitmap downloadImage(AmazonUrl amazonUrl) throws IOException {
-        return downloadImage(amazonUrl.getBucket(), amazonUrl.getFile());
+        return downloadImage(amazonUrl.getBucket(), amazonUrl.getPath());
     }
 
     public Bitmap downloadImage(String bucket, String file) throws IOException {
@@ -56,6 +56,6 @@ public class AmazonS3Controller {
     }
 
     public URL getUrl(AmazonUrl amazonUrl) {
-        return getUrl(amazonUrl.getBucket(), amazonUrl.getFile());
+        return getUrl(amazonUrl.getBucket(), amazonUrl.getPath());
     }
 }

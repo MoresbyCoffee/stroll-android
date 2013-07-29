@@ -3,11 +3,13 @@ package com.strollimo.android;
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.model.Secret;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,24 +20,17 @@ public class StrollimoPreferences {
     private static final String CAPTURED_PLACES_NUM_KEY = "CAPTURED_PLACES_NUM";
     public static final String USE_BARCODE_KEY = "USE_BARCODE";
     public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
-    public static final String SID = "sid_";
-    public static final String STITLE = "stitle_";
-    public static final String SDESC = "sdesc_";
-    public static final String SIMAGE = "simage_";
-    public static final String MMISSIONS = "mmissions_";
-    public static final String MLAT = "mlat_";
-    public static final String MLON = "mlon_";
-    public static final String MTITLE = "mtitle_";
-    public static final String MSECRET = "msecret_";
+    public static final String MISSIONS_KEY = "mmissions_";
     public static final String SECRET_KEY = "SECRET";
     private SharedPreferences mPrefs;
-    private final Gson mGsonExt;
+    private final Gson mGson;
 
     public StrollimoPreferences(SharedPreferences prefs) {
         mPrefs = prefs;
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
-        mGsonExt = builder.create();
+        builder.excludeFieldsWithoutExposeAnnotation();
+        mGson = builder.create();
     }
 
     public boolean isUseBarcode() {
@@ -70,12 +65,6 @@ public class StrollimoPreferences {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, 0).apply();
     }
 
-    public void saveMission(int capturedPlaces, Mystery mystery) {
-        mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, capturedPlaces).commit();
-        mPrefs.edit().putString(CAPTURE_PLACE_KEY + capturedPlaces, mystery.getId()).commit();
-        mPrefs.edit().putString(COIN_VALUE_KEY + capturedPlaces, mystery.getId()).commit();
-    }
-
     public void setDebugModeOn(boolean debugModeOn) {
         mPrefs.edit().putBoolean(DEBUG_MODE_ON, debugModeOn).apply();
     }
@@ -86,70 +75,36 @@ public class StrollimoPreferences {
 
     public void saveSecret(Secret secret) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(SECRET_KEY + secret.getId(), mGsonExt.toJson(secret));
-//        editor.putString(SID +secret.getId(), secret.getId());
-//        editor.putString(STITLE +secret.getId(), secret.getName());
-//        editor.putString(SDESC +secret.getId(), secret.getShortDesc());
-//        editor.putString(SIMAGE +secret.getId(), secret.getImgUrl());
+        editor.putString(SECRET_KEY + secret.getId(), mGson.toJson(secret));
         editor.apply();
     }
 
     public Secret getSecret(String id) {
         String json = mPrefs.getString(SECRET_KEY+ id, "");
-        return mGsonExt.fromJson(json, Secret.class);
-//        String title = mPrefs.getString(STITLE+ id, "");
-//        String desc = mPrefs.getString(SDESC+ id, "");
-//        String imageUrl = mPrefs.getString(SIMAGE+ id, "");
-//        Secret secret = new Secret(id, title);
-//        secret.setShortDesc(desc);
-//        secret.setImgUrl(imageUrl);
-//        return secret;
-    }
-
-    public Mystery getMission(String id) {
-        double lat = Double.parseDouble(mPrefs.getString(MLAT + id, "0"));
-        double lon = Double.parseDouble(mPrefs.getString(MLON + id, "0"));
-        String title = mPrefs.getString(MTITLE + id, "");
-        int i = 0;
-        Mystery mystery = new Mystery(id, title, lat, lon);
-        while (mPrefs.getString(MSECRET +id+"_"+i, "") != "") {
-            String secretId = mPrefs.getString(MSECRET +id+"_"+i, "");
-            Secret secret = getSecret(secretId);
-            mystery.addSecret(secret);
-            i++;
-        }
-        return mystery;
+        return mGson.fromJson(json, Secret.class);
     }
 
     public List<Mystery> getMissions() {
-        ArrayList<Mystery> mysteries = new ArrayList<Mystery>();
-        int i = 0;
-        while (mPrefs.getString(MMISSIONS +i, "") != "") {
-            String missionId = mPrefs.getString(MMISSIONS+i, "");
-            mysteries.add(getMission(missionId));
-            i++;
+        String json = mPrefs.getString(MISSIONS_KEY, "");
+        Type listType = new TypeToken<ArrayList<Mystery>>() {}.getType();
+        List<Mystery> mysteries = mGson.fromJson(json, listType);
+        for (Mystery mystery : mysteries) {
+            for (String secretId : mystery.getChildren()) {
+                mystery.addSecret(getSecret(secretId));
+            }
         }
         return mysteries;
     }
 
-    public void saveMission2(int order, Mystery mystery) {
+    public void saveMissions(List<Mystery> mysteries) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(MMISSIONS +order, mystery.getId());
-        editor.putString(MLAT + mystery.getId(), Double.toString(mystery.getLat()));
-        editor.putString(MLON + mystery.getId(), Double.toString(mystery.getLon()));
-        editor.putString(MTITLE + mystery.getId(), mystery.getTitle());
-        for (int i=0; i< mystery.getSecrets().size(); i++) {
-            editor.putString(MSECRET + mystery.getId() + "_" + i, mystery.getSecrets().get(i).getId());
-            saveSecret(mystery.getSecrets().get(i));
+        editor.putString(MISSIONS_KEY, mGson.toJson(mysteries));
+        for (Mystery mystery : mysteries) {
+            for (Secret secret : mystery.getSecrets()) {
+                saveSecret(secret);
+            }
         }
         editor.apply();
-
-    }
-
-    public void saveMissions(List<Mystery> mysteries) {
-        for (int i=0; i< mysteries.size(); i++) {
-            saveMission2(i, mysteries.get(i));
-        }
     }
 
 }

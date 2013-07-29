@@ -191,8 +191,8 @@ public class MapFragment extends Fragment {
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(mystery.getLat(), mystery.getLon()))
-                .title(mystery.getTitle()).icon(bitmapDescriptor));
+                .position(new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng()))
+                .title(mystery.getName()).icon(bitmapDescriptor));
         mMapPlacesModel.add(mystery, marker);
     }
 
@@ -217,7 +217,7 @@ public class MapFragment extends Fragment {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
                         Mystery mystery = mPlacesController.getPlaceById("1_lost_in_time");
-                        CameraPosition pos = CameraPosition.builder().target(new LatLng(mystery.getLat(), mystery.getLon())).zoom(16f).tilt(45).build();
+                        CameraPosition pos = CameraPosition.builder().target(new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }
@@ -245,7 +245,7 @@ public class MapFragment extends Fragment {
         Animation anim = AnimationUtils.loadAnimation(getActivity(), fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
         mRibbonPanel.setVisibility(View.VISIBLE);
         mPlaceImage.setImageBitmap(mystery.getBitmap());
-        mPlaceTitle.setText(mystery.getTitle().toUpperCase());
+        mPlaceTitle.setText(mystery.getName().toUpperCase());
         mRibbonPanel.startAnimation(anim);
     }
 
