@@ -4,13 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -29,24 +39,25 @@ public class AddMysteryActivity extends Activity {
     private EditText mIdEditText;
     private EditText mNameEditText;
     private EditText mShortDescEditText;
-    private Mystery mCurrentMystery;
     private PlacesController mPlacesController;
     private ImageView mPhotoImageView;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
     private MapView mMapView;
+    private LocationClient mLocationClient;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
         mImageManager = StrollimoApplication.getService(ImageManager.class);
-
-        setContentView(R.layout.add_mystery_activity);
-        mMapView = (MapView)findViewById(R.id.map);
-        mMapView.onCreate(savedInstanceState);
         mPlacesController = StrollimoApplication.getService(PlacesController.class);
-        mCurrentMystery = getSelectedPlace();
+        setContentView(R.layout.add_mystery_activity);
+        mMapView = (MapView) findViewById(R.id.map);
+        mMapView.onCreate(savedInstanceState);
+        setUpMapIfNecessary();
+        setUpLocationClientIfNecessary();
 
         mIdEditText = (EditText) findViewById(R.id.id_edit_text);
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
@@ -76,33 +87,39 @@ public class AddMysteryActivity extends Activity {
         mMapView.onDestroy();
     }
 
-    private Mystery getSelectedPlace() {
-        String placeId = getIntent().getStringExtra(DetailsActivity.PLACE_ID_EXTRA);
-        if (placeId != "") {
-            return mPlacesController.getPlaceById(placeId);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_secret, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_secret) {
+            addClicked();
+            return true;
         } else {
-            return null;
+            return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void addClicked() {
+        String id = mIdEditText.getText().toString();
+        String name = mNameEditText.getText().toString();
+        Secret secret = new Secret(id, name);
+        secret.setShortDesc(mShortDescEditText.getText().toString());
+        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", "folder", id + ".jpeg");
+        secret.setImgUrl(amazonUrl.getUrl());
+        Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
+        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
+        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
+        finish();
     }
 
     public void replaceImageClicked(View view) {
         Intent pickImageIntent = new Intent(
                 Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickImageIntent, REQUEST_PICK_IMAGE);
-    }
-
-    public void addClicked(View view) {
-        String id = mIdEditText.getText().toString();
-        String name = mNameEditText.getText().toString();
-        Secret secret = new Secret(id, name);
-        secret.setShortDesc(mShortDescEditText.getText().toString());
-        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
-        secret.setImgUrl(amazonUrl.getUrl());
-        Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
-        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
-        mPlacesController.addSecret(secret, mCurrentMystery);
-        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
-        finish();
     }
 
     @Override
@@ -130,6 +147,43 @@ public class AddMysteryActivity extends Activity {
 
                 break;
             default:
+        }
+    }
+
+    private void setUpMapIfNecessary() {
+        if (mMap == null) {
+            mMap = mMapView.getMap();
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(false);
+            mMap.getUiSettings().setCompassEnabled(false);
+        }
+    }
+
+    private void setUpLocationClientIfNecessary() {
+        if (mLocationClient == null) {
+            mLocationClient = new LocationClient(this, new GooglePlayServicesClient.ConnectionCallbacks() {
+                @Override
+                public void onConnected(Bundle bundle) {
+                    Location loc = mLocationClient.getLastLocation();
+                    Mystery mystery = mPlacesController.getPlaceById("1_lost_in_time");
+                    CameraPosition pos = CameraPosition.builder().target(new LatLng(loc.getLatitude(), loc.getLongitude())).zoom(16f).build();
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+                }
+
+                @Override
+                public void onDisconnected() {
+
+                }
+            }, new GooglePlayServicesClient.OnConnectionFailedListener() {
+                @Override
+                public void onConnectionFailed(ConnectionResult connectionResult) {
+
+                }
+            }
+            );
+        }
+        if (!mLocationClient.isConnected()) {
+            mLocationClient.connect();
         }
     }
 
