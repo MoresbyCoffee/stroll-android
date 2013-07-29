@@ -7,6 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -68,20 +70,6 @@ public class AddSecretActivity extends Activity {
         startActivityForResult(pickImageIntent, REQUEST_PICK_IMAGE);
     }
 
-    public void addClicked(View view) {
-        String id = mIdEditText.getText().toString();
-        String name = mNameEditText.getText().toString();
-        Secret secret = new Secret(id, name);
-        secret.setShortDesc(mShortDescEditText.getText().toString());
-        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
-        secret.setImgUrl(amazonUrl.getUrl());
-        Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
-        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
-        mPlacesController.addSecret(secret, mCurrentMystery);
-        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
-        finish();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -110,4 +98,33 @@ public class AddSecretActivity extends Activity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_secret, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_secret) {
+            addClicked();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void addClicked() {
+        String id = mIdEditText.getText().toString();
+        String name = mNameEditText.getText().toString();
+        Secret secret = new Secret(id, name);
+        secret.setShortDesc(mShortDescEditText.getText().toString());
+        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
+        secret.setImgUrl(amazonUrl.getUrl());
+        Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
+        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
+        mPlacesController.addSecret(secret, mCurrentMystery);
+        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
+        finish();
+    }
 }
