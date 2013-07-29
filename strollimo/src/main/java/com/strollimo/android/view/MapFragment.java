@@ -1,12 +1,11 @@
 package com.strollimo.android.view;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -78,6 +77,7 @@ public class MapFragment extends Fragment {
             Log.e("BB", "Error", ex);
         }
         if (mView == null) {
+            setHasOptionsMenu(true);
             mPrefs = ((StrollimoApplication)getActivity().getApplication()).getService(StrollimoPreferences.class);
             firstStart = true;
             mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
@@ -161,6 +161,26 @@ public class MapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.add_mystery).setVisible(mPrefs.isDebugModeOn());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_mystery) {
+            startActivity(new Intent(getActivity(), AddMysteryActivity.class));
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setUpMapIfNecessary() {

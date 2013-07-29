@@ -57,8 +57,10 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
         <activity
             android:name=".view.AddSecretActivity"
-            android:label="@string/title_activity_add_secret" >
-        </activity>
+            android:label="@string/title_activity_add_secret" />
+        <activity
+                android:name=".view.AddMysteryActivity"
+                android:label="@string/title_activity_add_mystery" />
     </application>
 
     <permission

@@ -3,6 +3,7 @@ package com.strollimo.android.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,6 @@ public class DebugFragment extends Fragment {
             }
         });
         mSwitch = (Switch) mView.findViewById(R.id.debug_mode_switch);
-        mSwitch.setSelected(mPrefs.isDebugModeOn());
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
@@ -63,4 +63,9 @@ public class DebugFragment extends Fragment {
         return mView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSwitch.setChecked(mPrefs.isDebugModeOn());
+    }
 }

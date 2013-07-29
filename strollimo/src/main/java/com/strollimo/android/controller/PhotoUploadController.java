@@ -11,6 +11,9 @@ import com.strollimo.android.util.BitmapUtils;
 import java.io.File;
 
 public class PhotoUploadController {
+    public interface OnUploadFinishedCallback {
+        public void onFinished();
+    }
     private Context mContext;
     private Handler mHandler;
     private AmazonS3Controller mAmazonS3Controller;
@@ -28,13 +31,17 @@ public class PhotoUploadController {
         mAmazonS3Controller = amazonS3Controller;
     }
 
-    public void uploadPhotoToAmazon(final AmazonUrl amazonUrl, final Bitmap photo) {
+    public void asyncUploadPhotoToAmazon(final AmazonUrl amazonUrl, final Bitmap photo, final OnUploadFinishedCallback callback) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
                 File file = BitmapUtils.saveImageToFile(mContext, amazonUrl.getFile(), photo);
                 mAmazonS3Controller.uploadFile(amazonUrl.getBucket(), amazonUrl.getPath(), file);
+                if (callback != null) {
+                    callback.onFinished();
+                }
             }
         });
     }
+
 }

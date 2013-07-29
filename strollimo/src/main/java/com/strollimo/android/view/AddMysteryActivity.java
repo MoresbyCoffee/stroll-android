@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import com.google.android.gms.maps.MapView;
 import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -23,7 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
-public class AddSecretActivity extends Activity {
+public class AddMysteryActivity extends Activity {
     public static final int REQUEST_PICK_IMAGE = 52;
     private EditText mIdEditText;
     private EditText mNameEditText;
@@ -33,13 +34,17 @@ public class AddSecretActivity extends Activity {
     private ImageView mPhotoImageView;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
         mImageManager = StrollimoApplication.getService(ImageManager.class);
-        setContentView(R.layout.add_secret_activity);
+
+        setContentView(R.layout.add_mystery_activity);
+        mMapView = (MapView)findViewById(R.id.map);
+        mMapView.onCreate(savedInstanceState);
         mPlacesController = StrollimoApplication.getService(PlacesController.class);
         mCurrentMystery = getSelectedPlace();
 
@@ -51,6 +56,24 @@ public class AddSecretActivity extends Activity {
         mNameEditText.setText("test title");
         mShortDescEditText.setText("test desc");
         mPhotoImageView = (ImageView) findViewById(R.id.photo_holder);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
     }
 
     private Mystery getSelectedPlace() {
