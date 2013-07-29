@@ -1,11 +1,12 @@
 package com.strollimo.android.controller;
 
 import android.content.Context;
-import com.strollimo.android.R;
+import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class PlacesController {
     private final StrollimoPreferences mPrefs;
+    private final ImageManager mImageManager;
     private Map<String, Mystery> mPlaces;
     private Context mContext;
     private List<Mystery> mMysteries = new ArrayList<Mystery>();
@@ -23,13 +25,17 @@ public class PlacesController {
         mContext = context;
         mPlaces = new HashMap<String, Mystery>();
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
-        Mystery lostInTime = new Mystery("1_lost_in_time", "Lost in time", 51.504055, -0.019859, "id:1", context.getResources().getDrawable(R.drawable.canary2));
+        mImageManager = StrollimoApplication.getService(ImageManager.class);        preloadPlaces();
+    }
+
+    public void preloadPlaces() {
+        Mystery lostInTime = new Mystery("1_lost_in_time", "Lost in time", 51.504055, -0.019859, AmazonS3Controller.mysteryUrl("canary2.jpeg").getUrl());
         addMission(lostInTime);
-        addMission(new Mystery("2_mystery_of_bridge", "The mystery of the Bridge", 51.501757, -0.020514, "id:2", context.getResources().getDrawable(R.drawable.canary3)));
-        addMission(new Mystery("3_hidden_canary", "The hidden 'Canary'", 51.507040, -0.022413, "id:3", context.getResources().getDrawable(R.drawable.canary4)));
-        addMission(new Mystery("4_amsterdam", "Amsterdam", 51.494996, -0.01649, "id:4", context.getResources().getDrawable(R.drawable.dock)));
-        addMission(new Mystery("5_floating_chinese", "Floating Chinese", 51.49708, -0.016147, "id:5", context.getResources().getDrawable(R.drawable.lotus)));
-        addMission(new Mystery("6_golden_egg", "The Golden Egg", 51.505722, -0.027047, "id:6", context.getResources().getDrawable(R.drawable.westferry_circus)));
+        addMission(new Mystery("2_mystery_of_bridge", "The mystery of the Bridge", 51.501757, -0.020514, AmazonS3Controller.mysteryUrl("canary3.png").getUrl()));
+        addMission(new Mystery("3_hidden_canary", "The hidden 'Canary'", 51.507040, -0.022413, AmazonS3Controller.mysteryUrl("canary4.jpg").getUrl()));
+        addMission(new Mystery("4_amsterdam", "Amsterdam", 51.494996, -0.01649, AmazonS3Controller.mysteryUrl("dock.jpg").getUrl()));
+        addMission(new Mystery("5_floating_chinese", "Floating Chinese", 51.49708, -0.016147, AmazonS3Controller.mysteryUrl("lotus.jpg").getUrl()));
+        addMission(new Mystery("6_golden_egg", "The Golden Egg", 51.505722, -0.027047, AmazonS3Controller.mysteryUrl("westferry_circus.jpg").getUrl()));
         List<Mystery> mysteries = mPrefs.getMysteries();
         if (mysteries != null) {
             for (Mystery mystery : mysteries) {
@@ -41,6 +47,19 @@ public class PlacesController {
                 }
             }
         }
+        preloadImages(new ArrayList<Mystery>(mMysteries));
+    }
+
+    private void preloadImages(final List<Mystery> mysteries) {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for (Mystery mystery : mysteries) {
+                    mImageManager.cacheImage(mystery.getImgUrl(), 800, 600);
+                }
+            }
+        }).start();
     }
 
     public void start() {

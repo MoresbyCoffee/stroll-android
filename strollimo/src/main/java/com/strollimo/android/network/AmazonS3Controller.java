@@ -58,4 +58,8 @@ public class AmazonS3Controller {
     public URL getUrl(AmazonUrl amazonUrl) {
         return getUrl(amazonUrl.getBucket(), amazonUrl.getPath());
     }
+
+    public static AmazonUrl mysteryUrl(String filename) {
+        return new AmazonUrl("strollimo1", "mystery", filename);
+    }
 }

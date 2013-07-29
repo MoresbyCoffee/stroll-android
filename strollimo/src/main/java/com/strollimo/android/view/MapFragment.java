@@ -20,6 +20,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.*;
+import com.novoda.imageloader.core.ImageManager;
+import com.novoda.imageloader.core.model.ImageTag;
+import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -35,6 +38,7 @@ public class MapFragment extends Fragment {
     private LocationClient mLocationClient;
     private PlacesController mPlacesController;
     private StrollimoPreferences mPrefs;
+    private ImageManager mImageManager;
 
     private UserService mUserService;
     private boolean firstStart = true;
@@ -79,6 +83,7 @@ public class MapFragment extends Fragment {
             mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
             mMapView = (MapView)mView.findViewById(R.id.map);
             mPlacesController = ((StrollimoApplication) getActivity().getApplication()).getService(PlacesController.class);
+            mImageManager = StrollimoApplication.getService(ImageManager.class);
             mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
             mPlaceImage = (ImageView) mView.findViewById(R.id.place_image);
             mPlaceTitle = (TextView) mView.findViewById(R.id.place_title);
@@ -244,7 +249,13 @@ public class MapFragment extends Fragment {
     private void displayRibbon(Mystery mystery, boolean fromRight) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(), fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
         mRibbonPanel.setVisibility(View.VISIBLE);
-        mPlaceImage.setImageBitmap(mystery.getBitmap());
+
+        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(800, 600, R.drawable.closed);
+        imageTagFactory.setAnimation(android.R.anim.fade_in);
+        ImageTag tag = imageTagFactory.build(mystery.getImgUrl(), getActivity());
+        mPlaceImage.setTag(tag);
+        mImageManager.getLoader().load(mPlaceImage);
+
         mPlaceTitle.setText(mystery.getName().toUpperCase());
         mRibbonPanel.startAnimation(anim);
     }

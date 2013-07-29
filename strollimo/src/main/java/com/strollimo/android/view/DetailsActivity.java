@@ -17,6 +17,9 @@ import android.widget.TextView;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.novoda.imageloader.core.ImageManager;
+import com.novoda.imageloader.core.model.ImageTag;
+import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -37,6 +40,7 @@ public class DetailsActivity extends Activity {
     private PlacesController mPlacesController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
+    private ImageManager mImageManager;
 
     private TextView mTitleTextView;
     private Mystery mCurrentMystery;
@@ -57,6 +61,7 @@ public class DetailsActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mImageManager = StrollimoApplication.getService(ImageManager.class);
         mPlacesController = ((StrollimoApplication) getApplication()).getService(PlacesController.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
         mPrefs = ((StrollimoApplication) getApplication()).getService(StrollimoPreferences.class);
@@ -80,7 +85,13 @@ public class DetailsActivity extends Activity {
 
         mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
-        mDetailsPhoto.setImageBitmap(mCurrentMystery.getBitmap());
+
+        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(800, 600, R.drawable.closed);
+        imageTagFactory.setAnimation(android.R.anim.fade_in);
+        ImageTag tag = imageTagFactory.build(mCurrentMystery.getImgUrl(), this);
+        mDetailsPhoto.setTag(tag);
+        mImageManager.getLoader().load(mDetailsPhoto);
+
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -1,8 +1,5 @@
 package com.strollimo.android.model;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
@@ -31,7 +28,6 @@ public class Mystery {
 
     private List<Secret> secrets = new ArrayList<Secret>();
     private String mCode;
-    private Drawable mImage;
     private int mCoinValue;
 
     public Mystery(String id, String name, double lat, double lon) {
@@ -40,17 +36,12 @@ public class Mystery {
         this.loc = new Location(lat, lon);
     }
 
-    public Mystery(String id, String name, double lat, double lon, String code, Drawable image) {
+    public Mystery(String id, String name, double lat, double lon, String imgUrl) {
         this.id = id;
         this.name = name;
         this.loc = new Location(lat, lon);
-        mCode = code;
-        mImage = image;
+        this.imgUrl = imgUrl;
         mCoinValue = new Random().nextInt(3) + 1;
-    }
-
-    public Bitmap getBitmap() {
-        return ((BitmapDrawable) mImage).getBitmap();
     }
 
     public boolean isScannedCodeValid(String scannedCode) {
@@ -83,14 +74,6 @@ public class Mystery {
 
     public void setCode(String mCode) {
         this.mCode = mCode;
-    }
-
-    public Drawable getImage() {
-        return mImage;
-    }
-
-    public void setImage(Drawable mImage) {
-        this.mImage = mImage;
     }
 
     public int getCoinValue() {

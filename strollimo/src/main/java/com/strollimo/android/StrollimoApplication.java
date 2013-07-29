@@ -25,15 +25,16 @@ public class StrollimoApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         mPrefs = new StrollimoPreferences(getSharedPreferences("StrollimoPreferences", 0));
-        mPlacesController = new PlacesController(this);
-        mUserService = new UserService(mPrefs);
-        mUserService.loadPlaces();
         mAmazonS3Controller = new AmazonS3Controller();
         LoaderSettings settings = new LoaderSettings.SettingsBuilder().withCacheManager(new LruBitmapCache(this, 50))
                 .withDisconnectOnEveryCall(true).build(this);
         settings.setNetworkManager(new AmazonNetworkManager(settings));
-        mImageManager = new ImageManager(this, settings);
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
+        mImageManager = new ImageManager(this, settings);
+        mPlacesController = new PlacesController(this);
+        mUserService = new UserService(mPrefs);
+        mUserService.loadPlaces();
+        mPlacesController.preloadPlaces();
     }
 
     public static <T> T getService(Class<T> serviceClass) {
