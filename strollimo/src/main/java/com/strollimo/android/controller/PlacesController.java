@@ -20,7 +20,8 @@ public class PlacesController {
         mContext = context;
         mMysteries = new HashMap<String, Mystery>();
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
-        mImageManager = StrollimoApplication.getService(ImageManager.class);        preloadPlaces();
+        mImageManager = StrollimoApplication.getService(ImageManager.class);
+        preloadPlaces();
     }
 
     public void preloadPlaces() {
@@ -72,10 +73,10 @@ public class PlacesController {
         mystery.addChild(secret.getId());
     }
 
-
     public Secret getSecretById(String id) {
         return mSecrets.get(id);
     }
+
     public Mystery getMysteryById(String id) {
         return mMysteries.get(id);
     }

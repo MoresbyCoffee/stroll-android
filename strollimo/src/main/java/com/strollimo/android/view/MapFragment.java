@@ -142,7 +142,7 @@ public class MapFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
         mMapPlacesModel.refreshSelectedMarker();
-        if (mUserService.getFoundPlacesNum() == mPlacesController.getMysteriesCount()) {
+        if (mUserService.getFoundPlacesNum() == mPlacesController.getMysteriesCount() && mPlacesController.getMysteriesCount() != 0) {
             new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
         }
     }
