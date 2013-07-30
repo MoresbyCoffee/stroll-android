@@ -1,6 +1,7 @@
 package com.strollimo.android.view;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,6 +36,7 @@ public class AddSecretActivity extends Activity {
     private ImageView mPhotoImageView;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,17 +117,30 @@ public class AddSecretActivity extends Activity {
     }
 
     private void addClicked() {
-        String id = mIdEditText.getText().toString();
-        String name = mNameEditText.getText().toString();
-        Secret secret = new Secret(id, name);
-        secret.setShortDesc(mShortDescEditText.getText().toString());
-        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
-        secret.setImgUrl(amazonUrl.getUrl());
+        final String id = mIdEditText.getText().toString();
+        final String name = mNameEditText.getText().toString();
+        final AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
-        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
-        mPlacesController.addSecret(secret, mCurrentMystery);
-        mPlacesController.saveAllData();
-        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
-        finish();
+
+        mImageManager.getCacheManager().put(amazonUrl.getUrl(), photo);
+        progressDialog = ProgressDialog.show(this, "", "Uploading image...");
+        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
+            @Override
+            public void onSuccess() {
+                Secret secret = new Secret(id, name);
+                secret.setShortDesc(mShortDescEditText.getText().toString());
+                secret.setImgUrl(amazonUrl.getUrl());
+                mPlacesController.addSecret(secret, mCurrentMystery);
+                mPlacesController.saveAllData();
+                progressDialog.dismiss();
+                finish();
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                progressDialog.dismiss();
+                finish();
+            }
+        });
     }
 }

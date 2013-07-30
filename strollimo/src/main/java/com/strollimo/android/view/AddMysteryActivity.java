@@ -1,6 +1,7 @@
 package com.strollimo.android.view;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -45,6 +46,7 @@ public class AddMysteryActivity extends Activity {
     private MapView mMapView;
     private LocationClient mLocationClient;
     private GoogleMap mMap;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,21 +105,32 @@ public class AddMysteryActivity extends Activity {
     }
 
     public void addClicked() {
-        double lat = mMap.getCameraPosition().target.latitude;
-        double lng = mMap.getCameraPosition().target.longitude;
-        String id = mIdEditText.getText().toString();
-        String name = mNameEditText.getText().toString();
-        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", "mystery", id + ".jpeg");
+        final double lat = mMap.getCameraPosition().target.latitude;
+        final double lng = mMap.getCameraPosition().target.longitude;
+        final String id = mIdEditText.getText().toString();
+        final String name = mNameEditText.getText().toString();
+        final AmazonUrl amazonUrl = new AmazonUrl("strollimo1", "mystery", id + ".jpeg");
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
 
-        Mystery mystery = new Mystery(id, name, lat, lng, amazonUrl.getUrl());
-        mystery.setShortDesc(mShortDescEditText.getText().toString());
-        mPlacesController.addMystery(mystery);
+        mImageManager.getCacheManager().put(amazonUrl.getUrl(), photo);
+        progressDialog = ProgressDialog.show(this, "", "Uploading image...");
+        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
+            @Override
+            public void onSuccess() {
+                Mystery mystery = new Mystery(id, name, lat, lng, amazonUrl.getUrl());
+                mystery.setShortDesc(mShortDescEditText.getText().toString());
+                mPlacesController.addMystery(mystery);
+                progressDialog.dismiss();
+                mPlacesController.saveAllData();
+                finish();
+            }
 
-        mImageManager.getCacheManager().put(mystery.getImgUrl(), photo);
-        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
-        mPlacesController.saveAllData();
-        finish();
+            @Override
+            public void onError(Exception ex) {
+                progressDialog.dismiss();
+                finish();
+            }
+        });
     }
 
     public void replaceImageClicked(View view) {

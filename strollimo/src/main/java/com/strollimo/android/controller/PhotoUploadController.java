@@ -2,8 +2,10 @@ package com.strollimo.android.controller;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.util.BitmapUtils;
@@ -11,9 +13,6 @@ import com.strollimo.android.util.BitmapUtils;
 import java.io.File;
 
 public class PhotoUploadController {
-    public interface OnUploadFinishedCallback {
-        public void onFinished();
-    }
     private Context mContext;
     private Handler mHandler;
     private AmazonS3Controller mAmazonS3Controller;
@@ -31,17 +30,40 @@ public class PhotoUploadController {
         mAmazonS3Controller = amazonS3Controller;
     }
 
-    public void asyncUploadPhotoToAmazon(final AmazonUrl amazonUrl, final Bitmap photo, final OnUploadFinishedCallback callback) {
-        mHandler.post(new Runnable() {
+    public void asyncUploadPhotoToAmazon(final AmazonUrl amazonUrl, final Bitmap photo, final Callback callback) {
+        new AsyncTask<Void, Void, Boolean>() {
+            private AmazonS3Exception exception;
+
             @Override
-            public void run() {
+            protected Boolean doInBackground(Void... voids) {
                 File file = BitmapUtils.saveImageToFile(mContext, amazonUrl.getFile(), photo);
-                mAmazonS3Controller.uploadFile(amazonUrl.getBucket(), amazonUrl.getPath(), file);
-                if (callback != null) {
-                    callback.onFinished();
+                try {
+                    mAmazonS3Controller.uploadFile(amazonUrl.getBucket(), amazonUrl.getPath(), file);
+                    return true;
+                } catch (AmazonS3Exception ex) {
+                    exception = ex;
+                    return false;
                 }
             }
-        });
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                super.onPostExecute(result);
+                if (callback != null) {
+                    if (result == true) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onError(exception);
+                    }
+                }
+            }
+        }.execute();
+    }
+
+    public interface Callback {
+        public void onSuccess();
+
+        public void onError(Exception ex);
     }
 
 }

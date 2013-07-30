@@ -2,8 +2,10 @@ package com.strollimo.android.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
@@ -16,19 +18,24 @@ import java.net.URLConnection;
 import java.util.Date;
 
 public class AmazonS3Controller {
+    private final static String TAG = AmazonS3Controller.class.getSimpleName();
+
     private final static String AWSAccessKeyId = "AKIAIO5MQ5HJN3NINXVQ";
     private final static String AWSSecretKey = "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";
 
-    public void uploadFile(String bucket, File file) {
-        AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
-        PutObjectRequest por = new PutObjectRequest(bucket, file.getName(), file);
-        s3Client.putObject(por);
+    public void uploadFile(String bucket, File file) throws AmazonS3Exception {
+        uploadFile(bucket, file.getName(), file);
     }
 
-    public void uploadFile(String bucket, String key, File file) {
-        AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
-        PutObjectRequest por = new PutObjectRequest(bucket, key, file);
-        s3Client.putObject(por);
+    public void uploadFile(String bucket, String key, File file) throws AmazonS3Exception {
+        try {
+            AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
+            PutObjectRequest por = new PutObjectRequest(bucket, key, file);
+            s3Client.putObject(por);
+        } catch (Exception ex) {
+            Log.e(TAG, "Upload to amazon failed", ex);
+            throw new AmazonS3Exception("Upload to amazon failed", ex);
+        }
     }
 
     public Bitmap downloadImage(AmazonUrl amazonUrl) throws IOException {
