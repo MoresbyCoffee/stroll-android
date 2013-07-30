@@ -59,6 +59,13 @@ public class DebugFragment extends Fragment {
                 StrollimoApplication.getService(ImageManager.class).getCacheManager().clean();
             }
         });
+        mView.findViewById(R.id.crash_app_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                throw new NullPointerException("Crash test");
+            }
+        });
+
         return mView;
     }
 

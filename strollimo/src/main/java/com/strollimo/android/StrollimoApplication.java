@@ -2,6 +2,7 @@ package com.strollimo.android;
 
 import android.app.Application;
 import android.content.Context;
+import com.crittercism.app.Crittercism;
 import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.LoaderSettings;
 import com.novoda.imageloader.core.cache.LruBitmapCache;
@@ -24,6 +25,7 @@ public class StrollimoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
+        Crittercism.init(getApplicationContext(), "51f80ad3558d6a58c1000002");
         mPrefs = new StrollimoPreferences(getSharedPreferences("StrollimoPreferences", 0), this);
         mAmazonS3Controller = new AmazonS3Controller();
         LoaderSettings settings = new LoaderSettings.SettingsBuilder().withCacheManager(new LruBitmapCache(this, 50))
