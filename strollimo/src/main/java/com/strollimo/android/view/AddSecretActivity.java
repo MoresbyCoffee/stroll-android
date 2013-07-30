@@ -124,6 +124,7 @@ public class AddSecretActivity extends Activity {
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
         mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
         mPlacesController.addSecret(secret, mCurrentMystery);
+        mPlacesController.saveAllData();
         mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
         finish();
     }

@@ -1,6 +1,8 @@
 package com.strollimo.android;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -9,6 +11,8 @@ import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.model.Secret;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,11 +27,13 @@ public class StrollimoPreferences {
     public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
     public static final String MISSIONS_KEY = "mmissions_";
     public static final String SECRET_KEY = "SECRET";
+    private final Context mContext;
     private SharedPreferences mPrefs;
     private final Gson mGson;
 
-    public StrollimoPreferences(SharedPreferences prefs) {
+    public StrollimoPreferences(SharedPreferences prefs, Context context) {
         mPrefs = prefs;
+        mContext = context;
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
         builder.excludeFieldsWithoutExposeAnnotation();
@@ -87,14 +93,36 @@ public class StrollimoPreferences {
 
     public List<Mystery> getMysteries() {
         String json = mPrefs.getString(MISSIONS_KEY, "");
+        return getMysteriesFromJson(json);
+    }
+
+    private List<Mystery> getMysteriesFromJson(String json) {
         Type listType = new TypeToken<ArrayList<Mystery>>() {}.getType();
         List<Mystery> mysteries = mGson.fromJson(json, listType);
         return mysteries;
     }
 
+    public List<Mystery> getHardcodedMysteries() {
+        try {
+            InputStream is = mContext.getAssets().open("demo.json");
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+
+            String json = new String(buffer);
+            return getMysteriesFromJson(json);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     public void saveMissions(List<Mystery> mysteries, Map<String, Secret> secrets) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(MISSIONS_KEY, mGson.toJson(mysteries));
+        String json = mGson.toJson(mysteries);
+        Log.i("BB4", json);
+        editor.putString(MISSIONS_KEY, json);
         for (Mystery mystery : mysteries) {
             for (String secretId : mystery.getChildren()) {
                 Secret secret = secrets.get(secretId);

@@ -241,8 +241,14 @@ public class MapFragment extends Fragment {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Mystery mystery = mPlacesController.getMysteryById("1_lost_in_time");
-                        CameraPosition pos = CameraPosition.builder().target(new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng())).zoom(16f).tilt(45).build();
+                        Mystery mystery = mPlacesController.getFirstMystery();
+                        LatLng latLng;
+                        if (mystery != null) {
+                            latLng = new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng());
+                        } else {
+                            latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+                        }
+                        CameraPosition pos = CameraPosition.builder().target(latLng).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }

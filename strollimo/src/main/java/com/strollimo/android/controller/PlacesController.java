@@ -6,7 +6,6 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.network.AmazonS3Controller;
 
 import java.util.*;
 
@@ -15,7 +14,7 @@ public class PlacesController {
     private final ImageManager mImageManager;
     private Map<String, Mystery> mMysteries;
     private Context mContext;
-    private Map<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
+    private LinkedHashMap<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
 
     public PlacesController(Context context) {
         mContext = context;
@@ -25,16 +24,10 @@ public class PlacesController {
     }
 
     public void preloadPlaces() {
-        Mystery lostInTime = new Mystery("1_lost_in_time", "Lost in time", 51.504055, -0.019859, AmazonS3Controller.mysteryUrl("canary2.jpeg").getUrl());
-        addMystery(lostInTime);
-        addMystery(new Mystery("2_mystery_of_bridge", "The mystery of the Bridge", 51.501757, -0.020514, AmazonS3Controller.mysteryUrl("canary3.png").getUrl()));
-        addMystery(new Mystery("3_hidden_canary", "The hidden 'Canary'", 51.507040, -0.022413, AmazonS3Controller.mysteryUrl("canary4.jpg").getUrl()));
-        addMystery(new Mystery("4_amsterdam", "Amsterdam", 51.494996, -0.01649, AmazonS3Controller.mysteryUrl("dock.jpg").getUrl()));
-        addMystery(new Mystery("5_floating_chinese", "Floating Chinese", 51.49708, -0.016147, AmazonS3Controller.mysteryUrl("lotus.jpg").getUrl()));
-        addMystery(new Mystery("6_golden_egg", "The Golden Egg", 51.505722, -0.027047, AmazonS3Controller.mysteryUrl("westferry_circus.jpg").getUrl()));
         List<Mystery> mysteries = mPrefs.getMysteries();
         if (mysteries != null) {
             for (Mystery mystery : mysteries) {
+                addMystery(mystery);
                 Mystery myMystery = getMysteryById(mystery.getId());
                 for (String secretId : mystery.getChildren()) {
                     Secret secret = mPrefs.getSecret(secretId);
@@ -44,6 +37,14 @@ public class PlacesController {
             }
         }
         preloadImages(new ArrayList<Mystery>(mMysteries.values()));
+    }
+
+    public Mystery getFirstMystery() {
+        if (mMysteries.size() > 0) {
+            return mMysteries.values().iterator().next();
+        } else {
+            return null;
+        }
     }
 
     private void preloadImages(final List<Mystery> mysteries) {
@@ -93,5 +94,11 @@ public class PlacesController {
 
     public void saveAllData() {
         mPrefs.saveMissions(getAllMysteries(), getAllSecrets());
+    }
+
+    public void loadDemoData() {
+        for (Mystery mystery : mPrefs.getHardcodedMysteries()) {
+            addMystery(mystery);
+        }
     }
 }

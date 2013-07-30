@@ -24,7 +24,7 @@ public class StrollimoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
-        mPrefs = new StrollimoPreferences(getSharedPreferences("StrollimoPreferences", 0));
+        mPrefs = new StrollimoPreferences(getSharedPreferences("StrollimoPreferences", 0), this);
         mAmazonS3Controller = new AmazonS3Controller();
         LoaderSettings settings = new LoaderSettings.SettingsBuilder().withCacheManager(new LruBitmapCache(this, 50))
                 .withDisconnectOnEveryCall(true).build(this);
