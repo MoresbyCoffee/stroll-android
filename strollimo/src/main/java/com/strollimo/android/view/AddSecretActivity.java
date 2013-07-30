@@ -58,7 +58,7 @@ public class AddSecretActivity extends Activity {
     private Mystery getSelectedPlace() {
         String placeId = getIntent().getStringExtra(DetailsActivity.PLACE_ID_EXTRA);
         if (placeId != "") {
-            return mPlacesController.getPlaceById(placeId);
+            return mPlacesController.getMysteryById(placeId);
         } else {
             return null;
         }

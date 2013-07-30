@@ -27,7 +27,6 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.model.Mystery;
-import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonUrl;
 
 import java.io.FileNotFoundException;
@@ -104,15 +103,20 @@ public class AddMysteryActivity extends Activity {
     }
 
     public void addClicked() {
+        double lat = mMap.getCameraPosition().target.latitude;
+        double lng = mMap.getCameraPosition().target.longitude;
         String id = mIdEditText.getText().toString();
         String name = mNameEditText.getText().toString();
-        Secret secret = new Secret(id, name);
-        secret.setShortDesc(mShortDescEditText.getText().toString());
-        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", "folder", id + ".jpeg");
-        secret.setImgUrl(amazonUrl.getUrl());
+        AmazonUrl amazonUrl = new AmazonUrl("strollimo1", "mystery", id + ".jpeg");
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
-        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
+
+        Mystery mystery = new Mystery(id, name, lat, lng, amazonUrl.getUrl());
+        mystery.setShortDesc(mShortDescEditText.getText().toString());
+        mPlacesController.addMystery(mystery);
+
+        mImageManager.getCacheManager().put(mystery.getImgUrl(), photo);
         mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, null);
+        mPlacesController.saveAllData();
         finish();
     }
 
@@ -165,7 +169,7 @@ public class AddMysteryActivity extends Activity {
                 @Override
                 public void onConnected(Bundle bundle) {
                     Location loc = mLocationClient.getLastLocation();
-                    Mystery mystery = mPlacesController.getPlaceById("1_lost_in_time");
+                    Mystery mystery = mPlacesController.getMysteryById("1_lost_in_time");
                     CameraPosition pos = CameraPosition.builder().target(new LatLng(loc.getLatitude(), loc.getLongitude())).zoom(16f).build();
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 }

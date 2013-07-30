@@ -98,7 +98,7 @@ public class MapPlacesModel {
 
         String currentId = mystery.getId();
         PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
-        return placesController.getPlaceById(currentId);
+        return placesController.getMysteryById(currentId);
     }
 
     public Mystery getPreviousPlaceFor(Activity activity, Mystery mystery) {
@@ -108,6 +108,6 @@ public class MapPlacesModel {
 
         String currentId = mystery.getId();
         PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
-        return placesController.getPlaceById(currentId);
+        return placesController.getMysteryById(currentId);
     }
 }

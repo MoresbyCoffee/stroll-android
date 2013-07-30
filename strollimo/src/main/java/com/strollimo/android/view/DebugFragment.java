@@ -3,7 +3,6 @@ package com.strollimo.android.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class DebugFragment extends Fragment {
         mView.findViewById(R.id.save_data_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPrefs.saveMissions(mPlacesController.getAllPlaces(), mPlacesController.getAllSecrets());
+                mPrefs.saveMissions(mPlacesController.getAllMysteries(), mPlacesController.getAllSecrets());
             }
         });
         mView.findViewById(R.id.clear_image_cache_button).setOnClickListener(new View.OnClickListener() {

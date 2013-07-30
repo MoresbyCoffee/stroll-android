@@ -142,7 +142,7 @@ public class MapFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
         mMapPlacesModel.refreshSelectedMarker();
-        if (mUserService.getFoundPlacesNum() == mPlacesController.getPlacesCount()) {
+        if (mUserService.getFoundPlacesNum() == mPlacesController.getMysteriesCount()) {
             new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
         }
     }
@@ -202,7 +202,7 @@ public class MapFragment extends Fragment {
 
         mMapPlacesModel = new MapPlacesModel(mUserService);
         mMap.clear();
-        for (Mystery mystery : mPlacesController.getAllPlaces()) {
+        for (Mystery mystery : mPlacesController.getAllMysteries()) {
             addPlaceToMap(mystery);
         }
     }
@@ -241,7 +241,7 @@ public class MapFragment extends Fragment {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Mystery mystery = mPlacesController.getPlaceById("1_lost_in_time");
+                        Mystery mystery = mPlacesController.getMysteryById("1_lost_in_time");
                         CameraPosition pos = CameraPosition.builder().target(new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng())).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;

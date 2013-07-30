@@ -72,7 +72,7 @@ public class DetailsActivity extends Activity {
         mCaptureListView = (ListView)findViewById(R.id.capture_list);
         mTitleTextView = (TextView) findViewById(R.id.title);
 
-        mCurrentMystery = mPlacesController.getPlaceById(getIntent().getStringExtra(PLACE_ID_EXTRA));
+        mCurrentMystery = mPlacesController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
         mSecretListAdapter = new SecretListAdapter(this, mCurrentMystery);
         mCaptureListView.setAdapter(mSecretListAdapter);
         mCaptureListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,7 +144,7 @@ public class DetailsActivity extends Activity {
         if (captureSuccessful) {
             boolean levelUp = mUserService.capturePlace(mCurrentMystery);
             int placesFound = mUserService.getFoundPlacesNum();
-            int placesCount = mPlacesController.getPlacesCount();
+            int placesCount = mPlacesController.getMysteriesCount();
             int coinValue = mCurrentMystery.getCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
