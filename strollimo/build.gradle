@@ -8,6 +8,9 @@ buildscript {
 }
 apply plugin: 'android'
 
+repositories {
+    mavenCentral()
+}
 dependencies {
     compile files('libs/android-support-v4.jar')
     compile files('libs/aws-android-sdk-1.6.0.jar')
@@ -17,6 +20,7 @@ dependencies {
     compile project(':libraries:google-play-services_lib')
     compile project(':libraries:ZXingLib')
     compile project(':libraries:OpenCV')
+    compile 'com.squareup.picasso:picasso:1.1.1'
 }
 
 android {

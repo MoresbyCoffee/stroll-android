@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.novoda.imageloader.core.ImageManager;
+import com.squareup.picasso.Picasso;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PhotoUploadController;
@@ -122,6 +123,8 @@ public class AddSecretActivity extends Activity {
         final AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
 
+        Picasso picasso = StrollimoApplication.getService(Picasso.class);
+        picasso.
         mImageManager.getCacheManager().put(amazonUrl.getUrl(), photo);
         progressDialog = ProgressDialog.show(this, "", "Uploading image...");
         mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {

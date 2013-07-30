@@ -6,9 +6,11 @@ import com.crittercism.app.Crittercism;
 import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.LoaderSettings;
 import com.novoda.imageloader.core.cache.LruBitmapCache;
+import com.squareup.picasso.Picasso;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.network.AmazonDownloader;
 import com.strollimo.android.network.AmazonNetworkManager;
 import com.strollimo.android.network.AmazonS3Controller;
 
@@ -20,6 +22,7 @@ public class StrollimoApplication extends Application {
     private AmazonS3Controller mAmazonS3Controller;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
+    private Picasso mPicasso;
 
     @Override
     public void onCreate() {
@@ -33,6 +36,10 @@ public class StrollimoApplication extends Application {
         settings.setNetworkManager(new AmazonNetworkManager(settings));
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
         mImageManager = new ImageManager(this, settings);
+
+        AmazonDownloader downloader = new AmazonDownloader(this, mAmazonS3Controller);
+        mPicasso = (new Picasso.Builder(this)).loader(downloader).build();
+
         mPlacesController = new PlacesController(this);
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
@@ -56,6 +63,8 @@ public class StrollimoApplication extends Application {
             return (T) mImageManager;
         } else if (serviceClass == PhotoUploadController.class) {
             return (T) mPhotoUploadController;
+        } else if (serviceClass == Picasso.class) {
+            return (T) mPicasso;
         }
         return null;
 
