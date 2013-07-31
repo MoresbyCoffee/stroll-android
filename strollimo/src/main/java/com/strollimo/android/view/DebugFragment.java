@@ -65,6 +65,12 @@ public class DebugFragment extends Fragment {
                 throw new NullPointerException("Crash test");
             }
         });
+        mView.findViewById(R.id.test_something_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                throw new NullPointerException("Crash test");
+            }
+        });
 
         return mView;
     }

@@ -8,15 +8,25 @@ buildscript {
 }
 apply plugin: 'android'
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    compile files('libs/android-support-v4.jar')
+    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+
+//  dexing dies if I use this from maven... try it later with another gradle/android plugin
+//    compile 'com.amazonaws:aws-java-sdk:1.5.2'
     compile files('libs/aws-android-sdk-1.6.0.jar')
+
     compile files('libs/imageloader-core-1.5.8.jar')
-    compile files('libs/gson-2.2.4.jar')
     compile files('libs/crittercism_v3_0_11_sdkonly.jar')
-    compile project(':libraries:google-play-services_lib')
+    compile 'com.google.android.gms:play-services:3.1.36'
     compile project(':libraries:ZXingLib')
     compile project(':libraries:OpenCV')
+    compile 'com.squareup.retrofit:retrofit:1.1.1'
+//    compile 'com.octo.android.robospice:robospice:1.4.6'
 }
 
 android {
