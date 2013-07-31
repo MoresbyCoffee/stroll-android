@@ -1,6 +1,7 @@
 package com.strollimo.android.controller;
 
 import android.content.Context;
+import android.text.TextUtils;
 import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -54,7 +55,9 @@ public class PlacesController {
             @Override
             public void run() {
                 for (Mystery mystery : mysteries) {
-                    mImageManager.cacheImage(mystery.getImgUrl(), 800, 600);
+                    if (!TextUtils.isEmpty(mystery.getImgUrl())) {
+                        mImageManager.cacheImage(mystery.getImgUrl(), 800, 600);
+                    }
                 }
             }
         }).start();
