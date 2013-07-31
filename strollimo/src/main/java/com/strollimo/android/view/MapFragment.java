@@ -70,6 +70,12 @@ public class MapFragment extends Fragment {
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             MapsInitializer.initialize(getActivity());
@@ -77,8 +83,7 @@ public class MapFragment extends Fragment {
             Log.e("BB", "Error", ex);
         }
         if (mView == null) {
-            setHasOptionsMenu(true);
-            mPrefs = ((StrollimoApplication)getActivity().getApplication()).getService(StrollimoPreferences.class);
+            mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
             firstStart = true;
             mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
             mMapView = (MapView)mView.findViewById(R.id.map);
@@ -170,7 +175,13 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.add_mystery).setVisible(mPrefs.isDebugModeOn());
+        if (menu == null) {
+            return;
+        }
+        MenuItem addMysteryItem = menu.findItem(R.id.add_mystery);
+        if (addMysteryItem != null) {
+            addMysteryItem.setVisible(mPrefs.isDebugModeOn());
+        }
     }
 
     @Override
