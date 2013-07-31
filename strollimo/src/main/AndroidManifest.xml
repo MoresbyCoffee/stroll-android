@@ -22,7 +22,7 @@
     <application
         android:name="com.strollimo.android.StrollimoApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_v3"
         android:label="@string/app_name"
         android:theme="@style/CustomActivityTheme" >
         <meta-data
