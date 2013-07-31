@@ -38,7 +38,6 @@ public class MapFragment extends Fragment {
     private PlacesController mPlacesController;
     private StrollimoPreferences mPrefs;
     private ImageManager mImageManager;
-
     private UserService mUserService;
     private boolean firstStart = true;
     private ImageView mPlaceImage;
@@ -46,7 +45,6 @@ public class MapFragment extends Fragment {
     private View mRibbonPanel;
     private MapPlacesModel mMapPlacesModel;
     private MapView mMapView;
-
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
@@ -72,6 +70,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
         setHasOptionsMenu(true);
     }
 
@@ -83,10 +82,9 @@ public class MapFragment extends Fragment {
             Log.e("BB", "Error", ex);
         }
         if (mView == null) {
-            mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
             firstStart = true;
             mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
-            mMapView = (MapView)mView.findViewById(R.id.map);
+            mMapView = (MapView) mView.findViewById(R.id.map);
             mPlacesController = ((StrollimoApplication) getActivity().getApplication()).getService(PlacesController.class);
             mImageManager = StrollimoApplication.getService(ImageManager.class);
             mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
@@ -112,7 +110,6 @@ public class MapFragment extends Fragment {
         }
         return mView;
     }
-
 
     private void setSwipeToChangePlace(View dismissableRibbon) {
         dismissableRibbon.setOnTouchListener(new SwipeDismissTouchListener(
@@ -256,8 +253,10 @@ public class MapFragment extends Fragment {
                         LatLng latLng;
                         if (mystery != null) {
                             latLng = new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng());
-                        } else {
+                        } else if (loc != null) {
                             latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+                        } else {
+                            latLng = new LatLng(51.511249, -0.119305);
                         }
                         CameraPosition pos = CameraPosition.builder().target(latLng).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
@@ -281,7 +280,6 @@ public class MapFragment extends Fragment {
             mLocationClient.connect();
         }
     }
-
 
     private void displayRibbon(Mystery mystery, boolean fromRight) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(), fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
