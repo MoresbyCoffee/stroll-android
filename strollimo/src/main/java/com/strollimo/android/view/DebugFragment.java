@@ -3,6 +3,7 @@ package com.strollimo.android.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,12 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.RetrofitTest;
+import com.strollimo.android.network.response.UpdateAccomplishableResponse;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class DebugFragment extends Fragment {
     private View mView;
@@ -77,7 +83,21 @@ public class DebugFragment extends Fragment {
     }
 
     private void testSomething() {
-        new RetrofitTest().call();
+        Mystery mystery = new Mystery("55", "BBtest", 0.4, 0.5, "image URL");
+        mystery.setShortDesc("something");
+        new RetrofitTest().updateMystery(mystery, new Callback<UpdateAccomplishableResponse>() {
+            @Override
+            public void success(UpdateAccomplishableResponse updateAccomplishableResponse, Response response) {
+                Log.i("BB", "success");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("BB", "failure");
+
+            }
+        });
+//        new RetrofitTest().getAccomplishables(true);
     }
 
     @Override

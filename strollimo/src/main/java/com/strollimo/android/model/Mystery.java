@@ -30,17 +30,16 @@ public class Mystery {
     private String mCode;
     private int mCoinValue;
 
-    public Mystery(String id, String name, double lat, double lon) {
-        this.id = id;
-        this.name = name;
-        this.loc = new Location(lat, lon);
+    public Mystery(String id, String name, double lat, double lng) {
+        this(id, name, lat, lng, null);
     }
 
-    public Mystery(String id, String name, double lat, double lon, String imgUrl) {
+    public Mystery(String id, String name, double lat, double lng, String imgUrl) {
         this.id = id;
         this.name = name;
-        this.loc = new Location(lat, lon);
+        this.loc = new Location(lat, lng);
         this.imgUrl = imgUrl;
+        this.topLevel = true;
         mCoinValue = new Random().nextInt(3) + 1;
     }
 

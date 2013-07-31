@@ -1,19 +1,18 @@
 package com.strollimo.android.network;
 
 import com.google.gson.Gson;
+import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.request.GetAccomplishablesRequest;
 import com.strollimo.android.network.request.RequestHeader;
+import com.strollimo.android.network.request.UpdateAccomplishableRequest;
 import com.strollimo.android.network.response.GetAccomplishablesResponse;
+import com.strollimo.android.network.response.UpdateAccomplishableResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-import retrofit.http.Body;
-import retrofit.http.POST;
 
 public class RetrofitTest {
-    StrollimoService service;
+    StrollimoServiceInterface service;
     private RequestHeader mRequestHeader;
 
     public RetrofitTest() {
@@ -23,34 +22,18 @@ public class RetrofitTest {
                 .build();
 
 
-        service = restAdapter.create(StrollimoService.class);
+        service = restAdapter.create(StrollimoServiceInterface.class);
         mRequestHeader = new RequestHeader("android");
     }
 
-    public void call() {
-        service.getAccomplisables(new GetAccomplishablesRequest(mRequestHeader, true), new Callback<GetAccomplishablesResponse>() {
-
-            @Override
-            public void success(GetAccomplishablesResponse topLevelResponse, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-            }
-        });
+    public void getAccomplishables(boolean topLevel, Callback<GetAccomplishablesResponse> callback) {
+        GetAccomplishablesRequest request = new GetAccomplishablesRequest(mRequestHeader, topLevel);
+        service.getAccomplisables(new GetAccomplishablesRequest(mRequestHeader, true), callback);
     }
 
-    public interface StrollimoService {
-        @POST("/rest/accomplishables")
-        GetAccomplishablesResponse getAccomplisables(@Body GetAccomplishablesRequest body, Callback<GetAccomplishablesResponse> callback);
+    public void updateMystery(Mystery mystery, Callback<UpdateAccomplishableResponse> callback) {
+        UpdateAccomplishableRequest request = new UpdateAccomplishableRequest(mRequestHeader, mystery);
+        service.updateAccomplishable(request, callback);
     }
 
-//    {
-//        "header" : { "deviceId" : "BarnysComputer" },
-//        "action" : "getAccomplishables",
-//            "body" : {
-//        "topLevel" : true
-//    }
 }

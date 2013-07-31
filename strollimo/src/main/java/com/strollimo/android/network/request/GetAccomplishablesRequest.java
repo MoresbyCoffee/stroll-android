@@ -1,17 +1,16 @@
 package com.strollimo.android.network.request;
 
-public class GetAccomplishablesRequest {
-    private RequestHeader header;
-    private String action = "getAccomplishables";
+public class GetAccomplishablesRequest extends BaseRequest {
     private RequestBody body;
 
     public GetAccomplishablesRequest(RequestHeader header, boolean topLevel) {
-        this.header = header;
+        super(header, "getAccomplishables");
         this.body = new RequestBody(topLevel);
     }
 
     private static class RequestBody {
         private boolean topLevel;
+
         public RequestBody(boolean topLevel) {
             this.topLevel = topLevel;
         }
