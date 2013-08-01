@@ -6,26 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Mystery {
+public class Mystery extends BaseAccomplishable {
     // TODO: change this on the server side
     public static final String TYPE = "mission";
 
-    @Expose
-    private String name;
-    @Expose
-    private String shortDesc;
-    @Expose
-    private String imgUrl;
-    @Expose
-    private String id;
-    @Expose
-    private boolean topLevel;
-    @Expose
-    private Location loc;
-    @Expose
-    private String type = TYPE;
-    @Expose
-    private List<String> envTags = new ArrayList<String>();
     @Expose
     private List<String> children = new ArrayList<String>();
 
@@ -38,11 +22,7 @@ public class Mystery {
     }
 
     public Mystery(String id, String name, double lat, double lng, String imgUrl) {
-        this.id = id;
-        this.name = name;
-        this.loc = new Location(lat, lng);
-        this.imgUrl = imgUrl;
-        this.topLevel = true;
+        super(id, name, lat, lng, imgUrl, TYPE, true);
         mCoinValue = new Random().nextInt(3) + 1;
     }
 
@@ -52,22 +32,6 @@ public class Mystery {
         } else {
             return scannedCode.equals(mCode);
         }
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getCode() {
@@ -96,47 +60,4 @@ public class Mystery {
         return this.children;
     }
 
-    public String getShortDesc() {
-        return shortDesc;
-    }
-
-    public void setShortDesc(String shortDesc) {
-        this.shortDesc = shortDesc;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public boolean isTopLevel() {
-        return topLevel;
-    }
-
-    public void setTopLevel(boolean topLevel) {
-        this.topLevel = topLevel;
-    }
-
-    public Location getLocation() {
-        return loc;
-    }
-
-    public void setLocation(Location loc) {
-        this.loc = loc;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public List<String> getEnvTags() {
-        return envTags;
-    }
-
-    public void addEnvTag(String envTag) {
-        envTags.add(envTag);
-    }
 }

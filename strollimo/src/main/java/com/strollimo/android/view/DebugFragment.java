@@ -171,7 +171,7 @@ public class DebugFragment extends Fragment {
         Secret secret = new Secret("1", "bb test secret");
         secret.setShortDesc("short desc");
         secret.setImgUrl("test imag url");
-        secret.setLoc(new Location(0.4, 0.5, 0.1));
+        secret.setLocation(new Location(0.4, 0.5, 0.1));
         ImageComparisonPickupMode mode = new ImageComparisonPickupMode();
         mode.addUrl("test url 1");
         secret.addPickupMode(mode);
