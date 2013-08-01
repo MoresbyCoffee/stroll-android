@@ -22,6 +22,10 @@ public class AmazonUrl {
         return new AmazonUrl(AMAZON_BUCKET, MYSTERY_FOLDER_NAME, mysteryId + JPEG_EXTENSION);
     }
 
+    public static AmazonUrl createSecretUrl(String secretId, String mysteryId) {
+        return new AmazonUrl(AMAZON_BUCKET, mysteryId, secretId + ".jpeg");
+    }
+
     public static AmazonUrl fromUrl(String url) throws ParseException {
         Matcher matcher = Pattern.compile("amazon:(.*)/(.*)/(.*)").matcher(url);
         if (!matcher.find() || matcher.groupCount() != 3) {

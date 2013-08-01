@@ -10,6 +10,7 @@ import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
+import com.strollimo.android.network.response.UpdateSecretResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -106,6 +107,76 @@ public class AccomplishableController {
                             if (callback != null) {
                                 callback.onSuccess();
                             }
+                        } else {
+                            if (callback != null) {
+                                callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        if (callback != null) {
+                            callback.onSuccess();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                if (callback != null) {
+                    callback.onError("Uploading photo failed");
+                }
+            }
+        });
+
+    }
+
+    public void asynUploadSecret(final Secret secret, final Mystery mystery, Bitmap photo, final UploadCallback callback) {
+        AmazonUrl amazonUrl = null;
+        try {
+            amazonUrl = AmazonUrl.fromUrl(secret.getImgUrl());
+        } catch (ParseException e) {
+            if (callback != null) {
+                callback.onError("Image URL is not an valid Amazon URL");
+            }
+        }
+
+        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
+        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
+            @Override
+            public void onSuccess() {
+                addSecret(secret, mystery);
+                saveAllData();
+
+                mStrollimoApi.updateMystery(mystery, new Callback<UpdateMysteryResponse>() {
+                    @Override
+                    public void success(UpdateMysteryResponse updateMysteryResponse, Response response) {
+                        if ("success".equals(updateMysteryResponse.getState())) {
+                            mStrollimoApi.updateSecret(secret, new Callback<UpdateSecretResponse>() {
+
+                                @Override
+                                public void success(UpdateSecretResponse updateSecretResponse, Response response) {
+                                    if ("success".equals(updateSecretResponse.getState())) {
+                                        if (callback != null) {
+                                            callback.onSuccess();
+                                        }
+                                    } else {
+                                        if (callback != null) {
+                                            callback.onError("Uploading to strollimo server failed with status: " + updateSecretResponse.getState());
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+                                    if (callback != null) {
+                                        callback.onSuccess();
+                                    }
+                                }
+                            });
+
                         } else {
                             if (callback != null) {
                                 callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());

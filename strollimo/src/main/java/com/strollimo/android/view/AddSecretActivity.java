@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
@@ -37,11 +39,13 @@ public class AddSecretActivity extends Activity {
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
     private ProgressDialog progressDialog;
+    StrollimoPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
+        mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
         mImageManager = StrollimoApplication.getService(ImageManager.class);
         setContentView(R.layout.add_secret_activity);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
@@ -117,30 +121,33 @@ public class AddSecretActivity extends Activity {
     }
 
     private void addClicked() {
-        final String id = mIdEditText.getText().toString();
-        final String name = mNameEditText.getText().toString();
-        final AmazonUrl amazonUrl = new AmazonUrl("strollimo1", mCurrentMystery.getId(), id + ".jpeg");
+        String id = mIdEditText.getText().toString();
+        String name = mNameEditText.getText().toString();
+        AmazonUrl amazonUrl = AmazonUrl.createSecretUrl(id, mCurrentMystery.getId());
+
+        Secret secret = new Secret(id, name);
+        secret.setShortDesc(mShortDescEditText.getText().toString());
+        secret.setImgUrl(amazonUrl.getUrl());
+        secret.addEnvTag(mPrefs.getEnvTag());
+
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
 
-        mImageManager.getCacheManager().put(amazonUrl.getUrl(), photo);
-        progressDialog = ProgressDialog.show(this, "", "Uploading image...");
-        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
+        progressDialog = ProgressDialog.show(this, "", "Uploading secret...");
+        mAccomplishableController.asynUploadSecret(secret, mCurrentMystery, photo, new AccomplishableController.UploadCallback() {
             @Override
             public void onSuccess() {
-                Secret secret = new Secret(id, name);
-                secret.setShortDesc(mShortDescEditText.getText().toString());
-                secret.setImgUrl(amazonUrl.getUrl());
-                mAccomplishableController.addSecret(secret, mCurrentMystery);
-                mAccomplishableController.saveAllData();
                 progressDialog.dismiss();
                 finish();
             }
 
             @Override
-            public void onError(Exception ex) {
+            public void onError(String errorMsg) {
                 progressDialog.dismiss();
+                Toast.makeText(AddSecretActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 finish();
             }
         });
+
+
     }
 }
