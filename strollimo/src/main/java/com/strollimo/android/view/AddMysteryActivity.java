@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.novoda.imageloader.core.ImageManager;
+import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PhotoUploadController;
@@ -109,28 +111,29 @@ public class AddMysteryActivity extends Activity {
         final double lng = mMap.getCameraPosition().target.longitude;
         final String id = mIdEditText.getText().toString();
         final String name = mNameEditText.getText().toString();
-        final AmazonUrl amazonUrl = new AmazonUrl("strollimo1", "mystery", id + ".jpeg");
+        final AmazonUrl amazonUrl = AmazonUrl.createMysteryUrl(id);
+        Mystery mystery = new Mystery(id, name, lat, lng, amazonUrl.getUrl());
+        mystery.setShortDesc(mShortDescEditText.getText().toString());
+
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
 
-        mImageManager.getCacheManager().put(amazonUrl.getUrl(), photo);
         progressDialog = ProgressDialog.show(this, "", "Uploading image...");
-        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
+
+        mPlacesController.asynUploadMystery(mystery, photo, new PlacesController.UploadCallback() {
             @Override
             public void onSuccess() {
-                Mystery mystery = new Mystery(id, name, lat, lng, amazonUrl.getUrl());
-                mystery.setShortDesc(mShortDescEditText.getText().toString());
-                mPlacesController.addMystery(mystery);
                 progressDialog.dismiss();
-                mPlacesController.saveAllData();
                 finish();
             }
 
             @Override
-            public void onError(Exception ex) {
+            public void onError(String errorMsg) {
                 progressDialog.dismiss();
+                Toast.makeText(AddMysteryActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 finish();
             }
         });
+
     }
 
     public void replaceImageClicked(View view) {
@@ -182,8 +185,12 @@ public class AddMysteryActivity extends Activity {
                 @Override
                 public void onConnected(Bundle bundle) {
                     Location loc = mLocationClient.getLastLocation();
-                    Mystery mystery = mPlacesController.getMysteryById("1_lost_in_time");
-                    CameraPosition pos = CameraPosition.builder().target(new LatLng(loc.getLatitude(), loc.getLongitude())).zoom(16f).build();
+                    CameraPosition pos;
+                    if (loc != null) {
+                        pos = CameraPosition.builder().target(new LatLng(loc.getLatitude(), loc.getLongitude())).zoom(16f).build();
+                    } else {
+                        pos = CameraPosition.builder().target(AppGlobals.LONDON_SOMERSET_HOUSE).zoom(16f).build();
+                    }
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 }
 

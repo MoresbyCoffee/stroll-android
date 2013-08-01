@@ -1,27 +1,31 @@
 package com.strollimo.android.controller;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import com.novoda.imageloader.core.ImageManager;
-import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonUrl;
 
+import java.text.ParseException;
 import java.util.*;
 
 public class PlacesController {
     private final StrollimoPreferences mPrefs;
     private final ImageManager mImageManager;
+    private final PhotoUploadController mPhotoUploadController;
     private Map<String, Mystery> mMysteries;
     private Context mContext;
     private LinkedHashMap<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
 
-    public PlacesController(Context context) {
+    public PlacesController(Context context, StrollimoPreferences prefs, ImageManager imageManager, PhotoUploadController photoUploadController) {
         mContext = context;
         mMysteries = new HashMap<String, Mystery>();
-        mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
-        mImageManager = StrollimoApplication.getService(ImageManager.class);
+        mPrefs = prefs;
+        mImageManager = imageManager;
+        mPhotoUploadController = photoUploadController;
         preloadPlaces();
     }
 
@@ -69,6 +73,41 @@ public class PlacesController {
 
     public void addMystery(Mystery mystery) {
         mMysteries.put(mystery.getId(), mystery);
+    }
+
+    public interface UploadCallback {
+        void onSuccess();
+        void onError(String errorMsg);
+    }
+    public void asynUploadMystery(final Mystery mystery, Bitmap photo, final UploadCallback callback) {
+        AmazonUrl amazonUrl = null;
+        try {
+            amazonUrl = AmazonUrl.fromUrl(mystery.getImgUrl());
+        } catch (ParseException e) {
+            if (callback != null) {
+                callback.onError("Image URL is not an valid Amazon URL");
+            }
+        }
+
+        mImageManager.getCacheManager().put(mystery.getImgUrl(), photo);
+        mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
+            @Override
+            public void onSuccess() {
+                addMystery(mystery);
+                saveAllData();
+                if (callback != null) {
+                    callback.onSuccess();
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                if (callback != null) {
+                    callback.onError("Uploading photo failed");
+                }
+            }
+        });
+
     }
 
     public void addSecret(Secret secret, Mystery mystery) {

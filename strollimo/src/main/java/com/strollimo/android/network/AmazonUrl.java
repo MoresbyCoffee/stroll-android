@@ -5,6 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AmazonUrl {
+    public static final String AMAZON_BUCKET = "strollimo1";
+    public static final String MYSTERY_FOLDER_NAME = "mystery";
+    public static final String JPEG_EXTENSION = ".jpeg";
     private String mBucket;
     private String mFile;
     private String mFolder;
@@ -13,6 +16,10 @@ public class AmazonUrl {
         this.mBucket = bucket;
         this.mFile = file;
         this.mFolder = folder;
+    }
+
+    public static AmazonUrl createMysteryUrl(String mysteryId) {
+        return new AmazonUrl(AMAZON_BUCKET, MYSTERY_FOLDER_NAME, mysteryId + JPEG_EXTENSION);
     }
 
     public static AmazonUrl fromUrl(String url) throws ParseException {

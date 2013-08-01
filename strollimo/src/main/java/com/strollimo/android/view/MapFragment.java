@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.*;
 import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.model.ImageTag;
 import com.novoda.imageloader.core.model.ImageTagFactory;
+import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -256,7 +257,7 @@ public class MapFragment extends Fragment {
                         } else if (loc != null) {
                             latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
                         } else {
-                            latLng = new LatLng(51.511249, -0.119305);
+                            latLng = AppGlobals.LONDON_SOMERSET_HOUSE;
                         }
                         CameraPosition pos = CameraPosition.builder().target(latLng).zoom(16f).tilt(45).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
