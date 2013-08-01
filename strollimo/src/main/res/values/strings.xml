@@ -17,5 +17,6 @@
     <string name="title_activity_aws">AwsTest</string>
     <string name="title_activity_add_secret">Add secret</string>
     <string name="title_activity_add_mystery">Add mystery</string>
+    <string name="debug_env_title">Current env: [%s]</string>
 
 </resources>

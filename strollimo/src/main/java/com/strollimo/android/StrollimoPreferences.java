@@ -23,6 +23,8 @@ public class StrollimoPreferences {
     private static final String CAPTURE_PLACE_KEY = "CAPTURED_PLACE_";
     private static final String CAPTURED_PLACES_NUM_KEY = "CAPTURED_PLACES_NUM";
     public static final String DEVICEID_KEY = "DEVICEID_KEY";
+    public static final String ENV_TAG_KEY = "ENV_TAG_KEY";
+    public static final String DEFAULT_ENV_TAG = "default";
     private final Context mContext;
     private final Gson mGson;
     private SharedPreferences mPrefs;
@@ -88,6 +90,14 @@ public class StrollimoPreferences {
 
     public void setDebugModeOn(boolean debugModeOn) {
         mPrefs.edit().putBoolean(DEBUG_MODE_ON, debugModeOn).apply();
+    }
+
+    public String getEnvTag() {
+        return mPrefs.getString(ENV_TAG_KEY, DEFAULT_ENV_TAG);
+    }
+
+    public void setEnvTag(String envTag) {
+        mPrefs.edit().putString(ENV_TAG_KEY, envTag).apply();
     }
 
     public void saveSecret(Secret secret) {

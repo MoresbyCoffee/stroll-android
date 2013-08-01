@@ -1,5 +1,7 @@
 package com.strollimo.android.view;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.AwsActivity;
 import com.strollimo.android.R;
@@ -84,9 +88,46 @@ public class DebugFragment extends Fragment {
                 testSomething();
             }
         });
+        mView.findViewById(R.id.set_env_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEnv();
+            }
+        });
 
+        refreshEnvTitle();
         return mView;
     }
+
+    private void refreshEnvTitle() {
+        String env = mPrefs.getEnvTag();
+        String envStr = getActivity().getString(R.string.debug_env_title, env);
+        ((TextView)mView.findViewById(R.id.current_env_text)).setText(envStr);
+    }
+
+    private void setEnv() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+        alert.setTitle("Environment");
+        alert.setMessage("Type in an environment");
+
+        final EditText input = new EditText(getActivity());
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mPrefs.setEnvTag(input.getText().toString());
+                refreshEnvTitle();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();    }
 
     private void testSomething() {
         testGetMysteries();

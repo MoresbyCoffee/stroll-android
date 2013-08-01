@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonUrl;
@@ -45,11 +46,13 @@ public class AddMysteryActivity extends Activity {
     private LocationClient mLocationClient;
     private GoogleMap mMap;
     private ProgressDialog progressDialog;
+    private StrollimoPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
+        mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
         setContentView(R.layout.add_mystery_activity);
         mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -108,6 +111,7 @@ public class AddMysteryActivity extends Activity {
         final AmazonUrl amazonUrl = AmazonUrl.createMysteryUrl(id);
         Mystery mystery = new Mystery(id, name, lat, lng, amazonUrl.getUrl());
         mystery.setShortDesc(mShortDescEditText.getText().toString());
+        mystery.addEnvTag(mPrefs.getEnvTag());
 
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
 

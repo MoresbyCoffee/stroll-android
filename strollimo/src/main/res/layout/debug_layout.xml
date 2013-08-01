@@ -16,25 +16,26 @@
             >
 
         <TextView
+                android:id="@+id/current_env_text"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Launch AWS test:"
+                android:text="@string/debug_env_title"
                 android:layout_gravity="center_vertical"/>
 
         <Button
                 android:layout_width="wrap_content"
                 android:minWidth="100dp"
                 android:layout_height="wrap_content"
-                android:text="AWS test"
-                android:id="@+id/aws_test_button"
+                android:text="Set env"
+                android:id="@+id/set_env_button"
                 android:layout_gravity="left|center_vertical"/>
     </LinearLayout>
     <View
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:background="#000000"
-        />
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="#000000"
+            />
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,6 +55,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/debug_mode_switch"
+                android:layout_gravity="left|center_vertical"/>
+    </LinearLayout>
+    <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="#000000"
+            />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            >
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Launch AWS test:"
+                android:layout_gravity="center_vertical"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:minWidth="100dp"
+                android:layout_height="wrap_content"
+                android:text="AWS test"
+                android:id="@+id/aws_test_button"
                 android:layout_gravity="left|center_vertical"/>
     </LinearLayout>
     <View

@@ -25,6 +25,8 @@ public class Mystery {
     @Expose
     private String type = TYPE;
     @Expose
+    private List<String> envTags = new ArrayList<String>();
+    @Expose
     private List<String> children = new ArrayList<String>();
 
     private List<Secret> secrets = new ArrayList<Secret>();
@@ -128,5 +130,13 @@ public class Mystery {
 
     public String getType() {
         return type;
+    }
+
+    public List<String> getEnvTags() {
+        return envTags;
+    }
+
+    public void addEnvTag(String envTag) {
+        envTags.add(envTag);
     }
 }
