@@ -30,14 +30,24 @@ public class StrollimoApi {
         mRequestHeader = new RequestHeader(deviceId);
     }
 
-    public void getMysteries(Callback<GetMysteriesResponse> callback) {
-        GetMysteriesRequest request = new GetMysteriesRequest(mRequestHeader, true);
-        service.getMysteries(new GetMysteriesRequest(mRequestHeader, true), callback);
+    public void getMysteries(String envTag, Callback<GetMysteriesResponse> callback) {
+        GetMysteriesRequest request = new GetMysteriesRequest(mRequestHeader, true, envTag);
+        service.getMysteries(request, callback);
+    }
+
+    public GetMysteriesResponse getMysteries(String envTag) {
+        GetMysteriesRequest request = new GetMysteriesRequest(mRequestHeader, true, envTag);
+        return service.getMysteries(request);
     }
 
     public void getSecrets(String mysteryId, Callback<GetSecretsResponse> callback) {
         GetSecretsRequest request = new GetSecretsRequest(mRequestHeader, mysteryId);
         service.getSecrets(request, callback);
+    }
+
+    public GetSecretsResponse getSecrets(String mysteryId) {
+        GetSecretsRequest request = new GetSecretsRequest(mRequestHeader, mysteryId);
+        return service.getSecrets(request);
     }
 
     public void updateMystery(Mystery mystery, Callback<UpdateMysteryResponse> callback) {

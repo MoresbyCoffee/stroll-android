@@ -9,8 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -129,22 +127,6 @@ public class StrollimoPreferences {
         }.getType();
         List<Mystery> mysteries = mGson.fromJson(json, listType);
         return mysteries;
-    }
-
-    public List<Mystery> getHardcodedMysteries() {
-        try {
-            InputStream is = mContext.getAssets().open("demo.json");
-            int size = is.available();
-
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-            String json = new String(buffer);
-            return getMysteriesFromJson(json);
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     public void saveMissions(List<Mystery> mysteries, Map<String, Secret> secrets) {

@@ -1,19 +1,15 @@
 package com.strollimo.android.view;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TextView;
-import com.strollimo.android.AwsActivity;
+import android.widget.*;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -50,12 +46,6 @@ public class DebugFragment extends Fragment {
             }
         }
 
-        mView.findViewById(R.id.aws_test_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().startActivity(new Intent(getActivity(), AwsActivity.class));
-            }
-        });
         mSwitch = (Switch) mView.findViewById(R.id.debug_mode_switch);
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -63,16 +53,10 @@ public class DebugFragment extends Fragment {
                 mPrefs.setDebugModeOn(checked);
             }
         });
-        mView.findViewById(R.id.save_data_button).setOnClickListener(new View.OnClickListener() {
+        mView.findViewById(R.id.sync_data_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAccomplishableController.loadDemoData();
-            }
-        });
-        mView.findViewById(R.id.clear_image_cache_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAccomplishableController.clearMysteries();
+                syncData();
             }
         });
         mView.findViewById(R.id.crash_app_button).setOnClickListener(new View.OnClickListener() {
@@ -96,6 +80,24 @@ public class DebugFragment extends Fragment {
 
         refreshEnvTitle();
         return mView;
+    }
+
+    private void syncData() {
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Please wait...");
+        progressDialog.show();
+        mAccomplishableController.clearMysteries();
+        mAccomplishableController.asyncSyncMysteries(mPrefs.getEnvTag(), new AccomplishableController.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(String errorMsg) {
+                Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        });
     }
 
     private void refreshEnvTitle() {
@@ -136,7 +138,7 @@ public class DebugFragment extends Fragment {
     }
 
     private void testGetMysteries() {
-        StrollimoApplication.getService(StrollimoApi.class).getMysteries(new Callback<GetMysteriesResponse>() {
+        StrollimoApplication.getService(StrollimoApi.class).getMysteries("default", new Callback<GetMysteriesResponse>() {
             @Override
             public void success(GetMysteriesResponse getMysteriesResponse, Response response) {
                 Log.i("BB", "success");

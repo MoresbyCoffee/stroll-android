@@ -133,7 +133,7 @@ public class AddSecretActivity extends Activity {
         Bitmap photo = ((BitmapDrawable) mPhotoImageView.getDrawable()).getBitmap();
 
         progressDialog = ProgressDialog.show(this, "", "Uploading secret...");
-        mAccomplishableController.asynUploadSecret(secret, mCurrentMystery, photo, new AccomplishableController.UploadCallback() {
+        mAccomplishableController.asynUploadSecret(secret, mCurrentMystery, photo, new AccomplishableController.OperationCallback() {
             @Override
             public void onSuccess() {
                 progressDialog.dismiss();

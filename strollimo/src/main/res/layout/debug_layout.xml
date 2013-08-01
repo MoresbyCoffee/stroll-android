@@ -74,71 +74,15 @@
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Launch AWS test:"
-                android:layout_gravity="center_vertical"/>
-
-        <Button
-                android:layout_width="wrap_content"
-                android:minWidth="100dp"
-                android:layout_height="wrap_content"
-                android:text="AWS test"
-                android:id="@+id/aws_test_button"
-                android:layout_gravity="left|center_vertical"/>
-    </LinearLayout>
-    <View
-            android:layout_height="1dp"
-            android:layout_width="match_parent"
-            android:background="#000000"
-            />
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            >
-
-        <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Load demo data:"
+                android:text="Sync data:"
                 android:layout_gravity="center_vertical"/>
 
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
-                android:text="Load"
-                android:id="@+id/save_data_button"
-                android:layout_gravity="left|center_vertical"/>
-    </LinearLayout>
-    <View
-            android:layout_height="1dp"
-            android:layout_width="match_parent"
-            android:background="#000000"
-            />
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            >
-
-        <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Clear image cache:"
-                android:layout_gravity="center_vertical"/>
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="100dp"
-                android:text="Clear"
-                android:id="@+id/clear_image_cache_button"
+                android:text="Sync"
+                android:id="@+id/sync_data_button"
                 android:layout_gravity="left|center_vertical"/>
     </LinearLayout>
     <View

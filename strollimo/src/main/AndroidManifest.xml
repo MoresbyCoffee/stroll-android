@@ -41,10 +41,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.strollimo.android.AwsActivity"
-            android:label="@string/title_activity_aws" >
-        </activity>
-        <activity
             android:name=".view.DetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_details"

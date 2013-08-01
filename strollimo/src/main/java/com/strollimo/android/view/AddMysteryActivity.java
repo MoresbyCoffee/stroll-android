@@ -117,7 +117,7 @@ public class AddMysteryActivity extends Activity {
 
         progressDialog = ProgressDialog.show(this, "", "Uploading image...");
 
-        mAccomplishableController.asynUploadMystery(mystery, photo, new AccomplishableController.UploadCallback() {
+        mAccomplishableController.asynUploadMystery(mystery, photo, new AccomplishableController.OperationCallback() {
             @Override
             public void onSuccess() {
                 progressDialog.dismiss();

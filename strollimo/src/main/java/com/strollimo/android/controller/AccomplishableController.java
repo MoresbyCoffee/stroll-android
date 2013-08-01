@@ -2,13 +2,17 @@ package com.strollimo.android.controller;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.network.response.GetMysteriesResponse;
+import com.strollimo.android.network.response.GetSecretsResponse;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
 import com.strollimo.android.network.response.UpdateSecretResponse;
 import retrofit.Callback;
@@ -19,6 +23,8 @@ import java.text.ParseException;
 import java.util.*;
 
 public class AccomplishableController {
+    private static final String TAG = AccomplishableController.class.getSimpleName();
+
     private final StrollimoPreferences mPrefs;
     private final ImageManager mImageManager;
     private final PhotoUploadController mPhotoUploadController;
@@ -51,7 +57,44 @@ public class AccomplishableController {
                 }
             }
         }
-        preloadImages(new ArrayList<Mystery>(mMysteries.values()));
+//        preloadImages(new ArrayList<Mystery>(mMysteries.values()));
+    }
+
+    public void asyncSyncMysteries(final String env, final OperationCallback callback) {
+        new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                GetMysteriesResponse getMysteriesResponse = mStrollimoApi.getMysteries(env);
+                if (getMysteriesResponse!= null && "success".equals(getMysteriesResponse.getState())) {
+                    for (Mystery mystery : getMysteriesResponse.getBody()) {
+                        addMystery(mystery);
+                        syncSecrets(mystery);
+                        saveAllData();
+                    }
+                    if (callback != null) {
+                        callback.onSuccess();
+                    }
+                } else {
+                    if (callback != null) {
+                        callback.onError("Error while getting mysteries");
+                    }
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private void syncSecrets(final Mystery mystery) {
+        GetSecretsResponse getSecretsResponse = mStrollimoApi.getSecrets(mystery.getId());
+        if ("success".equals(getSecretsResponse.getState())) {
+            for (Secret secret : getSecretsResponse.getBody()) {
+                addSecret(secret, mystery);
+            }
+        } else {
+            // TODO: we need something stronger than this :)
+            Log.i(TAG, "Error while getting secrets");
+        }
     }
 
     public void clearMysteries() {
@@ -95,7 +138,7 @@ public class AccomplishableController {
         mMysteries.put(mystery.getId(), mystery);
     }
 
-    public void asynUploadMystery(final Mystery mystery, Bitmap photo, final UploadCallback callback) {
+    public void asynUploadMystery(final Mystery mystery, Bitmap photo, final OperationCallback callback) {
         AmazonUrl amazonUrl = null;
         try {
             amazonUrl = AmazonUrl.fromUrl(mystery.getImgUrl());
@@ -144,7 +187,7 @@ public class AccomplishableController {
 
     }
 
-    public void asynUploadSecret(final Secret secret, final Mystery mystery, Bitmap photo, final UploadCallback callback) {
+    public void asynUploadSecret(final Secret secret, final Mystery mystery, Bitmap photo, final OperationCallback callback) {
         AmazonUrl amazonUrl = null;
         try {
             amazonUrl = AmazonUrl.fromUrl(secret.getImgUrl());
@@ -243,13 +286,7 @@ public class AccomplishableController {
         mPrefs.saveMissions(getAllMysteries(), getAllSecrets());
     }
 
-    public void loadDemoData() {
-        for (Mystery mystery : mPrefs.getHardcodedMysteries()) {
-            addMystery(mystery);
-        }
-    }
-
-    public interface UploadCallback {
+    public interface OperationCallback {
         void onSuccess();
 
         void onError(String errorMsg);

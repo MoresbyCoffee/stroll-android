@@ -12,6 +12,7 @@ public class GetSecretsRequest extends BaseRequest {
     }
 
     private static class RequestBody {
+        @Expose
         private String childrenOf;
 
         public RequestBody(String childrenOf) {
