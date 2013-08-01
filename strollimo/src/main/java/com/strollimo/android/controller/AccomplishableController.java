@@ -54,6 +54,17 @@ public class AccomplishableController {
         preloadImages(new ArrayList<Mystery>(mMysteries.values()));
     }
 
+    public void clearMysteries() {
+        for (Secret secret : mSecrets.values()) {
+            if (secret != null) {
+                mPrefs.clearSecret(secret.getId());
+            }
+        }
+        mPrefs.clearMysteries();
+        mSecrets.clear();
+        mMysteries.clear();
+    }
+
     public Mystery getFirstMystery() {
         if (mMysteries.size() > 0) {
             return mMysteries.values().iterator().next();

@@ -111,9 +111,17 @@ public class StrollimoPreferences {
         return mGson.fromJson(json, Secret.class);
     }
 
+    public void clearSecret(String id) {
+        mPrefs.edit().remove(SECRET_KEY + id).apply();
+    }
+
     public List<Mystery> getMysteries() {
         String json = mPrefs.getString(MISSIONS_KEY, "");
         return getMysteriesFromJson(json);
+    }
+
+    public void clearMysteries() {
+        mPrefs.edit().remove(MISSIONS_KEY).apply();
     }
 
     private List<Mystery> getMysteriesFromJson(String json) {
