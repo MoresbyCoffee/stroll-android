@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Mystery {
+    // TODO: change this on the server side
     public static final String TYPE = "mission";
 
     @Expose

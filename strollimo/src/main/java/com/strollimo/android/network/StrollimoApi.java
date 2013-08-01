@@ -1,14 +1,14 @@
 package com.strollimo.android.network;
 
-import android.util.Log;
 import com.google.gson.Gson;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
-import com.strollimo.android.network.request.GetAccomplishablesRequest;
-import com.strollimo.android.network.request.RequestHeader;
-import com.strollimo.android.network.request.UpdateAccomplishableRequest;
-import com.strollimo.android.network.response.GetAccomplishablesResponse;
-import com.strollimo.android.network.response.UpdateAccomplishableResponse;
+import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.request.*;
+import com.strollimo.android.network.response.GetMysteriesResponse;
+import com.strollimo.android.network.response.GetSecretsResponse;
+import com.strollimo.android.network.response.UpdateMysteryResponse;
+import com.strollimo.android.network.response.UpdateSecretResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -30,15 +30,23 @@ public class StrollimoApi {
         mRequestHeader = new RequestHeader(deviceId);
     }
 
-    public void getAccomplishables(boolean topLevel, Callback<GetAccomplishablesResponse> callback) {
-        GetAccomplishablesRequest request = new GetAccomplishablesRequest(mRequestHeader, topLevel);
-        service.getAccomplisables(new GetAccomplishablesRequest(mRequestHeader, true), callback);
+    public void getMysteries(Callback<GetMysteriesResponse> callback) {
+        GetMysteriesRequest request = new GetMysteriesRequest(mRequestHeader, true);
+        service.getMysteries(new GetMysteriesRequest(mRequestHeader, true), callback);
     }
 
-    public void updateMystery(Mystery mystery, Callback<UpdateAccomplishableResponse> callback) {
-        UpdateAccomplishableRequest request = new UpdateAccomplishableRequest(mRequestHeader, mystery);
-        Log.i("BB", mGson.toJson(request));
-        service.updateAccomplishable(request, callback);
+    public void getSecrets(String mysteryId, Callback<GetSecretsResponse> callback) {
+        GetSecretsRequest request = new GetSecretsRequest(mRequestHeader, mysteryId);
+        service.getSecrets(request, callback);
     }
 
+    public void updateMystery(Mystery mystery, Callback<UpdateMysteryResponse> callback) {
+        UpdaterMysteryRequest request = new UpdaterMysteryRequest(mRequestHeader, mystery);
+        service.updateMystery(request, callback);
+    }
+
+    public void updateSecret(Secret secret, Callback<UpdateSecretResponse> callback) {
+        UpdaterSecretRequest request = new UpdaterSecretRequest(mRequestHeader, secret);
+        service.updateSecret(request, callback);
+    }
 }

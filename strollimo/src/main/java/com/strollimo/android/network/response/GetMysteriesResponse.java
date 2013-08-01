@@ -5,7 +5,7 @@ import com.strollimo.android.model.Mystery;
 
 import java.util.List;
 
-public class GetAccomplishablesResponse extends BaseResponse {
+public class GetMysteriesResponse extends BaseResponse {
     @Expose
     private List<Mystery> body;
 

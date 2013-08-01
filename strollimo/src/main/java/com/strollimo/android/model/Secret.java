@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Secret {
+    public static final String TYPE = "secret";
+
     @Expose
     private String name;
     @Expose
@@ -17,16 +19,17 @@ public class Secret {
     @Expose
     private String id;
     @Expose
-    private String type;
-    @Expose
     private Location loc;
     @Expose
     private boolean topLevel;
+    @Expose
+    private String type;
 
     public Secret(String id, String name) {
         this.id = id;
         this.name = name;
         this.topLevel = false;
+        this.type = TYPE;
     }
 
     public String getType() {

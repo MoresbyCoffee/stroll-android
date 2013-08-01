@@ -15,9 +15,14 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.model.ImageComparisonPickupMode;
+import com.strollimo.android.model.Location;
 import com.strollimo.android.model.Mystery;
+import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.StrollimoApi;
-import com.strollimo.android.network.response.UpdateAccomplishableResponse;
+import com.strollimo.android.network.response.GetSecretsResponse;
+import com.strollimo.android.network.response.UpdateMysteryResponse;
+import com.strollimo.android.network.response.UpdateSecretResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -83,11 +88,16 @@ public class DebugFragment extends Fragment {
     }
 
     private void testSomething() {
-        Mystery mystery = new Mystery("55", "BBtest", 0.4, 0.5, "image URL");
-        mystery.setShortDesc("something");
-        StrollimoApplication.getService(StrollimoApi.class).updateMystery(mystery, new Callback<UpdateAccomplishableResponse>() {
+        testGetSecrets();
+//        testUpdateSecretCall();
+//        new StrollimoApi().getMysteries(true);
+    }
+
+    private void testGetSecrets() {
+        String mysteryId = "feb1eb63-fca6-4291-99c1-7a6fee31ee05";
+        StrollimoApplication.getService(StrollimoApi.class).getSecrets(mysteryId, new Callback<GetSecretsResponse>() {
             @Override
-            public void success(UpdateAccomplishableResponse updateAccomplishableResponse, Response response) {
+            public void success(GetSecretsResponse getSecretsResponse, Response response) {
                 Log.i("BB", "success");
             }
 
@@ -97,7 +107,45 @@ public class DebugFragment extends Fragment {
 
             }
         });
-//        new StrollimoApi().getAccomplishables(true);
+    }
+
+    private void testUpdateSecretCall() {
+        Secret secret = new Secret("1", "bb test secret");
+        secret.setShortDesc("short desc");
+        secret.setImgUrl("test imag url");
+        secret.setLoc(new Location(0.4, 0.5, 0.1));
+        ImageComparisonPickupMode mode = new ImageComparisonPickupMode();
+        mode.addUrl("test url 1");
+        secret.addPickupMode(mode);
+        StrollimoApplication.getService(StrollimoApi.class).updateSecret(secret, new Callback<UpdateSecretResponse>() {
+            @Override
+            public void success(UpdateSecretResponse updateSecretResponse, Response response) {
+                Log.i("BB", "success");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("BB", "failure");
+
+            }
+        });
+    }
+
+    private void testUpdateMysteryCall() {
+        Mystery mystery = new Mystery("55", "BBtest", 0.4, 0.5, "image URL");
+        mystery.setShortDesc("something");
+        StrollimoApplication.getService(StrollimoApi.class).updateMystery(mystery, new Callback<UpdateMysteryResponse>() {
+            @Override
+            public void success(UpdateMysteryResponse updateMysteryResponse, Response response) {
+                Log.i("BB", "success");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("BB", "failure");
+
+            }
+        });
     }
 
     @Override
