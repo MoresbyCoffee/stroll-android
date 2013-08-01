@@ -50,7 +50,7 @@ public class StrollimoApplication extends Application {
         settings.setNetworkManager(new AmazonNetworkManager(settings));
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
         mImageManager = new ImageManager(this, settings);
-        mAccomplishableController = new AccomplishableController(this, mPrefs, mImageManager, mPhotoUploadController);
+        mAccomplishableController = new AccomplishableController(this, mPrefs, mImageManager, mPhotoUploadController, mStrollimoApi);
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
         mAccomplishableController.preloadPlaces();

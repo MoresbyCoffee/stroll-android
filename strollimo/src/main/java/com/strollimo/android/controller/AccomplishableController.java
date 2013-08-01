@@ -8,6 +8,11 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonUrl;
+import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.network.response.UpdateMysteryResponse;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.text.ParseException;
 import java.util.*;
@@ -16,16 +21,19 @@ public class AccomplishableController {
     private final StrollimoPreferences mPrefs;
     private final ImageManager mImageManager;
     private final PhotoUploadController mPhotoUploadController;
+    private final StrollimoApi mStrollimoApi;
     private Map<String, Mystery> mMysteries;
     private Context mContext;
     private LinkedHashMap<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
 
-    public AccomplishableController(Context context, StrollimoPreferences prefs, ImageManager imageManager, PhotoUploadController photoUploadController) {
+    public AccomplishableController(Context context, StrollimoPreferences prefs, ImageManager imageManager,
+                                    PhotoUploadController photoUploadController, StrollimoApi strollimoApi) {
         mContext = context;
         mMysteries = new HashMap<String, Mystery>();
         mPrefs = prefs;
         mImageManager = imageManager;
         mPhotoUploadController = photoUploadController;
+        mStrollimoApi = strollimoApi;
         preloadPlaces();
     }
 
@@ -75,10 +83,6 @@ public class AccomplishableController {
         mMysteries.put(mystery.getId(), mystery);
     }
 
-    public interface UploadCallback {
-        void onSuccess();
-        void onError(String errorMsg);
-    }
     public void asynUploadMystery(final Mystery mystery, Bitmap photo, final UploadCallback callback) {
         AmazonUrl amazonUrl = null;
         try {
@@ -93,11 +97,29 @@ public class AccomplishableController {
         mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
             @Override
             public void onSuccess() {
-                addMystery(mystery);
-                saveAllData();
-                if (callback != null) {
-                    callback.onSuccess();
-                }
+                mStrollimoApi.updateMystery(mystery, new Callback<UpdateMysteryResponse>() {
+                    @Override
+                    public void success(UpdateMysteryResponse updateMysteryResponse, Response response) {
+                        if ("success".equals(updateMysteryResponse.getState())) {
+                            addMystery(mystery);
+                            saveAllData();
+                            if (callback != null) {
+                                callback.onSuccess();
+                            }
+                        } else {
+                            if (callback != null) {
+                                callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        if (callback != null) {
+                            callback.onSuccess();
+                        }
+                    }
+                });
             }
 
             @Override
@@ -143,5 +165,11 @@ public class AccomplishableController {
         for (Mystery mystery : mPrefs.getHardcodedMysteries()) {
             addMystery(mystery);
         }
+    }
+
+    public interface UploadCallback {
+        void onSuccess();
+
+        void onError(String errorMsg);
     }
 }

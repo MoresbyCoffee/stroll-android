@@ -23,11 +23,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
-import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonUrl;
@@ -43,8 +41,6 @@ public class AddMysteryActivity extends Activity {
     private EditText mShortDescEditText;
     private AccomplishableController mAccomplishableController;
     private ImageView mPhotoImageView;
-    private ImageManager mImageManager;
-    private PhotoUploadController mPhotoUploadController;
     private MapView mMapView;
     private LocationClient mLocationClient;
     private GoogleMap mMap;
@@ -53,8 +49,6 @@ public class AddMysteryActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
-        mImageManager = StrollimoApplication.getService(ImageManager.class);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         setContentView(R.layout.add_mystery_activity);
         mMapView = (MapView) findViewById(R.id.map);
