@@ -28,7 +28,7 @@ import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonUrl;
 
@@ -41,7 +41,7 @@ public class AddMysteryActivity extends Activity {
     private EditText mIdEditText;
     private EditText mNameEditText;
     private EditText mShortDescEditText;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
     private ImageView mPhotoImageView;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
@@ -55,7 +55,7 @@ public class AddMysteryActivity extends Activity {
         super.onCreate(savedInstanceState);
         mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
         mImageManager = StrollimoApplication.getService(ImageManager.class);
-        mPlacesController = StrollimoApplication.getService(PlacesController.class);
+        mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         setContentView(R.layout.add_mystery_activity);
         mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -119,7 +119,7 @@ public class AddMysteryActivity extends Activity {
 
         progressDialog = ProgressDialog.show(this, "", "Uploading image...");
 
-        mPlacesController.asynUploadMystery(mystery, photo, new PlacesController.UploadCallback() {
+        mAccomplishableController.asynUploadMystery(mystery, photo, new AccomplishableController.UploadCallback() {
             @Override
             public void onSuccess() {
                 progressDialog.dismiss();

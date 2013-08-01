@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 
 import java.util.ArrayList;
@@ -97,8 +97,8 @@ public class MapPlacesModel {
         }
 
         String currentId = mystery.getId();
-        PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
-        return placesController.getMysteryById(currentId);
+        AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
+        return accomplishableController.getMysteryById(currentId);
     }
 
     public Mystery getPreviousPlaceFor(Activity activity, Mystery mystery) {
@@ -107,7 +107,7 @@ public class MapPlacesModel {
         }
 
         String currentId = mystery.getId();
-        PlacesController placesController = StrollimoApplication.getService(PlacesController.class);
-        return placesController.getMysteryById(currentId);
+        AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
+        return accomplishableController.getMysteryById(currentId);
     }
 }

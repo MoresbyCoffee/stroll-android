@@ -17,7 +17,7 @@ import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonUrl;
@@ -32,7 +32,7 @@ public class AddSecretActivity extends Activity {
     private EditText mNameEditText;
     private EditText mShortDescEditText;
     private Mystery mCurrentMystery;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
     private ImageView mPhotoImageView;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
@@ -44,7 +44,7 @@ public class AddSecretActivity extends Activity {
         mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
         mImageManager = StrollimoApplication.getService(ImageManager.class);
         setContentView(R.layout.add_secret_activity);
-        mPlacesController = StrollimoApplication.getService(PlacesController.class);
+        mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         mCurrentMystery = getSelectedPlace();
 
         mIdEditText = (EditText) findViewById(R.id.id_edit_text);
@@ -60,7 +60,7 @@ public class AddSecretActivity extends Activity {
     private Mystery getSelectedPlace() {
         String placeId = getIntent().getStringExtra(DetailsActivity.PLACE_ID_EXTRA);
         if (placeId != "") {
-            return mPlacesController.getMysteryById(placeId);
+            return mAccomplishableController.getMysteryById(placeId);
         } else {
             return null;
         }
@@ -130,8 +130,8 @@ public class AddSecretActivity extends Activity {
                 Secret secret = new Secret(id, name);
                 secret.setShortDesc(mShortDescEditText.getText().toString());
                 secret.setImgUrl(amazonUrl.getUrl());
-                mPlacesController.addSecret(secret, mCurrentMystery);
-                mPlacesController.saveAllData();
+                mAccomplishableController.addSecret(secret, mCurrentMystery);
+                mAccomplishableController.saveAllData();
                 progressDialog.dismiss();
                 finish();
             }

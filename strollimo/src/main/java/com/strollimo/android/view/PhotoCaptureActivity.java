@@ -14,7 +14,7 @@ import com.novoda.imageloader.core.model.ImageTag;
 import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Secret;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -33,7 +33,7 @@ public class PhotoCaptureActivity extends Activity {
     private Button mCaptureButton;
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView mRefImageView;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
     private Secret mSelectedSecret;
     private boolean mCameraOn;
 
@@ -42,7 +42,7 @@ public class PhotoCaptureActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_capture);
         mCameraOn = false;
-        mPlacesController = ((StrollimoApplication)getApplication()).getService(PlacesController.class);
+        mAccomplishableController = ((StrollimoApplication)getApplication()).getService(AccomplishableController.class);
         mSelectedSecret = getSelectedPlace();
         if (mSelectedSecret == null) {
             // TODO: error handling, should send handled exception to crittercism
@@ -96,7 +96,7 @@ public class PhotoCaptureActivity extends Activity {
 
     private Secret getSelectedPlace() {
         String secretId = getIntent().getStringExtra(PLACE_ID_EXTRA);
-        return mPlacesController.getSecretById(secretId);
+        return mAccomplishableController.getSecretById(secretId);
     }
 
     @Override

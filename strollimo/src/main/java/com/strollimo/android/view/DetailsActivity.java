@@ -23,7 +23,7 @@ import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -37,7 +37,7 @@ public class DetailsActivity extends Activity {
     public static final String PLACE_ID_EXTRA = "place_id";
 
     private ZXingLibConfig zxingLibConfig;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
     private ImageManager mImageManager;
@@ -62,7 +62,7 @@ public class DetailsActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mImageManager = StrollimoApplication.getService(ImageManager.class);
-        mPlacesController = ((StrollimoApplication) getApplication()).getService(PlacesController.class);
+        mAccomplishableController = ((StrollimoApplication) getApplication()).getService(AccomplishableController.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
         mPrefs = ((StrollimoApplication) getApplication()).getService(StrollimoPreferences.class);
         zxingLibConfig = new ZXingLibConfig();
@@ -72,7 +72,7 @@ public class DetailsActivity extends Activity {
         mCaptureListView = (ListView)findViewById(R.id.capture_list);
         mTitleTextView = (TextView) findViewById(R.id.title);
 
-        mCurrentMystery = mPlacesController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
+        mCurrentMystery = mAccomplishableController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
         mSecretListAdapter = new SecretListAdapter(this, mCurrentMystery);
         mCaptureListView.setAdapter(mSecretListAdapter);
         mCaptureListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,7 +144,7 @@ public class DetailsActivity extends Activity {
         if (captureSuccessful) {
             boolean levelUp = mUserService.capturePlace(mCurrentMystery);
             int placesFound = mUserService.getFoundPlacesNum();
-            int placesCount = mPlacesController.getMysteriesCount();
+            int placesCount = mAccomplishableController.getMysteriesCount();
             int coinValue = mCurrentMystery.getCoinValue();
             String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
             TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);

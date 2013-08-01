@@ -26,7 +26,7 @@ import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.MapPlacesModel;
 import com.strollimo.android.model.Mystery;
@@ -36,7 +36,7 @@ public class MapFragment extends Fragment {
     private View mView;
     private GoogleMap mMap;
     private LocationClient mLocationClient;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
     private StrollimoPreferences mPrefs;
     private ImageManager mImageManager;
     private UserService mUserService;
@@ -86,7 +86,7 @@ public class MapFragment extends Fragment {
             firstStart = true;
             mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
             mMapView = (MapView) mView.findViewById(R.id.map);
-            mPlacesController = ((StrollimoApplication) getActivity().getApplication()).getService(PlacesController.class);
+            mAccomplishableController = ((StrollimoApplication) getActivity().getApplication()).getService(AccomplishableController.class);
             mImageManager = StrollimoApplication.getService(ImageManager.class);
             mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
             mPlaceImage = (ImageView) mView.findViewById(R.id.place_image);
@@ -145,7 +145,7 @@ public class MapFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
         mMapPlacesModel.refreshSelectedMarker();
-        if (mUserService.getFoundPlacesNum() == mPlacesController.getMysteriesCount() && mPlacesController.getMysteriesCount() != 0) {
+        if (mUserService.getFoundPlacesNum() == mAccomplishableController.getMysteriesCount() && mAccomplishableController.getMysteriesCount() != 0) {
             new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
         }
     }
@@ -211,7 +211,7 @@ public class MapFragment extends Fragment {
 
         mMapPlacesModel = new MapPlacesModel(mUserService);
         mMap.clear();
-        for (Mystery mystery : mPlacesController.getAllMysteries()) {
+        for (Mystery mystery : mAccomplishableController.getAllMysteries()) {
             addPlaceToMap(mystery);
         }
     }
@@ -250,7 +250,7 @@ public class MapFragment extends Fragment {
                 public void onConnected(Bundle bundle) {
                     if (firstStart) {
                         Location loc = mLocationClient.getLastLocation();
-                        Mystery mystery = mPlacesController.getFirstMystery();
+                        Mystery mystery = mAccomplishableController.getFirstMystery();
                         LatLng latLng;
                         if (mystery != null) {
                             latLng = new LatLng(mystery.getLocation().getLat(), mystery.getLocation().getLng());

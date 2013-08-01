@@ -14,7 +14,7 @@ import com.strollimo.android.AwsActivity;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.ImageComparisonPickupMode;
 import com.strollimo.android.model.Location;
 import com.strollimo.android.model.Mystery;
@@ -32,12 +32,12 @@ public class DebugFragment extends Fragment {
     private View mView;
     private Switch mSwitch;
     private StrollimoPreferences mPrefs;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
-        mPlacesController = StrollimoApplication.getService(PlacesController.class);
+        mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         if (mView == null) {
             mView = inflater.inflate(R.layout.debug_layout, container, false);
         } else {
@@ -63,7 +63,7 @@ public class DebugFragment extends Fragment {
         mView.findViewById(R.id.save_data_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPlacesController.loadDemoData();
+                mAccomplishableController.loadDemoData();
             }
         });
         mView.findViewById(R.id.clear_image_cache_button).setOnClickListener(new View.OnClickListener() {

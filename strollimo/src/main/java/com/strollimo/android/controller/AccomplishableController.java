@@ -12,7 +12,7 @@ import com.strollimo.android.network.AmazonUrl;
 import java.text.ParseException;
 import java.util.*;
 
-public class PlacesController {
+public class AccomplishableController {
     private final StrollimoPreferences mPrefs;
     private final ImageManager mImageManager;
     private final PhotoUploadController mPhotoUploadController;
@@ -20,7 +20,7 @@ public class PlacesController {
     private Context mContext;
     private LinkedHashMap<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
 
-    public PlacesController(Context context, StrollimoPreferences prefs, ImageManager imageManager, PhotoUploadController photoUploadController) {
+    public AccomplishableController(Context context, StrollimoPreferences prefs, ImageManager imageManager, PhotoUploadController photoUploadController) {
         mContext = context;
         mMysteries = new HashMap<String, Mystery>();
         mPrefs = prefs;

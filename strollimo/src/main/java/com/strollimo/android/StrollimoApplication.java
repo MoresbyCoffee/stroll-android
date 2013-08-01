@@ -9,7 +9,7 @@ import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.LoaderSettings;
 import com.novoda.imageloader.core.cache.LruBitmapCache;
 import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.PlacesController;
+import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
@@ -19,7 +19,7 @@ import com.strollimo.android.network.StrollimoApi;
 
 public class StrollimoApplication extends Application {
     private static Context mContext;
-    private PlacesController mPlacesController;
+    private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
     private AmazonS3Controller mAmazonS3Controller;
@@ -50,15 +50,15 @@ public class StrollimoApplication extends Application {
         settings.setNetworkManager(new AmazonNetworkManager(settings));
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
         mImageManager = new ImageManager(this, settings);
-        mPlacesController = new PlacesController(this, mPrefs, mImageManager, mPhotoUploadController);
+        mAccomplishableController = new AccomplishableController(this, mPrefs, mImageManager, mPhotoUploadController);
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
-        mPlacesController.preloadPlaces();
+        mAccomplishableController.preloadPlaces();
     }
 
     public <T> T getServiceInstance(Class<T> serviceClass) {
-        if (serviceClass == PlacesController.class) {
-            return (T) mPlacesController;
+        if (serviceClass == AccomplishableController.class) {
+            return (T) mAccomplishableController;
         } else if (serviceClass == UserService.class) {
             return (T) mUserService;
         } else if (serviceClass == StrollimoPreferences.class) {
