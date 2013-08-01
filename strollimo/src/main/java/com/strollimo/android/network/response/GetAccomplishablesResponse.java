@@ -1,10 +1,12 @@
 package com.strollimo.android.network.response;
 
+import com.google.gson.annotations.Expose;
 import com.strollimo.android.model.Mystery;
 
 import java.util.List;
 
 public class GetAccomplishablesResponse extends BaseResponse {
+    @Expose
     private List<Mystery> body;
 
     public List<Mystery> getBody() {

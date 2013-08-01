@@ -1,6 +1,9 @@
 package com.strollimo.android.network.request;
 
+import com.google.gson.annotations.Expose;
+
 public class GetAccomplishablesRequest extends BaseRequest {
+    @Expose
     private RequestBody body;
 
     public GetAccomplishablesRequest(RequestHeader header, boolean topLevel) {

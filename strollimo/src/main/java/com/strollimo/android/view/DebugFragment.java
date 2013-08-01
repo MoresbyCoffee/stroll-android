@@ -16,7 +16,7 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.model.Mystery;
-import com.strollimo.android.network.RetrofitTest;
+import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.UpdateAccomplishableResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -85,7 +85,7 @@ public class DebugFragment extends Fragment {
     private void testSomething() {
         Mystery mystery = new Mystery("55", "BBtest", 0.4, 0.5, "image URL");
         mystery.setShortDesc("something");
-        new RetrofitTest().updateMystery(mystery, new Callback<UpdateAccomplishableResponse>() {
+        StrollimoApplication.getService(StrollimoApi.class).updateMystery(mystery, new Callback<UpdateAccomplishableResponse>() {
             @Override
             public void success(UpdateAccomplishableResponse updateAccomplishableResponse, Response response) {
                 Log.i("BB", "success");
@@ -97,7 +97,7 @@ public class DebugFragment extends Fragment {
 
             }
         });
-//        new RetrofitTest().getAccomplishables(true);
+//        new StrollimoApi().getAccomplishables(true);
     }
 
     @Override

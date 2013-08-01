@@ -2,42 +2,52 @@ package com.strollimo.android;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.strollimo.android.model.Mystery;
-import com.strollimo.android.model.PickupMode;
-import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.model.Secret;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StrollimoPreferences {
-    private static final String COIN_VALUE_KEY = "COIN_VALUE_KEY";
-    private static final String CAPTURE_PLACE_KEY = "CAPTURED_PLACE_";
-    private static final String CAPTURED_PLACES_NUM_KEY = "CAPTURED_PLACES_NUM";
     public static final String USE_BARCODE_KEY = "USE_BARCODE";
     public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
     public static final String MISSIONS_KEY = "mmissions_";
     public static final String SECRET_KEY = "SECRET";
+    private static final String COIN_VALUE_KEY = "COIN_VALUE_KEY";
+    private static final String CAPTURE_PLACE_KEY = "CAPTURED_PLACE_";
+    private static final String CAPTURED_PLACES_NUM_KEY = "CAPTURED_PLACES_NUM";
+    public static final String DEVICEID_KEY = "DEVICEID_KEY";
     private final Context mContext;
-    private SharedPreferences mPrefs;
     private final Gson mGson;
+    private SharedPreferences mPrefs;
 
-    public StrollimoPreferences(SharedPreferences prefs, Context context) {
+    public StrollimoPreferences(Context context, SharedPreferences prefs, Gson gson) {
         mPrefs = prefs;
         mContext = context;
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
-        builder.excludeFieldsWithoutExposeAnnotation();
-        mGson = builder.create();
+        mGson = gson;
+    }
+
+    public String getDeviceUUID() {
+        String deviceId = mPrefs.getString(DEVICEID_KEY, null);
+        if (deviceId == null) {
+            final TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+
+            final String tmDevice, tmSerial, androidId;
+            tmDevice = "" + tm.getDeviceId();
+            tmSerial = "" + tm.getSimSerialNumber();
+            androidId = "" + android.provider.Settings.Secure.getString(mContext.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            deviceId = deviceUuid.toString();
+            mPrefs.edit().putString(DEVICEID_KEY, deviceId);
+        }
+        return deviceId;
     }
 
     public boolean isUseBarcode() {
@@ -72,12 +82,12 @@ public class StrollimoPreferences {
         mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, 0).apply();
     }
 
-    public void setDebugModeOn(boolean debugModeOn) {
-        mPrefs.edit().putBoolean(DEBUG_MODE_ON, debugModeOn).apply();
-    }
-
     public boolean isDebugModeOn() {
         return mPrefs.getBoolean(DEBUG_MODE_ON, false);
+    }
+
+    public void setDebugModeOn(boolean debugModeOn) {
+        mPrefs.edit().putBoolean(DEBUG_MODE_ON, debugModeOn).apply();
     }
 
     public void saveSecret(Secret secret) {
@@ -87,7 +97,7 @@ public class StrollimoPreferences {
     }
 
     public Secret getSecret(String id) {
-        String json = mPrefs.getString(SECRET_KEY+ id, "");
+        String json = mPrefs.getString(SECRET_KEY + id, "");
         return mGson.fromJson(json, Secret.class);
     }
 
@@ -97,7 +107,8 @@ public class StrollimoPreferences {
     }
 
     private List<Mystery> getMysteriesFromJson(String json) {
-        Type listType = new TypeToken<ArrayList<Mystery>>() {}.getType();
+        Type listType = new TypeToken<ArrayList<Mystery>>() {
+        }.getType();
         List<Mystery> mysteries = mGson.fromJson(json, listType);
         return mysteries;
     }

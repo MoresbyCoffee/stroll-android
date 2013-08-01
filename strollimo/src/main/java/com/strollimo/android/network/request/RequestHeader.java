@@ -1,6 +1,9 @@
 package com.strollimo.android.network.request;
 
+import com.google.gson.annotations.Expose;
+
 public class RequestHeader {
+    @Expose
     private String deviceId;
 
     public RequestHeader(String deviceId) {

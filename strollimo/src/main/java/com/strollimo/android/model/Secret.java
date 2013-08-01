@@ -20,10 +20,13 @@ public class Secret {
     private String type;
     @Expose
     private Location loc;
+    @Expose
+    private boolean topLevel;
 
     public Secret(String id, String name) {
         this.id = id;
         this.name = name;
+        this.topLevel = false;
     }
 
     public String getType() {

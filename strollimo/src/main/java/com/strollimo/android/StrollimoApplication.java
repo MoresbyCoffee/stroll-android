@@ -3,14 +3,19 @@ package com.strollimo.android;
 import android.app.Application;
 import android.content.Context;
 import com.crittercism.app.Crittercism;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.novoda.imageloader.core.ImageManager;
 import com.novoda.imageloader.core.LoaderSettings;
 import com.novoda.imageloader.core.cache.LruBitmapCache;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.PlacesController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.model.PickupMode;
+import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonNetworkManager;
 import com.strollimo.android.network.AmazonS3Controller;
+import com.strollimo.android.network.StrollimoApi;
 
 public class StrollimoApplication extends Application {
     private static Context mContext;
@@ -20,13 +25,25 @@ public class StrollimoApplication extends Application {
     private AmazonS3Controller mAmazonS3Controller;
     private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
+    private Gson mGson;
+    private StrollimoApi mStrollimoApi;
+
+    public static <T> T getService(Class<T> serviceClass) {
+        return ((StrollimoApplication) mContext.getApplicationContext()).getServiceInstance(serviceClass);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
         Crittercism.init(getApplicationContext(), "51f80ad3558d6a58c1000002");
-        mPrefs = new StrollimoPreferences(getSharedPreferences("StrollimoPreferences", 0), this);
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
+        builder.excludeFieldsWithoutExposeAnnotation();
+        mGson = builder.create();
+
+        mPrefs = new StrollimoPreferences(this, getSharedPreferences("StrollimoPreferences", 0), mGson);
+        mStrollimoApi = new StrollimoApi(mGson, mPrefs);
         mAmazonS3Controller = new AmazonS3Controller();
         LoaderSettings settings = new LoaderSettings.SettingsBuilder().withCacheManager(new LruBitmapCache(this, 50))
                 .withDisconnectOnEveryCall(true).build(this);
@@ -37,10 +54,6 @@ public class StrollimoApplication extends Application {
         mUserService = new UserService(mPrefs);
         mUserService.loadPlaces();
         mPlacesController.preloadPlaces();
-    }
-
-    public static <T> T getService(Class<T> serviceClass) {
-        return ((StrollimoApplication)mContext.getApplicationContext()).getServiceInstance(serviceClass);
     }
 
     public <T> T getServiceInstance(Class<T> serviceClass) {
@@ -56,6 +69,8 @@ public class StrollimoApplication extends Application {
             return (T) mImageManager;
         } else if (serviceClass == PhotoUploadController.class) {
             return (T) mPhotoUploadController;
+        } else if (serviceClass == StrollimoApi.class) {
+            return (T) mStrollimoApi;
         }
         return null;
 
