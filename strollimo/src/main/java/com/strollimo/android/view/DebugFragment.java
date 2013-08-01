@@ -20,6 +20,7 @@ import com.strollimo.android.model.Location;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.network.response.GetMysteriesResponse;
 import com.strollimo.android.network.response.GetSecretsResponse;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
 import com.strollimo.android.network.response.UpdateSecretResponse;
@@ -88,9 +89,25 @@ public class DebugFragment extends Fragment {
     }
 
     private void testSomething() {
-        testGetSecrets();
+        testGetMysteries();
 //        testUpdateSecretCall();
-//        new StrollimoApi().getMysteries(true);
+//        testUpdateMysteryCall();
+//        testGetSecrets();
+    }
+
+    private void testGetMysteries() {
+        StrollimoApplication.getService(StrollimoApi.class).getMysteries(new Callback<GetMysteriesResponse>() {
+            @Override
+            public void success(GetMysteriesResponse getMysteriesResponse, Response response) {
+                Log.i("BB", "success");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("BB", "failure");
+
+            }
+        });
     }
 
     private void testGetSecrets() {
@@ -132,7 +149,7 @@ public class DebugFragment extends Fragment {
     }
 
     private void testUpdateMysteryCall() {
-        Mystery mystery = new Mystery("55", "BBtest", 0.4, 0.5, "image URL");
+        Mystery mystery = new Mystery("56", "BBTestNew", 0.4, 0.5, "image URL");
         mystery.setShortDesc("something");
         StrollimoApplication.getService(StrollimoApi.class).updateMystery(mystery, new Callback<UpdateMysteryResponse>() {
             @Override

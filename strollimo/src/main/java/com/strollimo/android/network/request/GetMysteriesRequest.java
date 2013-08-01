@@ -12,6 +12,7 @@ public class GetMysteriesRequest extends BaseRequest {
     }
 
     private static class RequestBody {
+        @Expose
         private boolean topLevel;
 
         public RequestBody(boolean topLevel) {
