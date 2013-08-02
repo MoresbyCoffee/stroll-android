@@ -119,6 +119,7 @@ public class DebugFragment extends Fragment {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mPrefs.setEnvTag(input.getText().toString());
                 refreshEnvTitle();
+                syncData();
             }
         });
 
