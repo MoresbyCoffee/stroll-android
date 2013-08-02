@@ -22,6 +22,10 @@ public class StrollimoPreferences {
     public static final String DEVICEID_KEY = "DEVICEID_KEY";
     public static final String ENV_TAG_KEY = "ENV_TAG_KEY";
     public static final String DEFAULT_ENV_TAG = "default";
+    public static final String LAST_SYNC_KEY = "LAST_SYNC";
+
+    // The client should sync daily
+    public static final int SYNC_INTERVAL = 24 * 60 * 60 * 1000;
     private final Context mContext;
     private final Gson mGson;
     private SharedPreferences mPrefs;
@@ -132,6 +136,19 @@ public class StrollimoPreferences {
             }
         }
         editor.apply();
+    }
+
+    public boolean needInitialSync() {
+        long lastSync = mPrefs.getLong(LAST_SYNC_KEY, 0);
+        if (System.currentTimeMillis() - lastSync > SYNC_INTERVAL) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void saveSyncTime() {
+        mPrefs.edit().putLong(LAST_SYNC_KEY, System.currentTimeMillis()).apply();
     }
 
 }

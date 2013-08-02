@@ -1,7 +1,6 @@
 package com.strollimo.android.view;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -23,6 +25,7 @@ import com.strollimo.android.network.response.GetMysteriesResponse;
 import com.strollimo.android.network.response.GetSecretsResponse;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
 import com.strollimo.android.network.response.UpdateSecretResponse;
+import com.strollimo.android.view.dialog.SyncDialogHelper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -83,21 +86,7 @@ public class DebugFragment extends Fragment {
     }
 
     private void syncData() {
-        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Please wait...");
-        progressDialog.show();
-        mAccomplishableController.clearMysteries();
-        mAccomplishableController.asyncSyncMysteries(mPrefs.getEnvTag(), new AccomplishableController.OperationCallback() {
-            @Override
-            public void onSuccess() {
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onError(String errorMsg) {
-                Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-            }
-        });
+        SyncDialogHelper.syncData(mPrefs.getEnvTag(), getActivity(), mAccomplishableController, mPrefs);
     }
 
     private void refreshEnvTitle() {
