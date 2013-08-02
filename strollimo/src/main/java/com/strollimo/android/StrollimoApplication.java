@@ -36,7 +36,11 @@ public class StrollimoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
-        Crittercism.init(getApplicationContext(), "51f80ad3558d6a58c1000002");
+        // Initialize Crittercism crash reporting only on release builds
+        if (!BuildConfig.DEBUG) {
+            Crittercism.init(getApplicationContext(), "51f80ad3558d6a58c1000002");
+        }
+
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
         builder.excludeFieldsWithoutExposeAnnotation();
