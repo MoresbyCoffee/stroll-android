@@ -131,7 +131,10 @@ public class MapFragment extends Fragment {
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
                         } else {
-                            mMapPlacesModel.getSelectedMarker().hideInfoWindow();
+                            Marker selectedMarker = mMapPlacesModel.getSelectedMarker();
+                            if (selectedMarker != null) {
+                                selectedMarker.hideInfoWindow();
+                            }
                             mRibbonPanel.setVisibility(View.GONE);
                             mMapPlacesModel.hideSelectedPlace();
                         }
