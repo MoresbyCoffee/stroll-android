@@ -30,7 +30,6 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.MapPlacesModel;
 import com.strollimo.android.model.Mystery;
-import com.strollimo.android.view.dialog.DemoFinishedDialog;
 
 public class MapFragment extends Fragment {
     private View mView;
@@ -145,9 +144,10 @@ public class MapFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
         mMapPlacesModel.refreshSelectedMarker();
-        if (mUserService.getFoundPlacesNum() == mAccomplishableController.getMysteriesCount() && mAccomplishableController.getMysteriesCount() != 0) {
-            new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
-        }
+        // TODO BB: do we need this dialog?
+//        if (mUserService.getFoundPlacesNum() == mAccomplishableController.getMysteriesCount() && mAccomplishableController.getMysteriesCount() != 0) {
+//            new DemoFinishedDialog().show(getActivity().getSupportFragmentManager(), "dialog");
+//        }
     }
 
     @Override
@@ -218,7 +218,7 @@ public class MapFragment extends Fragment {
 
     private void addPlaceToMap(Mystery mystery) {
         BitmapDescriptor bitmapDescriptor;
-        if (mUserService.isPlaceCaptured(mystery.getId())) {
+        if (mUserService.isSecretCaptured(mystery.getId())) {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);

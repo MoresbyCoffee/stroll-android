@@ -2,9 +2,12 @@ package com.strollimo.android.view;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,14 +30,13 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.view.dialog.TreasureFoundDialog;
-import com.strollimo.android.view.dialog.TreasureNotFoundDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DetailsActivity extends Activity {
     public static final String PLACE_ID_EXTRA = "place_id";
+    private static final int TEMPORARY_TAKE_PHOTO = 15;
 
     private ZXingLibConfig zxingLibConfig;
     private AccomplishableController mAccomplishableController;
@@ -48,6 +50,7 @@ public class DetailsActivity extends Activity {
     private ImageView mDetailsPhoto;
     private ListView mCaptureListView;
     private SecretListAdapter mSecretListAdapter;
+    private Secret mSelectedSecret;
 
     public static Intent createDetailsIntent(Context context, String placeId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -78,8 +81,8 @@ public class DetailsActivity extends Activity {
         mCaptureListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Secret secret = mSecretListAdapter.getItem(i);
-                launchPickupActivity(secret.getId());
+                mSelectedSecret = mSecretListAdapter.getItem(i);
+                launchPickupActivity(mSelectedSecret.getId());
             }
         });
 
@@ -136,21 +139,32 @@ public class DetailsActivity extends Activity {
             case PhotoCaptureActivity.REQUEST_CODE:
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
                 break;
+            case TEMPORARY_TAKE_PHOTO:
+                final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Uploading photo for checking...");
+                progressDialog.show();
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mUserService.captureSecret(mSelectedSecret);
+                        mSecretListAdapter.notifyDataSetChanged();
+                        progressDialog.dismiss();
+                    }
+                }, 2000);
+
             default:
         }
     }
 
     private void handleResult(boolean captureSuccessful) {
         if (captureSuccessful) {
-            boolean levelUp = mUserService.capturePlace(mCurrentMystery);
-            int placesFound = mUserService.getFoundPlacesNum();
-            int placesCount = mAccomplishableController.getMysteriesCount();
-            int coinValue = mCurrentMystery.getCoinValue();
-            String levelText = levelUp ? mUserService.getCurrentLevel() : mUserService.getNextLevel();
-            TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
-            dialog.show(getFragmentManager(), "dialog");
+            // TODO: recreate these dialogs
+            mUserService.captureSecret(mSelectedSecret);
+//            TreasureFoundDialog dialog = new TreasureFoundDialog(placesFound, placesCount, coinValue, levelUp, levelText);
+//            dialog.show(getFragmentManager(), "dialog");
         } else {
-            new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
+            // TODO: recreate these dialogs
+//            new TreasureNotFoundDialog().show(getFragmentManager(), "dialog");
         }
     }
 
@@ -197,12 +211,15 @@ public class DetailsActivity extends Activity {
     }
 
     public void launchPickupActivity(String secretId) {
-        if (mPrefs.isUseBarcode()) {
-            IntentIntegrator integrator = new IntentIntegrator(this);
-            integrator.initiateScan();
-        } else {
-            PhotoCaptureActivity.initiatePhotoCapture(this, secretId);
-        }
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, TEMPORARY_TAKE_PHOTO);
+        // Temporarily disabling capture modes
+//        if (mPrefs.isUseBarcode()) {
+//            IntentIntegrator integrator = new IntentIntegrator(this);
+//            integrator.initiateScan();
+//        } else {
+//            PhotoCaptureActivity.initiatePhotoCapture(this, secretId);
+//        }
     }
 
     private String createFilename() {

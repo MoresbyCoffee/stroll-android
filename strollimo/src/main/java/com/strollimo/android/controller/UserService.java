@@ -1,94 +1,35 @@
 package com.strollimo.android.controller;
 
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.model.Mystery;
+import com.strollimo.android.model.Secret;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class UserService {
     private final StrollimoPreferences mPrefs;
-    private Set<String> mCapturedPlaces;
-    private int mCapturedPlaceNum;
-    private int mAllCoins;
-    private List<Level> mLevels;
+    private Set<String> mCapturedSecrets;
 
     public UserService(StrollimoPreferences prefs) {
         mPrefs = prefs;
-        mCapturedPlaces = new HashSet<String>();
-        mLevels = new ArrayList<Level>();
-        mLevels.add(new Level(5, "novice explorer"));
-        mLevels.add(new Level(10, "explorer"));
-        mLevels.add(new Level(15, "seasoned explorer"));
+        mCapturedSecrets = new HashSet<String>();
     }
 
-    public void loadPlaces() {
-        mCapturedPlaces = mPrefs.getCapturedPlaces();
-        mCapturedPlaceNum = mCapturedPlaces.size();
-        mAllCoins = mPrefs.getCoins();
+    public void loadCapturedSecrets() {
+        mCapturedSecrets = mPrefs.getCapturedSecrets();
     }
 
     public void reset() {
-        mCapturedPlaceNum = 0;
-        mAllCoins = 0;
-        mCapturedPlaces.clear();
-        mPrefs.clearCapturedPlaces();
-        mPrefs.saveCoins(0);
+        mCapturedSecrets.clear();
+        mPrefs.clearCapturedSecrets();
     }
 
-    public boolean capturePlace(Mystery mystery) {
-        mCapturedPlaces.add(mystery.getId());
-        mCapturedPlaceNum++;
-        String currentLevel = getCurrentLevel();
-        mAllCoins += mystery.getCoinValue();
-        String updatedLevel = getCurrentLevel();
-
-        if (currentLevel.equals(updatedLevel)) {
-            return false;
-        } else {
-            return true;
-        }
+    public void captureSecret(Secret secret) {
+        mCapturedSecrets.add(secret.getId());
     }
 
-    public String getCurrentLevel() {
-        for (int i = 1; i < mLevels.size(); i++) {
-            if (mAllCoins >= mLevels.get(i - 1).mCoins && mAllCoins < mLevels.get(i).mCoins) {
-                return mLevels.get(i - 1).mName;
-            }
-        }
-        return "";
+    public boolean isSecretCaptured(String secretId) {
+        return mCapturedSecrets.contains(secretId);
     }
 
-    public String getNextLevel() {
-        for (Level level : mLevels) {
-            if (mAllCoins < level.mCoins) {
-                return level.mName;
-            }
-        }
-        return "";
-    }
-
-    public boolean isPlaceCaptured(String placeId) {
-        return mCapturedPlaces.contains(placeId);
-    }
-
-    public int getFoundPlacesNum() {
-        return mCapturedPlaceNum;
-    }
-
-    public int getAllCoins() {
-        return mAllCoins;
-    }
-
-    private static class Level {
-        public int mCoins;
-        public String mName;
-
-        public Level(int coins, String name) {
-            mCoins = coins;
-            mName = name;
-        }
-    }
 }

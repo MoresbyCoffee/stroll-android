@@ -76,7 +76,7 @@ public class MapPlacesModel {
     }
 
     public boolean isSelectedPlaceCaptured() {
-        if (getSelectedPlace() != null && mUserService.isPlaceCaptured(getSelectedPlace().getId())) {
+        if (getSelectedPlace() != null && mUserService.isSecretCaptured(getSelectedPlace().getId())) {
             return true;
         } else {
             return false;

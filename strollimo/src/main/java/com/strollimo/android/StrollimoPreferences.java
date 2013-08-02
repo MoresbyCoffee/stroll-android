@@ -17,9 +17,8 @@ public class StrollimoPreferences {
     public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
     public static final String MISSIONS_KEY = "mmissions_";
     public static final String SECRET_KEY = "SECRET";
-    private static final String COIN_VALUE_KEY = "COIN_VALUE_KEY";
-    private static final String CAPTURE_PLACE_KEY = "CAPTURED_PLACE_";
-    private static final String CAPTURED_PLACES_NUM_KEY = "CAPTURED_PLACES_NUM";
+    private static final String CAPTURED_SECRET_KEY = "CAPTURED_SECRET_";
+    private static final String CAPTURED_SECRETS_NUM_KEY = "CAPTURED_SECRET_NUM";
     public static final String DEVICEID_KEY = "DEVICEID_KEY";
     public static final String ENV_TAG_KEY = "ENV_TAG_KEY";
     public static final String DEFAULT_ENV_TAG = "default";
@@ -58,19 +57,11 @@ public class StrollimoPreferences {
         mPrefs.edit().putBoolean(USE_BARCODE_KEY, useBarcode).apply();
     }
 
-    public int getCoins() {
-        return mPrefs.getInt(COIN_VALUE_KEY, 0);
-    }
-
-    public void saveCoins(int coins) {
-        mPrefs.edit().putInt(COIN_VALUE_KEY, coins).apply();
-    }
-
-    public HashSet<String> getCapturedPlaces() {
+    public HashSet<String> getCapturedSecrets() {
         HashSet<String> places = new HashSet<String>();
-        int maxCaptured = mPrefs.getInt(CAPTURED_PLACES_NUM_KEY, 0);
+        int maxCaptured = mPrefs.getInt(CAPTURED_SECRETS_NUM_KEY, 0);
         for (int i = 1; i < maxCaptured + 1; i++) {
-            String placeId = mPrefs.getString(CAPTURE_PLACE_KEY + i, "");
+            String placeId = mPrefs.getString(CAPTURED_SECRET_KEY + i, "");
             if (placeId != "") {
                 places.add(placeId);
             }
@@ -78,8 +69,8 @@ public class StrollimoPreferences {
         return places;
     }
 
-    public void clearCapturedPlaces() {
-        mPrefs.edit().putInt(CAPTURED_PLACES_NUM_KEY, 0).apply();
+    public void clearCapturedSecrets() {
+        mPrefs.edit().putInt(CAPTURED_SECRETS_NUM_KEY, 0).apply();
     }
 
     public boolean isDebugModeOn() {

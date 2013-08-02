@@ -56,7 +56,7 @@ public class StrollimoApplication extends Application {
         mImageManager = new ImageManager(this, settings);
         mAccomplishableController = new AccomplishableController(this, mPrefs, mImageManager, mPhotoUploadController, mStrollimoApi);
         mUserService = new UserService(mPrefs);
-        mUserService.loadPlaces();
+        mUserService.loadCapturedSecrets();
         mAccomplishableController.preloadPlaces();
     }
 

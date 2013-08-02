@@ -13,6 +13,7 @@ import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 
@@ -21,6 +22,7 @@ public class SecretListAdapter extends BaseAdapter {
     public static final int HEIGHT = 150;
     private final Context mContext;
     private final AccomplishableController mAccomplishableController;
+    private final UserService mUserService;
     private Mystery mMystery;
     private ImageManager mImageManager;
 
@@ -29,6 +31,7 @@ public class SecretListAdapter extends BaseAdapter {
         mContext = context;
         mImageManager = StrollimoApplication.getService(ImageManager.class);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
+        mUserService = StrollimoApplication.getService(UserService.class);
 
     }
 
@@ -58,7 +61,11 @@ public class SecretListAdapter extends BaseAdapter {
         Secret secret = mAccomplishableController.getSecretById(mMystery.getChildren().get(i));
         secretTitle.setText(secret.getName());
         ImageView secretPhoto = ((ImageView)view.findViewById(R.id.secret_photo));
-
+        if (mUserService.isSecretCaptured(secret.getId())) {
+            view.findViewById(R.id.captured).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.captured).setVisibility(View.GONE);
+        }
         ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
         imageTagFactory.setAnimation(android.R.anim.fade_in);
         ImageTag tag = imageTagFactory.build(secret.getImgUrl(), mContext);
