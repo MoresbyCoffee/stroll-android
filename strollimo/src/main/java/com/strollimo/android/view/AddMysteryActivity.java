@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +29,9 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonUrl;
+import com.strollimo.android.util.BitmapUtils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.File;
 import java.util.Random;
 
 public class AddMysteryActivity extends Activity {
@@ -150,19 +149,9 @@ public class AddMysteryActivity extends Activity {
         switch (requestCode) {
             case REQUEST_PICK_IMAGE:
                 Uri imageUri = data.getData();
-                Bitmap bitmap;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(
-                            getContentResolver(), imageUri);
-                    mPhotoImageView.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
+                File file = new File(BitmapUtils.getRealPathFromURI(this, imageUri));
+                Bitmap bitmap = BitmapUtils.getBitmapFromFile(file, 800, 600);
+                mPhotoImageView.setImageBitmap(bitmap);
                 break;
             default:
         }
