@@ -6,3 +6,4 @@ gen
 strollimo-release-key.keystore
 strollimo/build.gradle
 *.iml
+local.properties
