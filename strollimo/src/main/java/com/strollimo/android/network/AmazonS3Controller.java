@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
 import java.util.Date;
 
 public class AmazonS3Controller {
@@ -68,5 +69,17 @@ public class AmazonS3Controller {
 
     public static AmazonUrl mysteryUrl(String filename) {
         return new AmazonUrl("strollimo1", "mystery", filename);
+    }
+
+    public String getUrl(String s) {
+        AmazonUrl amazonUrl;
+        try {
+            amazonUrl = AmazonUrl.fromUrl(s);
+        } catch (ParseException e) {
+            Log.e(TAG, "Wrong amazon URL", e);
+            return null;
+        }
+        URL url = getUrl(amazonUrl);
+        return url.toString();
     }
 }

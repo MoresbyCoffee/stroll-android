@@ -17,12 +17,11 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.novoda.imageloader.core.ImageManager;
-import com.novoda.imageloader.core.model.ImageTag;
-import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -30,6 +29,7 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,7 +42,6 @@ public class DetailsActivity extends Activity {
     private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
-    private ImageManager mImageManager;
 
     private TextView mTitleTextView;
     private Mystery mCurrentMystery;
@@ -64,7 +63,6 @@ public class DetailsActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mImageManager = StrollimoApplication.getService(ImageManager.class);
         mAccomplishableController = ((StrollimoApplication) getApplication()).getService(AccomplishableController.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
         mPrefs = ((StrollimoApplication) getApplication()).getService(StrollimoPreferences.class);
@@ -89,11 +87,9 @@ public class DetailsActivity extends Activity {
         mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase());
         mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
 
-        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(800, 600, R.drawable.closed);
-        imageTagFactory.setAnimation(android.R.anim.fade_in);
-        ImageTag tag = imageTagFactory.build(mCurrentMystery.getImgUrl(), this);
-        mDetailsPhoto.setTag(tag);
-        mImageManager.getLoader().load(mDetailsPhoto);
+        String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
+
+        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mDetailsPhoto);
 
         mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override

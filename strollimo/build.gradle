@@ -25,16 +25,15 @@ dependencies {
     //    compile 'com.amazonaws:aws-java-sdk:1.5.2'
     compile files('libs/aws-android-sdk-1.6.0.jar')
 
-    // the current artifact is broken in maven central... check later
-    compile files('libs/imageloader-core-1.5.8.jar')
-
     compile files('libs/crittercism_v3_0_11_sdkonly.jar')
     compile project(':libraries:ZXingLib')
     compile project(':libraries:OpenCV')
+    compile project(':libraries:volley')
+    compile project(':libraries:glide')
 }
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 18
     buildToolsVersion "17.0.0"
 
     signingConfigs {
@@ -55,7 +54,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 16
+        minSdkVersion 14
+        targetSdkVersion 18
     }
 }

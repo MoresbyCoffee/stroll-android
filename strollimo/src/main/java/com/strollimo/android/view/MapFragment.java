@@ -10,6 +10,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -19,9 +21,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.*;
-import com.novoda.imageloader.core.ImageManager;
-import com.novoda.imageloader.core.model.ImageTag;
-import com.novoda.imageloader.core.model.ImageTagFactory;
 import com.strollimo.android.AppGlobals;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -30,6 +29,7 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.MapPlacesModel;
 import com.strollimo.android.model.Mystery;
+import com.strollimo.android.network.AmazonS3Controller;
 
 public class MapFragment extends Fragment {
     private View mView;
@@ -37,7 +37,6 @@ public class MapFragment extends Fragment {
     private LocationClient mLocationClient;
     private AccomplishableController mAccomplishableController;
     private StrollimoPreferences mPrefs;
-    private ImageManager mImageManager;
     private UserService mUserService;
     private boolean firstStart = true;
     private ImageView mPlaceImage;
@@ -86,7 +85,6 @@ public class MapFragment extends Fragment {
             mView = inflater.inflate(R.layout.stroll_map_layout, container, false);
             mMapView = (MapView) mView.findViewById(R.id.map);
             mAccomplishableController = ((StrollimoApplication) getActivity().getApplication()).getService(AccomplishableController.class);
-            mImageManager = StrollimoApplication.getService(ImageManager.class);
             mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
             mPlaceImage = (ImageView) mView.findViewById(R.id.place_image);
             mPlaceTitle = (TextView) mView.findViewById(R.id.place_title);
@@ -289,11 +287,9 @@ public class MapFragment extends Fragment {
         Animation anim = AnimationUtils.loadAnimation(getActivity(), fromRight ? R.anim.slide_in_from_right : R.anim.slide_in_from_left);
         mRibbonPanel.setVisibility(View.VISIBLE);
 
-        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(800, 600, R.drawable.closed);
-        imageTagFactory.setAnimation(android.R.anim.fade_in);
-        ImageTag tag = imageTagFactory.build(mystery.getImgUrl(), getActivity());
-        mPlaceImage.setTag(tag);
-        mImageManager.getLoader().load(mPlaceImage);
+        String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
+
+        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mPlaceImage);
 
         mPlaceTitle.setText(mystery.getName().toUpperCase());
         mRibbonPanel.startAnimation(anim);

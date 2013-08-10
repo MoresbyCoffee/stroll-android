@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -36,7 +35,6 @@ public class AddSecretActivity extends Activity {
     private Mystery mCurrentMystery;
     private AccomplishableController mAccomplishableController;
     private ImageView mPhotoImageView;
-    private ImageManager mImageManager;
     private PhotoUploadController mPhotoUploadController;
     private ProgressDialog progressDialog;
 
@@ -45,7 +43,6 @@ public class AddSecretActivity extends Activity {
         super.onCreate(savedInstanceState);
         mPhotoUploadController = StrollimoApplication.getService(PhotoUploadController.class);
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
-        mImageManager = StrollimoApplication.getService(ImageManager.class);
         setContentView(R.layout.add_secret_activity);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         mCurrentMystery = getSelectedPlace();

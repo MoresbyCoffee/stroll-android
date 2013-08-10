@@ -9,13 +9,14 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import com.novoda.imageloader.core.ImageManager;
-import com.novoda.imageloader.core.model.ImageTag;
-import com.novoda.imageloader.core.model.ImageTagFactory;
+
+import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
@@ -52,11 +53,9 @@ public class PhotoCaptureActivity extends Activity {
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mRefImageView = (ImageView)findViewById(R.id.ref_image);
 
-        ImageManager imageManager = StrollimoApplication.getService(ImageManager.class);
-        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
-        ImageTag tag = imageTagFactory.build(mSelectedSecret.getImgUrl(), this);
-        mRefImageView.setTag(tag);
-        imageManager.getLoader().load(mRefImageView);
+        String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSelectedSecret.getImgUrl());
+
+        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mRefImageView);
 
         mRefImageView.setOnClickListener(new View.OnClickListener() {
             @Override

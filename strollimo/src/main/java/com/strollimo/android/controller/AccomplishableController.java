@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
-import com.novoda.imageloader.core.ImageManager;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -26,19 +25,17 @@ public class AccomplishableController {
     private static final String TAG = AccomplishableController.class.getSimpleName();
 
     private final StrollimoPreferences mPrefs;
-    private final ImageManager mImageManager;
     private final PhotoUploadController mPhotoUploadController;
     private final StrollimoApi mStrollimoApi;
     private Map<String, Mystery> mMysteries;
     private Context mContext;
     private LinkedHashMap<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
 
-    public AccomplishableController(Context context, StrollimoPreferences prefs, ImageManager imageManager,
+    public AccomplishableController(Context context, StrollimoPreferences prefs,
                                     PhotoUploadController photoUploadController, StrollimoApi strollimoApi) {
         mContext = context;
         mMysteries = new HashMap<String, Mystery>();
         mPrefs = prefs;
-        mImageManager = imageManager;
         mPhotoUploadController = photoUploadController;
         mStrollimoApi = strollimoApi;
         preloadPlaces();
@@ -116,19 +113,19 @@ public class AccomplishableController {
         }
     }
 
-    private void preloadImages(final List<Mystery> mysteries) {
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                for (Mystery mystery : mysteries) {
-                    if (!TextUtils.isEmpty(mystery.getImgUrl())) {
-                        mImageManager.cacheImage(mystery.getImgUrl(), 800, 600);
-                    }
-                }
-            }
-        }).start();
-    }
+//    private void preloadImages(final List<Mystery> mysteries) {
+//        new Thread(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                for (Mystery mystery : mysteries) {
+//                    if (!TextUtils.isEmpty(mystery.getImgUrl())) {
+//                        mImageManager.cacheImage(mystery.getImgUrl(), 800, 600);
+//                    }
+//                }
+//            }
+//        }).start();
+//    }
 
     public void start() {
 
@@ -148,7 +145,8 @@ public class AccomplishableController {
             }
         }
 
-        mImageManager.getCacheManager().put(mystery.getImgUrl(), photo);
+        // TODO save image in cache
+        // mImageManager.getCacheManager().put(mystery.getImgUrl(), photo);
         mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
             @Override
             public void onSuccess() {
@@ -197,7 +195,8 @@ public class AccomplishableController {
             }
         }
 
-        mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
+        //TODO save image in cache
+        //mImageManager.getCacheManager().put(secret.getImgUrl(), photo);
         mPhotoUploadController.asyncUploadPhotoToAmazon(amazonUrl, photo, new PhotoUploadController.Callback() {
             @Override
             public void onSuccess() {

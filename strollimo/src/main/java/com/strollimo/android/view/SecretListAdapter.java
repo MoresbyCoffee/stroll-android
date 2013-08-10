@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.novoda.imageloader.core.ImageManager;
-import com.novoda.imageloader.core.model.ImageTag;
-import com.novoda.imageloader.core.model.ImageTagFactory;
+
+import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 
 public class SecretListAdapter extends BaseAdapter {
     public static final int WIDTH = 200;
@@ -24,12 +24,10 @@ public class SecretListAdapter extends BaseAdapter {
     private final AccomplishableController mAccomplishableController;
     private final UserService mUserService;
     private Mystery mMystery;
-    private ImageManager mImageManager;
 
     public SecretListAdapter(Context context, Mystery mystery) {
         mMystery = mystery;
         mContext = context;
-        mImageManager = StrollimoApplication.getService(ImageManager.class);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         mUserService = StrollimoApplication.getService(UserService.class);
 
@@ -66,11 +64,10 @@ public class SecretListAdapter extends BaseAdapter {
         } else {
             view.findViewById(R.id.captured).setVisibility(View.GONE);
         }
-        ImageTagFactory imageTagFactory = ImageTagFactory.newInstance(WIDTH, HEIGHT, R.drawable.closed);
-        imageTagFactory.setAnimation(android.R.anim.fade_in);
-        ImageTag tag = imageTagFactory.build(secret.getImgUrl(), mContext);
-        secretPhoto.setTag(tag);
-        mImageManager.getLoader().load(secretPhoto);
+
+        String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(secret.getImgUrl());
+
+        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(secretPhoto);
 
         return view;
     }
