@@ -1,6 +1,7 @@
 package com.strollimo.android.view;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ public class MapFragment extends Fragment {
     private ImageView mPlaceImage;
     private TextView mPlaceTitle;
     private View mRibbonPanel;
+    private Circle mCircleRadius;
     private MapPlacesModel mMapPlacesModel;
     private MapView mMapView;
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
@@ -55,13 +57,33 @@ public class MapFragment extends Fragment {
         @Override
         public boolean onMarkerClick(Marker marker) {
             mMapPlacesModel.onMarkerClick(marker);
+            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
             return false;
         }
     };
+
+    private void removeCircleRadius() {
+        if (mCircleRadius != null) {
+            mCircleRadius.remove();
+            mCircleRadius = null;
+        }
+    }
+
+    private void displayCircleRadius(Mystery selectedPlace) {
+        removeCircleRadius();
+        double radius = selectedPlace.getLocation().getRadius() <= 0 ? 100 : selectedPlace.getLocation().getRadius();
+        mCircleRadius = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(selectedPlace.getLocation().getLat(), selectedPlace.getLocation().getLng()))
+                .radius(radius)
+                .strokeColor(Color.TRANSPARENT)
+                .fillColor(0x450000FF));
+    }
+
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
+            removeCircleRadius();
             hideRibbon();
         }
     };
