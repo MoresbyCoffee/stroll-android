@@ -9,14 +9,8 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import com.bumptech.glide.Glide;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -27,7 +21,6 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.network.AmazonS3Controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,10 +34,8 @@ public class DetailsActivity extends FragmentActivity {
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
 
-    private TextView mTitleTextView;
     private Mystery mCurrentMystery;
 
-    private ImageView mDetailsPhoto;
     private Secret mSelectedSecret;
     private ViewPager mViewPager;
     private SecretSlideAdapter mPagerAdapter;
@@ -64,6 +55,7 @@ public class DetailsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.details_screen);
 
         mAccomplishableController = ((StrollimoApplication) getApplication()).getService(AccomplishableController.class);
         mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
@@ -71,10 +63,8 @@ public class DetailsActivity extends FragmentActivity {
         zxingLibConfig = new ZXingLibConfig();
         zxingLibConfig.useFrontLight = true;
 
-        setContentView(R.layout.details2_screen);
         mViewPager = (ViewPager)findViewById(R.id.secret_pager);
-        mTitleTextView = (TextView) findViewById(R.id.title);
-
+        mViewPager.setPageTransformer(true, new DepthPageTransformer());
         mCurrentMystery = mAccomplishableController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
         mPagerAdapter = new SecretSlideAdapter(getSupportFragmentManager(), getApplicationContext(), mCurrentMystery);
         mViewPager.setAdapter(mPagerAdapter);
@@ -86,29 +76,8 @@ public class DetailsActivity extends FragmentActivity {
 
             }
         });
-
-        mTitleTextView.setText(mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase());
-        mDetailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
-
-        String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
-
-        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mDetailsPhoto);
-
-        mDetailsPhoto.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.i("BB", "resetting");
-                if (motionEvent.getPointerCount() >= 3) {
-                    Log.i("BB", "resetting - really");
-                    mUserService.reset();
-                    Intent intent = new Intent(DetailsActivity.this, MapFragment.class);
-                    startActivity(intent);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
+        String title = mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase();
+        actionBar.setTitle(title);
     }
 
     @Override
