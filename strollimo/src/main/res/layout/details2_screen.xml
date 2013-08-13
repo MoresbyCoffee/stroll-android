@@ -43,12 +43,11 @@
                 android:textColor="@color/title_text_color"
                 android:layout_marginBottom="15dp"/>
 
-        <ListView
-                android:id="@+id/capture_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
+        <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/secret_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>

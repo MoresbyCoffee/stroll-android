@@ -1,23 +1,21 @@
 package com.strollimo.android.view;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -34,7 +32,7 @@ import com.strollimo.android.network.AmazonS3Controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DetailsActivity extends Activity {
+public class DetailsActivity extends FragmentActivity {
     public static final String PLACE_ID_EXTRA = "place_id";
     private static final int TEMPORARY_TAKE_PHOTO = 15;
 
@@ -47,9 +45,13 @@ public class DetailsActivity extends Activity {
     private Mystery mCurrentMystery;
 
     private ImageView mDetailsPhoto;
-    private ListView mCaptureListView;
-    private SecretListAdapter mSecretListAdapter;
     private Secret mSelectedSecret;
+    private ViewPager mViewPager;
+    private SecretSlideAdapter mPagerAdapter;
+
+    public interface OnSecretClickListener {
+        public void onSecretClicked(Secret secret);
+    }
 
     public static Intent createDetailsIntent(Context context, String placeId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -70,17 +72,18 @@ public class DetailsActivity extends Activity {
         zxingLibConfig.useFrontLight = true;
 
         setContentView(R.layout.details2_screen);
-        mCaptureListView = (ListView)findViewById(R.id.capture_list);
+        mViewPager = (ViewPager)findViewById(R.id.secret_pager);
         mTitleTextView = (TextView) findViewById(R.id.title);
 
         mCurrentMystery = mAccomplishableController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
-        mSecretListAdapter = new SecretListAdapter(this, mCurrentMystery);
-        mCaptureListView.setAdapter(mSecretListAdapter);
-        mCaptureListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPagerAdapter = new SecretSlideAdapter(getSupportFragmentManager(), getApplicationContext(), mCurrentMystery);
+        mViewPager.setAdapter(mPagerAdapter);
+        mPagerAdapter.setOnSecretClickListener(new OnSecretClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mSelectedSecret = mSecretListAdapter.getItem(i);
+            public void onSecretClicked(Secret secret) {
+                mSelectedSecret = secret;
                 launchPickupActivity(mSelectedSecret.getId());
+
             }
         });
 
@@ -111,7 +114,7 @@ public class DetailsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSecretListAdapter.notifyDataSetChanged();
+        mPagerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -143,7 +146,7 @@ public class DetailsActivity extends Activity {
                     @Override
                     public void run() {
                         mUserService.captureSecret(mSelectedSecret);
-                        mSecretListAdapter.notifyDataSetChanged();
+                        mPagerAdapter.notifyDataSetChanged();
                         progressDialog.dismiss();
                     }
                 }, 2000);
