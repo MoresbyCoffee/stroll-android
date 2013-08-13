@@ -63,6 +63,9 @@
         <activity
                 android:name=".view.AddMysteryActivity"
                 android:label="@string/title_activity_add_mystery" />
+        <activity
+                android:name=".view.MysteryOpenActivity"
+                android:label="@string/title_mystery_open_activity" />
     </application>
 
     <uses-feature android:name="android.hardware.camera" />
