@@ -17,15 +17,18 @@ import com.strollimo.android.network.AmazonS3Controller;
 public class SecretCardFragment extends Fragment {
     private final DetailsActivity.OnSecretClickListener mOnSecretClickListener;
     private final UserService mUserService;
+    private final int mSecretOrderNum;
     private Secret mSecret;
     private TextView mSecretTitle;
     private ImageView mSecretPhoto;
     private ImageView mCapturedView;
+    private TextView mSecretOrder;
 
-    public SecretCardFragment(Secret secret, UserService userService, DetailsActivity.OnSecretClickListener onSecretClickListener) {
+    public SecretCardFragment(Secret secret, int position, UserService userService, DetailsActivity.OnSecretClickListener onSecretClickListener) {
         mUserService = userService;
         mSecret = secret;
         mOnSecretClickListener = onSecretClickListener;
+        mSecretOrderNum = position;
     }
 
     @Override
@@ -45,10 +48,12 @@ public class SecretCardFragment extends Fragment {
             }
         });
 
-        mSecretTitle = ((TextView)rootView.findViewById(R.id.secret_title));
-        mSecretPhoto = ((ImageView)rootView.findViewById(R.id.secret_photo));
+        mSecretTitle = (TextView)rootView.findViewById(R.id.secret_title);
+        mSecretPhoto = (ImageView)rootView.findViewById(R.id.secret_photo);
         mCapturedView = (ImageView)rootView.findViewById(R.id.captured);
+        mSecretOrder = (TextView)rootView.findViewById(R.id.secret_order);
 
+        mSecretOrder.setText("" + mSecretOrderNum);
         mSecretTitle.setText(mSecret.getName());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSecret.getImgUrl());
         Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mSecretPhoto);

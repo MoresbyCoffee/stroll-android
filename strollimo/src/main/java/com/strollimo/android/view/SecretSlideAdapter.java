@@ -34,7 +34,7 @@ public class SecretSlideAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Secret secret = mAccomplishableController.getSecretById(mMystery.getChildren().get(position));
-        SecretCardFragment fragment = new SecretCardFragment(secret, mUserService, mOnSecretClickListener);
+        SecretCardFragment fragment = new SecretCardFragment(secret, position + 1, mUserService, mOnSecretClickListener);
         mFragments.add(position, new WeakReference<SecretCardFragment>(fragment));
         return fragment;
     }
