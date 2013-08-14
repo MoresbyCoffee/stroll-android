@@ -15,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -37,6 +36,7 @@ import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
 
 public class MapFragment extends Fragment {
+    public static final int DEFAULT_RADIUS = 25;
     private View mView;
     private GoogleMap mMap;
     private LocationClient mLocationClient;
@@ -69,6 +69,7 @@ public class MapFragment extends Fragment {
 
             mMapPlacesModel.onMarkerClick(marker);
 
+            // TODO: replace this with assets
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
             displayCircleRadius(mMapPlacesModel.getSelectedPlace());
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
@@ -246,12 +247,12 @@ public class MapFragment extends Fragment {
 
     private void displayCircleRadius(Mystery selectedPlace) {
         removeCircleRadius();
-        double radius = selectedPlace.getLocation().getRadius() <= 0 ? 25 : selectedPlace.getLocation().getRadius();
+        double radius = selectedPlace.getLocation().getRadius() <= 0 ? DEFAULT_RADIUS : selectedPlace.getLocation().getRadius();
         mCircleRadius = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(selectedPlace.getLocation().getLat(), selectedPlace.getLocation().getLng()))
                 .radius(radius)
                 .strokeColor(Color.TRANSPARENT)
-                .fillColor(0x450000FF));
+                .fillColor(getResources().getColor(R.color.map_circle)));
     }
 
     private void setUpMapIfNecessary() {
@@ -281,9 +282,10 @@ public class MapFragment extends Fragment {
     private void addPlaceToMap(Mystery mystery) {
         BitmapDescriptor bitmapDescriptor;
         if (mUserService.isSecretCaptured(mystery.getId())) {
-            // TODO: icon for captured mysteries
+            // TODO: need an asset for captured mysteries
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
+            // TODO: replace this with assets
             bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(150));
         }
 
