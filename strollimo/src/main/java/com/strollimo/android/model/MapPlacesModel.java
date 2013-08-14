@@ -26,9 +26,9 @@ public class MapPlacesModel {
             return;
         }
         if (isSelectedPlaceCaptured()) {
-            getSelectedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
+            // TODO: icon for captured place
+            //getSelectedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pink_flag));
         }
-        getSelectedMarker().showInfoWindow();
     }
 
     public void onMarkerClick(Marker marker) {
@@ -83,7 +83,7 @@ public class MapPlacesModel {
         }
     }
 
-    public void hideSelectedPlace() {
+    public void clearSelectedPlace() {
         mSelectedMapPlace = null;
     }
 
