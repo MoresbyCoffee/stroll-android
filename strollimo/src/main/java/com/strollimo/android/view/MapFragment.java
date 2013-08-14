@@ -78,7 +78,6 @@ public class MapFragment extends Fragment {
             return true;
         }
     };
-
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
@@ -97,7 +96,6 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     *
      * @param alpha Between 0 and 255
      * @return
      */
@@ -110,7 +108,6 @@ public class MapFragment extends Fragment {
         drawable.draw(canvas);
         return bitmap;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

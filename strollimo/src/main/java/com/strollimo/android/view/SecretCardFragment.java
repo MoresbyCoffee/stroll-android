@@ -39,7 +39,8 @@ public class SecretCardFragment extends Fragment {
         if (mSecret == null) {
             return rootView;
         }
-        rootView.setOnClickListener(new View.OnClickListener() {
+
+        rootView.findViewById(R.id.capture_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnSecretClickListener != null) {
@@ -47,11 +48,10 @@ public class SecretCardFragment extends Fragment {
                 }
             }
         });
-
-        mSecretTitle = (TextView)rootView.findViewById(R.id.secret_title);
-        mSecretPhoto = (ImageView)rootView.findViewById(R.id.secret_photo);
-        mCapturedView = (ImageView)rootView.findViewById(R.id.captured);
-        mSecretOrder = (TextView)rootView.findViewById(R.id.secret_order);
+        mSecretTitle = (TextView) rootView.findViewById(R.id.secret_title);
+        mSecretPhoto = (ImageView) rootView.findViewById(R.id.secret_photo);
+        mCapturedView = (ImageView) rootView.findViewById(R.id.captured);
+        mSecretOrder = (TextView) rootView.findViewById(R.id.secret_order);
 
         mSecretOrder.setText("" + mSecretOrderNum);
         mSecretTitle.setText(mSecret.getName().toUpperCase());
