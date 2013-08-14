@@ -54,7 +54,7 @@ public class SecretCardFragment extends Fragment {
         mSecretOrder = (TextView)rootView.findViewById(R.id.secret_order);
 
         mSecretOrder.setText("" + mSecretOrderNum);
-        mSecretTitle.setText(mSecret.getName());
+        mSecretTitle.setText(mSecret.getName().toUpperCase());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSecret.getImgUrl());
         Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mSecretPhoto);
         refreshView();

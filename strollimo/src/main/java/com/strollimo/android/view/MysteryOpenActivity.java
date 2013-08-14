@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -36,6 +37,7 @@ public class MysteryOpenActivity extends Activity {
                 startActivity(DetailsActivity.createDetailsIntent(MysteryOpenActivity.this, mCurrentMystery.getId()));
             }
         });
+        ((TextView)findViewById(R.id.title)).setText(mCurrentMystery.getName().toUpperCase());
         ImageView detailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
         Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(detailsPhoto);
