@@ -1,7 +1,11 @@
 package com.strollimo.android.view;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,37 +60,56 @@ public class MapFragment extends Fragment {
     private GoogleMap.OnMarkerClickListener mOnMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
         @Override
         public boolean onMarkerClick(Marker marker) {
+
+            //reset previous selection if any
+            Marker selectedMarker = mMapPlacesModel.getSelectedMarker();
+            if (selectedMarker != null) {
+                resetMarkerIcon(selectedMarker);
+            }
+
             mMapPlacesModel.onMarkerClick(marker);
+
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
             displayCircleRadius(mMapPlacesModel.getSelectedPlace());
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
-            return false;
+            marker.hideInfoWindow();
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
+            return true;
         }
     };
-
-    private void removeCircleRadius() {
-        if (mCircleRadius != null) {
-            mCircleRadius.remove();
-            mCircleRadius = null;
-        }
-    }
-
-    private void displayCircleRadius(Mystery selectedPlace) {
-        removeCircleRadius();
-        double radius = selectedPlace.getLocation().getRadius() <= 0 ? 100 : selectedPlace.getLocation().getRadius();
-        mCircleRadius = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(selectedPlace.getLocation().getLat(), selectedPlace.getLocation().getLng()))
-                .radius(radius)
-                .strokeColor(Color.TRANSPARENT)
-                .fillColor(0x450000FF));
-    }
 
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
+            Marker selectedMarker = mMapPlacesModel.getSelectedMarker();
+            if (selectedMarker != null) {
+                resetMarkerIcon(selectedMarker);
+            }
             removeCircleRadius();
             hideRibbon();
+            mMapPlacesModel.clearSelectedPlace();
         }
     };
+
+    private void resetMarkerIcon(Marker marker) {
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(150)));
+    }
+
+    /**
+     *
+     * @param alpha Between 0 and 255
+     * @return
+     */
+    private Bitmap getMoWithAlpha(int alpha) {
+        BitmapDrawable drawable = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.mo));
+        drawable.setAlpha(alpha);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +169,6 @@ public class MapFragment extends Fragment {
                         }
                         if (toMystery != null) {
                             Marker marker = mMapPlacesModel.getMarkerForPlace(toMystery);
-                            marker.showInfoWindow();
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
@@ -156,7 +178,7 @@ public class MapFragment extends Fragment {
                                 selectedMarker.hideInfoWindow();
                             }
                             mRibbonPanel.setVisibility(View.GONE);
-                            mMapPlacesModel.hideSelectedPlace();
+                            mMapPlacesModel.clearSelectedPlace();
                         }
                     }
                 }));
@@ -215,6 +237,23 @@ public class MapFragment extends Fragment {
         }
     }
 
+    private void removeCircleRadius() {
+        if (mCircleRadius != null) {
+            mCircleRadius.remove();
+            mCircleRadius = null;
+        }
+    }
+
+    private void displayCircleRadius(Mystery selectedPlace) {
+        removeCircleRadius();
+        double radius = selectedPlace.getLocation().getRadius() <= 0 ? 25 : selectedPlace.getLocation().getRadius();
+        mCircleRadius = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(selectedPlace.getLocation().getLat(), selectedPlace.getLocation().getLng()))
+                .radius(radius)
+                .strokeColor(Color.TRANSPARENT)
+                .fillColor(0x450000FF));
+    }
+
     private void setUpMapIfNecessary() {
         if (mMap == null) {
             mMap = mMapView.getMap();
@@ -242,9 +281,10 @@ public class MapFragment extends Fragment {
     private void addPlaceToMap(Mystery mystery) {
         BitmapDescriptor bitmapDescriptor;
         if (mUserService.isSecretCaptured(mystery.getId())) {
+            // TODO: icon for captured mysteries
             bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
         } else {
-            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.azure_flag);
+            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(150));
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()
@@ -338,7 +378,6 @@ public class MapFragment extends Fragment {
             });
             mRibbonPanel.startAnimation(anim);
         }
-        mMapPlacesModel.hideSelectedPlace();
     }
 
 }
