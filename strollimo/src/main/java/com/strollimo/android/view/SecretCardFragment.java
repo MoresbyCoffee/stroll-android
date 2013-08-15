@@ -42,7 +42,8 @@ public class SecretCardFragment extends Fragment {
         if (mSecret == null) {
             return rootView;
         }
-        rootView.setOnClickListener(new View.OnClickListener() {
+
+        rootView.findViewById(R.id.capture_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnSecretClickListener != null) {
@@ -50,14 +51,13 @@ public class SecretCardFragment extends Fragment {
                 }
             }
         });
-
-        mSecretTitle = (TextView)rootView.findViewById(R.id.secret_title);
-        mSecretPhoto = (ImageView)rootView.findViewById(R.id.secret_photo);
-        mCapturedView = (ImageView)rootView.findViewById(R.id.captured);
-        mSecretOrder = (TextView)rootView.findViewById(R.id.secret_order);
+        mSecretTitle = (TextView) rootView.findViewById(R.id.secret_title);
+        mSecretPhoto = (ImageView) rootView.findViewById(R.id.secret_photo);
+        mCapturedView = (ImageView) rootView.findViewById(R.id.captured);
+        mSecretOrder = (TextView) rootView.findViewById(R.id.secret_order);
 
         mSecretOrder.setText("" + mSecretOrderNum);
-        mSecretTitle.setText(mSecret.getName());
+        mSecretTitle.setText(mSecret.getName().toUpperCase());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSecret.getImgUrl());
         //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mSecretPhoto);
         VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mSecretPhoto, R.drawable.closed, R.drawable.closed));
