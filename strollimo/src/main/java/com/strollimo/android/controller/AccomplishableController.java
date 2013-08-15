@@ -56,15 +56,15 @@ public class AccomplishableController {
                 }
             }
         }
-        preloadImages(new ArrayList<Mystery>(mMysteries.values()));
+        //preloadImages(new ArrayList<Mystery>(mMysteries.values()));
     }
 
-    private void preloadImages(List<Mystery> misteries){
-        for (Mystery mystery : misteries) {
-            ImageRequest imageRequest = new ImageRequest(mystery.getImgUrl(), null, 0, 0, Bitmap.Config.RGB_565, null);
-            VolleyRequestQueue.getInstance().add(imageRequest);
-        }
-    }
+//    private void preloadImages(List<Mystery> misteries){
+//        for (Mystery mystery : misteries) {
+//            ImageRequest imageRequest = new ImageRequest(mystery.getImgUrl(), null, 0, 0, Bitmap.Config.RGB_565, null);
+//            VolleyRequestQueue.getInstance().add(imageRequest);
+//        }
+//    }
 
     public void asyncSyncMysteries(final String env, final OperationCallback callback) {
         new AsyncTask<Void, Void, Void>(){

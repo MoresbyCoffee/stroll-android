@@ -184,7 +184,7 @@ public class ImageRequest extends Request<Bitmap> {
 
     private Cache.Entry parseCacheHeaders(NetworkResponse response) {
         Cache.Entry entry = HttpHeaderParser.parseCacheHeaders(response);
-        long future = System.currentTimeMillis() + (30 * 24 * 60 * 60 * 1000);
+        long future = System.currentTimeMillis() + (30l * 24 * 60 * 60 * 1000);
         entry.softTtl = future;
         entry.ttl = future;
 
