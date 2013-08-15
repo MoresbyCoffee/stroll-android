@@ -74,12 +74,10 @@ public class MapFragment extends Fragment {
             displayCircleRadius(mMapPlacesModel.getSelectedPlace());
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
             marker.hideInfoWindow();
-            LatLngBounds bounds = createMarkerBounds(marker, DEFAULT_RADIUS);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100), 250, null);
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
             return true;
         }
     };
-
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
@@ -379,31 +377,6 @@ public class MapFragment extends Fragment {
             });
             mRibbonPanel.startAnimation(anim);
         }
-    }
-
-    /**
-     * Create a LatLngBounds around a marker with a given raidus in meters
-     * @param marker
-     * @param radisuInMeter
-     * @return
-     */
-    private LatLngBounds createMarkerBounds(Marker marker, double radisuInMeter) {
-        LatLng northeast = offsetLatLng(marker.getPosition(), -radisuInMeter, -radisuInMeter);
-        LatLng southwest = offsetLatLng(marker.getPosition(), radisuInMeter, radisuInMeter);
-        return new LatLngBounds(northeast, southwest);
-    }
-
-    /**
-     * Creates a LatLng adding x and y offsets in meter to an origin point
-     * @param origin - original point
-     * @param dx - x offset in meter
-     * @param dy - y offset in meter
-     * @return
-     */
-    private LatLng offsetLatLng(LatLng origin, double dx, double dy) {
-        double lat = origin.latitude + (180/Math.PI)*(dy/6378137);
-        double lng = origin.longitude + (180/Math.PI)*(dx/6378137)/Math.cos(Math.PI / 180.0 * origin.latitude);
-        return new LatLng(lat, lng);
     }
 
 }
