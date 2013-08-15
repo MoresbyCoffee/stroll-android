@@ -474,6 +474,10 @@ public class ImageLoader {
      * @param maxHeight The max-height of the output.
      */
     private static String getCacheKey(String url, int maxWidth, int maxHeight) {
+        //MARCO
+        if (url.contains("amazon")) {
+            url = url.substring(0, url.indexOf('?'));
+        }
         return new StringBuilder(url.length() + 12).append("#W").append(maxWidth)
                 .append("#H").append(maxHeight).append(url).toString();
     }

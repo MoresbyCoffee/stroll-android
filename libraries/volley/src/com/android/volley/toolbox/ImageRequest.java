@@ -16,6 +16,7 @@
 
 package com.android.volley.toolbox;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -177,13 +178,24 @@ public class ImageRequest extends Request<Bitmap> {
         if (bitmap == null) {
             return Response.error(new ParseError());
         } else {
-            return Response.success(bitmap, HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(bitmap, parseCacheHeaders(response));
         }
+    }
+
+    private Cache.Entry parseCacheHeaders(NetworkResponse response) {
+        Cache.Entry entry = HttpHeaderParser.parseCacheHeaders(response);
+        long future = System.currentTimeMillis() + (30 * 24 * 60 * 60 * 1000);
+        entry.softTtl = future;
+        entry.ttl = future;
+
+        return entry;
     }
 
     @Override
     protected void deliverResponse(Bitmap response) {
-        mListener.onResponse(response);
+        if (mListener != null) {
+            mListener.onResponse(response);
+        }
     }
 
     /**
@@ -207,5 +219,15 @@ public class ImageRequest extends Request<Bitmap> {
         }
 
         return (int) n;
+    }
+
+    @Override
+    public String getCacheKey() {
+        String url = getUrl();
+        //MARCO
+        if (url.contains("amazon")) {
+            url = url.substring(0, url.indexOf('?'));
+        }
+        return url;
     }
 }

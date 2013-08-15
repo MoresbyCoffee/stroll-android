@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
@@ -56,7 +59,8 @@ public class SecretCardFragment extends Fragment {
         mSecretOrder.setText("" + mSecretOrderNum);
         mSecretTitle.setText(mSecret.getName());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSecret.getImgUrl());
-        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mSecretPhoto);
+        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mSecretPhoto);
+        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mSecretPhoto, R.drawable.closed, R.drawable.closed));
         refreshView();
         return rootView;
     }

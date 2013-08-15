@@ -15,6 +15,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -31,6 +33,7 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.MapPlacesModel;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -353,7 +356,8 @@ public class MapFragment extends Fragment {
 
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
 
-        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mPlaceImage);
+        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mPlaceImage);
+        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mPlaceImage, R.drawable.closed, R.drawable.closed));
 
         mPlaceTitle.setText(mystery.getName().toUpperCase());
         mRibbonPanel.startAnimation(anim);

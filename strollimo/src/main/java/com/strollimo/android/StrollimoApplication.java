@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.controller.VolleyRequestQueue;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -22,6 +23,7 @@ public class StrollimoApplication extends Application {
     private PhotoUploadController mPhotoUploadController;
     private Gson mGson;
     private StrollimoApi mStrollimoApi;
+    private VolleyRequestQueue mVolleyRequestQueue;
 
     public static <T> T getService(Class<T> serviceClass) {
         return ((StrollimoApplication) mContext.getApplicationContext()).getServiceInstance(serviceClass);
@@ -67,5 +69,9 @@ public class StrollimoApplication extends Application {
         }
         return null;
 
+    }
+
+    public static Context getContext() {
+        return StrollimoApplication.mContext;
     }
 }

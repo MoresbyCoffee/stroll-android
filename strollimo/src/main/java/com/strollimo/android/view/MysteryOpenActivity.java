@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
 
@@ -38,6 +41,7 @@ public class MysteryOpenActivity extends Activity {
         });
         ImageView detailsPhoto = (ImageView)findViewById(R.id.detailed_photo);
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
-        Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(detailsPhoto);
+        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(detailsPhoto);
+        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(detailsPhoto, R.drawable.closed, R.drawable.closed));
     }
 }
