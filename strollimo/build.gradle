@@ -50,6 +50,10 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            packageNameSuffix ".release"
+        }
+        privateBeta.initWith(buildTypes.release)
+        privateBeta {
         }
     }
 
