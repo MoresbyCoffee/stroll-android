@@ -3,7 +3,6 @@ package com.strollimo.android;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.strollimo.android.model.Mystery;
@@ -21,7 +20,7 @@ public class StrollimoPreferences {
     private static final String CAPTURED_SECRETS_NUM_KEY = "CAPTURED_SECRET_NUM";
     public static final String DEVICEID_KEY = "DEVICEID_KEY";
     public static final String ENV_TAG_KEY = "ENV_TAG_KEY";
-    public static final String DEFAULT_ENV_TAG = "default";
+    public static final String DEFAULT_ENV_TAG = "cv";
     public static final String LAST_SYNC_KEY = "LAST_SYNC";
 
     // The client should sync daily
@@ -127,7 +126,6 @@ public class StrollimoPreferences {
     public void saveMissions(List<Mystery> mysteries, Map<String, Secret> secrets) {
         SharedPreferences.Editor editor = mPrefs.edit();
         String json = mGson.toJson(mysteries);
-        Log.i("BB4", json);
         editor.putString(MISSIONS_KEY, json);
         for (Mystery mystery : mysteries) {
             for (String secretId : mystery.getChildren()) {
