@@ -164,20 +164,30 @@ public class MapFragment extends Fragment {
                     public void onDismiss(View view, Object token, DismissDirectionType dismissDirectionType) {
                         Mystery toMystery;
                         if (dismissDirectionType == DismissDirectionType.RIGHT) {
-                            toMystery = mMapPlacesModel.getNextPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
+                            toMystery = mAccomplishableController.getPrevMisteryOf(mMapPlacesModel.getSelectedPlace());
                         } else {
-                            toMystery = mMapPlacesModel.getPreviousPlaceFor(getActivity(), mMapPlacesModel.getSelectedPlace());
+                            toMystery = mAccomplishableController.getNextMisteryOf(mMapPlacesModel.getSelectedPlace());
                         }
                         if (toMystery != null) {
-                            Marker marker = mMapPlacesModel.getMarkerForPlace(toMystery);
-                            mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
+                            //reset previous selection if any
+                            Marker oldMarker = mMapPlacesModel.getSelectedMarker();
+                            if (oldMarker != null) {
+                                resetMarkerIcon(oldMarker);
+                            }
+                            Marker newMarker = mMapPlacesModel.getMarkerForPlace(toMystery);
+                            mMapPlacesModel.onMarkerClick(newMarker);
+                            // TODO: replace this with assets
+                            newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
+                            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
+                            mMap.animateCamera(CameraUpdateFactory.newLatLng(newMarker.getPosition()), 250, null);
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
                         } else {
                             Marker selectedMarker = mMapPlacesModel.getSelectedMarker();
                             if (selectedMarker != null) {
-                                selectedMarker.hideInfoWindow();
+                                resetMarkerIcon(selectedMarker);
                             }
+                            removeCircleRadius();
                             mRibbonPanel.setVisibility(View.GONE);
                             mMapPlacesModel.clearSelectedPlace();
                         }

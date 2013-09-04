@@ -91,23 +91,4 @@ public class MapPlacesModel {
         mMapPlaces.add(new MapPlace(mystery, marker));
     }
 
-    public Mystery getNextPlaceFor(Activity activity, Mystery mystery) {
-        if (mystery == null) {
-            return null;
-        }
-
-        String currentId = mystery.getId();
-        AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
-        return accomplishableController.getMysteryById(currentId);
-    }
-
-    public Mystery getPreviousPlaceFor(Activity activity, Mystery mystery) {
-        if (mystery == null) {
-            return null;
-        }
-
-        String currentId = mystery.getId();
-        AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
-        return accomplishableController.getMysteryById(currentId);
-    }
 }

@@ -3,10 +3,8 @@ package com.strollimo.android.controller;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.toolbox.ImageRequest;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -29,14 +27,14 @@ public class AccomplishableController {
     private final StrollimoPreferences mPrefs;
     private final PhotoUploadController mPhotoUploadController;
     private final StrollimoApi mStrollimoApi;
-    private Map<String, Mystery> mMysteries;
+    private Map<String, Mystery> mMysteriesMapById;
     private Context mContext;
     private LinkedHashMap<String, Secret> mSecrets = new LinkedHashMap<String, Secret>();
 
     public AccomplishableController(Context context, StrollimoPreferences prefs,
                                     PhotoUploadController photoUploadController, StrollimoApi strollimoApi) {
         mContext = context;
-        mMysteries = new HashMap<String, Mystery>();
+        mMysteriesMapById = new LinkedHashMap<String, Mystery>();
         mPrefs = prefs;
         mPhotoUploadController = photoUploadController;
         mStrollimoApi = strollimoApi;
@@ -56,7 +54,7 @@ public class AccomplishableController {
                 }
             }
         }
-        //preloadImages(new ArrayList<Mystery>(mMysteries.values()));
+        //preloadImages(new ArrayList<Mystery>(mMysteriesMapById.values()));
     }
 
 //    private void preloadImages(List<Mystery> misteries){
@@ -111,12 +109,12 @@ public class AccomplishableController {
         }
         mPrefs.clearMysteries();
         mSecrets.clear();
-        mMysteries.clear();
+        mMysteriesMapById.clear();
     }
 
     public Mystery getFirstMystery() {
-        if (mMysteries.size() > 0) {
-            return mMysteries.values().iterator().next();
+        if (mMysteriesMapById.size() > 0) {
+            return mMysteriesMapById.values().iterator().next();
         } else {
             return null;
         }
@@ -141,7 +139,7 @@ public class AccomplishableController {
     }
 
     public void addMystery(Mystery mystery) {
-        mMysteries.put(mystery.getId(), mystery);
+        mMysteriesMapById.put(mystery.getId(), mystery);
     }
 
     public void asynUploadMystery(final Mystery mystery, Bitmap photo, final OperationCallback callback) {
@@ -275,7 +273,7 @@ public class AccomplishableController {
     }
 
     public Mystery getMysteryById(String id) {
-        return mMysteries.get(id);
+        return mMysteriesMapById.get(id);
     }
 
     public Map<String, Secret> getAllSecrets() {
@@ -283,15 +281,33 @@ public class AccomplishableController {
     }
 
     public List<Mystery> getAllMysteries() {
-        return new ArrayList<Mystery>(mMysteries.values());
+        return new ArrayList<Mystery>(mMysteriesMapById.values());
     }
 
     public int getMysteriesCount() {
-        return mMysteries.size();
+        return mMysteriesMapById.size();
     }
 
     public void saveAllData() {
         mPrefs.saveMissions(getAllMysteries(), getAllSecrets());
+    }
+
+    public Mystery getNextMisteryOf(Mystery mystery) {
+        List<Mystery> mysteryList = new ArrayList<Mystery>(mMysteriesMapById.values());
+        int newIndex = mysteryList.indexOf(mystery) + 1;
+        if (newIndex >= mysteryList.size()) {
+            newIndex = 0;
+        }
+        return mysteryList.get(newIndex);
+    }
+
+    public Mystery getPrevMisteryOf(Mystery mystery) {
+        List<Mystery> mysteryList = new ArrayList<Mystery>(mMysteriesMapById.values());
+        int newIndex = mysteryList.indexOf(mystery) - 1;
+        if (newIndex < 0) {
+            newIndex = mysteryList.size() - 1;
+        }
+        return mysteryList.get(newIndex);
     }
 
     public interface OperationCallback {
