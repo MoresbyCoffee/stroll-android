@@ -5,10 +5,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -17,6 +20,7 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.Mystery;
+import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
 public class MysteryOpenActivity extends Activity {
@@ -52,6 +56,9 @@ public class MysteryOpenActivity extends Activity {
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
         //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(detailsPhoto);
         VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(detailsPhoto, R.drawable.closed, R.drawable.closed));
+
+
+        preloadSecretImages(mCurrentMystery);
     }
 
     @Override
@@ -62,6 +69,26 @@ public class MysteryOpenActivity extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void preloadSecretImages(Mystery mystery) {
+        for (String secretId : mystery.getChildren()) {
+            Secret secret = mAccomplishableController.getSecretById(secretId);
+            String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(secret.getImgUrl());
+            if (!TextUtils.isEmpty(imageUrl)) {
+                VolleyImageLoader.getInstance().get(imageUrl, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        //
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //
+                    }
+                });
+            }
         }
     }
 }

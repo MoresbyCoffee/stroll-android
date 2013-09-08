@@ -3,11 +3,19 @@ package com.strollimo.android.controller;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
+import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.GetMysteriesResponse;
@@ -54,31 +62,26 @@ public class AccomplishableController {
                 }
             }
         }
-        //preloadImages(new ArrayList<Mystery>(mMysteriesMapById.values()));
     }
 
-//    private void preloadImages(List<Mystery> misteries){
-//        for (Mystery mystery : misteries) {
-//            ImageRequest imageRequest = new ImageRequest(mystery.getImgUrl(), null, 0, 0, Bitmap.Config.RGB_565, null);
-//            VolleyRequestQueue.getInstance().add(imageRequest);
-//        }
-//    }
 
     public void asyncSyncMysteries(final String env, final OperationCallback callback) {
-        new AsyncTask<Void, Void, Void>(){
+        new AsyncTask<Void, Void, List<Mystery>>(){
 
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected List<Mystery> doInBackground(Void... voids) {
                 GetMysteriesResponse getMysteriesResponse = mStrollimoApi.getMysteries(env);
-                if (getMysteriesResponse!= null && "success".equals(getMysteriesResponse.getState())) {
+                if (getMysteriesResponse != null && "success".equals(getMysteriesResponse.getState())) {
                     for (Mystery mystery : getMysteriesResponse.getBody()) {
                         addMystery(mystery);
                         syncSecrets(mystery);
                         saveAllData();
+
                     }
                     if (callback != null) {
                         callback.onSuccess();
                     }
+                    return getMysteriesResponse.getBody();
                 } else {
                     if (callback != null) {
                         callback.onError("Error while getting mysteries");
@@ -86,8 +89,34 @@ public class AccomplishableController {
                 }
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(List<Mystery> mysteries) {
+                super.onPostExecute(mysteries);
+                if (mysteries == null) {
+                    return;
+                }
+                //start preloading images, Image loader must be invoked on main thread
+                for (Mystery mystery : mysteries) {
+                    String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
+                    if (!TextUtils.isEmpty(imageUrl)) {
+                        VolleyImageLoader.getInstance().get(imageUrl, new ImageLoader.ImageListener() {
+                            @Override
+                            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                                //
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                //
+                            }
+                        });
+                    }
+                }
+            }
         }.execute();
     }
+
 
     private void syncSecrets(final Mystery mystery) {
         GetSecretsResponse getSecretsResponse = mStrollimoApi.getSecrets(mystery.getId());
