@@ -6,15 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
+import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import android.widget.TextView;
-import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
@@ -54,8 +51,7 @@ public class MysteryOpenActivity extends Activity {
         ((TextView) findViewById(R.id.title)).setText(mCurrentMystery.getName().toUpperCase());
         ImageView detailsPhoto = (ImageView) findViewById(R.id.detailed_photo);
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
-        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(detailsPhoto);
-        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(detailsPhoto, R.drawable.closed, R.drawable.closed));
+        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(detailsPhoto, R.drawable.white_bg, R.drawable.white_bg));
 
 
         preloadSecretImages(mCurrentMystery);

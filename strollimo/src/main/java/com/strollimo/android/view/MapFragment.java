@@ -15,9 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.volley.toolbox.ImageLoader;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -363,8 +361,7 @@ public class MapFragment extends Fragment {
 
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
 
-        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mPlaceImage);
-        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mPlaceImage, R.drawable.closed, R.drawable.closed));
+        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mPlaceImage, R.drawable.white_bg, R.drawable.white_bg));
 
         mPlaceTitle.setText(mystery.getName().toUpperCase());
         mRibbonPanel.startAnimation(anim);
