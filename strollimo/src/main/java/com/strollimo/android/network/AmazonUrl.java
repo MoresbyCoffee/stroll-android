@@ -8,6 +8,7 @@ public class AmazonUrl {
     public static final String AMAZON_BUCKET = "strollimo1";
     public static final String MYSTERY_FOLDER_NAME = "mystery";
     public static final String JPEG_EXTENSION = ".jpeg";
+    public static final String PICKUP_FOLDER_NAME = "pickup";
     private String mBucket;
     private String mFile;
     private String mFolder;
@@ -23,7 +24,11 @@ public class AmazonUrl {
     }
 
     public static AmazonUrl createSecretUrl(String secretId, String mysteryId) {
-        return new AmazonUrl(AMAZON_BUCKET, mysteryId, secretId + ".jpeg");
+        return new AmazonUrl(AMAZON_BUCKET, mysteryId, secretId + JPEG_EXTENSION);
+    }
+
+    public static AmazonUrl createPickupPhotoUrl(String secretId, String userId) {
+        return new AmazonUrl(AMAZON_BUCKET, PICKUP_FOLDER_NAME, userId+"-|-"+secretId+JPEG_EXTENSION);
     }
 
     public static AmazonUrl fromUrl(String url) throws ParseException {

@@ -4,11 +4,15 @@ import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.google.zxing.config.ZXingLibConfig;
@@ -18,13 +22,23 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonUrl;
+import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.network.response.PickupSecretResponse;
+import com.strollimo.android.util.BitmapUtils;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class DetailsActivity extends FragmentActivity {
     public static final String PLACE_ID_EXTRA = "place_id";
@@ -40,6 +54,7 @@ public class DetailsActivity extends FragmentActivity {
     private Secret mSelectedSecret;
     private ViewPager mViewPager;
     private SecretSlideAdapter mPagerAdapter;
+    private File mImage;
 
     public interface OnSecretClickListener {
         public void onSecretClicked(Secret secret);
@@ -116,15 +131,42 @@ public class DetailsActivity extends FragmentActivity {
             case TEMPORARY_TAKE_PHOTO:
                 final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Uploading photo for checking...");
                 progressDialog.show();
-                new Handler().postDelayed(new Runnable() {
 
+                //we should do it
+                //Uri imageUri = data.getData();
+                //File file = new File(BitmapUtils.getRealPathFromURI(this, imageUri));
+                Bitmap bitmap = BitmapUtils.getBitmapFromFile(mImage, 800, 600);
+                Log.d("MC", "Uploading photo secredId: "+ mSelectedSecret.getId()+" deviceId: "+ mPrefs.getDeviceUUID());
+                final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
+                StrollimoApplication.getService(PhotoUploadController.class).asyncUploadPhotoToAmazon(pickupPhotoUrl, bitmap, new PhotoUploadController.Callback() {
                     @Override
-                    public void run() {
+                    public void onSuccess() {
+                        Log.d("MC", "Pickup photo succes");
                         mUserService.captureSecret(mSelectedSecret);
                         mPagerAdapter.notifyDataSetChanged();
+                        StrollimoApplication.getService(StrollimoApi.class).pickupSecret(mSelectedSecret, pickupPhotoUrl.getUrl(), new Callback<PickupSecretResponse>() {
+                            @Override
+                            public void success(PickupSecretResponse pickupSecretResponse, Response response) {
+                                Log.d("MC", "Success pickup");
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+                                Log.d("MC", "Error pickup");
+                                progressDialog.dismiss();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Exception ex) {
+                        Log.d("MC", "Pickup photo error");
                         progressDialog.dismiss();
                     }
-                }, 2000);
+                });
+
+
 
             default:
         }
@@ -185,8 +227,18 @@ public class DetailsActivity extends FragmentActivity {
     }
 
     public void launchPickupActivity(String secretId) {
+        try {
+            File folder = new File(Environment.getExternalStorageDirectory() + "/strollimoTmpPickImg");
+            if(!folder.exists())            {
+                folder.mkdir();
+            }
+            mImage = new File(folder +"/tmp.jpg");
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mImage));
             startActivityForResult(takePictureIntent, TEMPORARY_TAKE_PHOTO);
+        } catch (Exception e) {
+            Log.e("MC", "LunchPickupActivity error "+e.toString());
+        }
         // Temporarily disabling capture modes
 //        if (mPrefs.isUseBarcode()) {
 //            IntentIntegrator integrator = new IntentIntegrator(this);

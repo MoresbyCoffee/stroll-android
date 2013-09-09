@@ -23,6 +23,7 @@ import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.GetMysteriesResponse;
 import com.strollimo.android.network.response.GetSecretsResponse;
+import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
 import com.strollimo.android.network.response.UpdateSecretResponse;
 import com.strollimo.android.view.dialog.SyncDialogHelper;
@@ -121,10 +122,26 @@ public class DebugFragment extends Fragment {
         alert.show();    }
 
     private void testSomething() {
-        testGetMysteries();
+//        testGetMysteries();
 //        testUpdateSecretCall();
 //        testUpdateMysteryCall();
 //        testGetSecrets();
+        testPickup();
+    }
+
+    private void testPickup() {
+        StrollimoApplication.getService(StrollimoApi.class).pickupSecret(new Secret("11marco", "test"), "http//", new Callback<PickupSecretResponse>() {
+            @Override
+            public void success(PickupSecretResponse pickupSecretResponse, Response response) {
+                Log.i("BB", "success");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("BB", "failure");
+
+            }
+        });
     }
 
     private void testGetMysteries() {

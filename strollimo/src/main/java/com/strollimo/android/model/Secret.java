@@ -8,6 +8,14 @@ import java.util.List;
 public class Secret extends BaseAccomplishable {
     public static final String TYPE = "secret";
 
+
+    public enum SecretStatus {
+        PENDING,
+        REJECTED,
+        ACCOMPLISHED,
+        UNPICKED;
+    }
+
     @Expose
     private List<PickupMode> pickupModes = new ArrayList<PickupMode>();
 

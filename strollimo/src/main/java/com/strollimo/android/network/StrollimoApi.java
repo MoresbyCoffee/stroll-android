@@ -7,6 +7,7 @@ import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.request.*;
 import com.strollimo.android.network.response.GetMysteriesResponse;
 import com.strollimo.android.network.response.GetSecretsResponse;
+import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
 import com.strollimo.android.network.response.UpdateSecretResponse;
 import retrofit.Callback;
@@ -58,5 +59,10 @@ public class StrollimoApi {
     public void updateSecret(Secret secret, Callback<UpdateSecretResponse> callback) {
         UpdaterSecretRequest request = new UpdaterSecretRequest(mRequestHeader, secret);
         service.updateSecret(request, callback);
+    }
+
+    public void pickupSecret(Secret secret, String capturedSecretUrl, Callback<PickupSecretResponse> callback) {
+        PickupSecretRequest request = new PickupSecretRequest(mRequestHeader, secret.getId(), "imgComp", capturedSecretUrl);
+        service.pickupSecret(request, callback);
     }
 }
