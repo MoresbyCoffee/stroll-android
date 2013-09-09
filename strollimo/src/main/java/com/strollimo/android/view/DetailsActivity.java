@@ -21,6 +21,7 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,6 +79,11 @@ public class DetailsActivity extends FragmentActivity {
         });
         String title = mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase();
         actionBar.setTitle(title);
+
+
+        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.page_indicator);
+        indicator.setViewPager(mViewPager);
+        indicator.setSnap(true);
     }
 
     @Override

@@ -1,1 +1,1 @@
-include ':strollimo', ':libraries:google-play-services_lib', ':libraries:ZXingLib', ':libraries:OpenCV', ':libraries:volley', ':libraries:glide'
+include ':strollimo', ':libraries:google-play-services_lib', ':libraries:ZXingLib', ':libraries:OpenCV', ':libraries:volley', ':libraries:glide', ':libraries:ViewPagerIndicator'

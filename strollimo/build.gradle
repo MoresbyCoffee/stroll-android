@@ -18,6 +18,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:3.1.36'
     compile 'com.squareup.retrofit:retrofit:1.1.1'
 
+
     // robospice uses the android support via a jar not as a maven repo... gradle complains about this
     //    compile 'com.octo.android.robospice:robospice:1.4.6'
 
@@ -30,6 +31,7 @@ dependencies {
     compile project(':libraries:OpenCV')
     compile project(':libraries:volley')
     compile project(':libraries:glide')
+    compile project(':libraries:ViewPagerIndicator')
 }
 
 android {
@@ -41,7 +43,7 @@ android {
             storeFile file("debug.keystore")
         }
         release {
-            storeFile file("/Users/balazsbalazs/Dropbox/strollimo/strollimo-release-key.keystore")
+            storeFile file("strollimo-release-key.keystore")
             storePassword "BullGitar"
             keyAlias "stroll-key"
             keyPassword "BullGitar"
