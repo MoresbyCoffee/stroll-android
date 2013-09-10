@@ -5,13 +5,10 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.request.*;
-import com.strollimo.android.network.response.GetMysteriesResponse;
-import com.strollimo.android.network.response.GetSecretsResponse;
-import com.strollimo.android.network.response.PickupSecretResponse;
-import com.strollimo.android.network.response.UpdateMysteryResponse;
-import com.strollimo.android.network.response.UpdateSecretResponse;
+import com.strollimo.android.network.response.*;
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
 public class StrollimoApi {
@@ -36,7 +33,7 @@ public class StrollimoApi {
         service.getMysteries(request, callback);
     }
 
-    public GetMysteriesResponse getMysteries(String envTag) {
+    public GetMysteriesResponse getMysteries(String envTag) throws RetrofitError {
         GetMysteriesRequest request = new GetMysteriesRequest(mRequestHeader, true, envTag);
         return service.getMysteries(request);
     }
