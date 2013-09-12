@@ -23,6 +23,7 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonUrl;
@@ -136,11 +137,15 @@ public class DetailsActivity extends FragmentActivity {
                         StrollimoApplication.getService(StrollimoApi.class).pickupSecret(mSelectedSecret, pickupPhotoUrl.getUrl(), new Callback<PickupSecretResponse>() {
                             @Override
                             public void success(PickupSecretResponse pickupSecretResponse, Response response) {
+                                mSelectedSecret.setStatus(BaseAccomplishable.Status.PENDING);
+                                mAccomplishableController.saveAllData();
+                                mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();
                             }
 
                             @Override
                             public void failure(RetrofitError retrofitError) {
+                                mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();
                             }
                         });
@@ -216,7 +221,7 @@ public class DetailsActivity extends FragmentActivity {
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            mImage = new File(folder + "/tmp.jpg");
+            mImage = new File(folder + "/" + secretId + ".jpg");
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mImage));
             startActivityForResult(takePictureIntent, TEMPORARY_TAKE_PHOTO);
