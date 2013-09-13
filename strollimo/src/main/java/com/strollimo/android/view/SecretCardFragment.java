@@ -1,5 +1,9 @@
 package com.strollimo.android.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +16,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
+import com.strollimo.android.controller.SecretStatusPollingService;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.BaseAccomplishable;
@@ -76,8 +81,24 @@ public class SecretCardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        IntentFilter filter = new IntentFilter(SecretStatusPollingService.ACTION_SECRET_STATUS_UPDATED);
+        getActivity().registerReceiver(mSecretStatusUpdatedReceiver, filter);
+
         refreshView();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mSecretStatusUpdatedReceiver);
+    }
+
+    private BroadcastReceiver mSecretStatusUpdatedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshView();
+        }
+    };
 
     public void refreshView() {
         BaseAccomplishable.Status status = mSecret.getStatus();

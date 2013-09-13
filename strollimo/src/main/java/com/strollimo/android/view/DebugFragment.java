@@ -16,20 +16,15 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.model.ImageComparisonPickupMode;
-import com.strollimo.android.model.Location;
-import com.strollimo.android.model.Mystery;
-import com.strollimo.android.model.Secret;
+import com.strollimo.android.model.*;
 import com.strollimo.android.network.StrollimoApi;
-import com.strollimo.android.network.response.GetMysteriesResponse;
-import com.strollimo.android.network.response.GetSecretsResponse;
-import com.strollimo.android.network.response.PickupSecretResponse;
-import com.strollimo.android.network.response.UpdateMysteryResponse;
-import com.strollimo.android.network.response.UpdateSecretResponse;
+import com.strollimo.android.network.response.*;
 import com.strollimo.android.view.dialog.SyncDialogHelper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import java.util.Map;
 
 public class DebugFragment extends Fragment {
     private View mView;
@@ -126,7 +121,26 @@ public class DebugFragment extends Fragment {
 //        testUpdateSecretCall();
 //        testUpdateMysteryCall();
 //        testGetSecrets();
-        testPickup();
+//        testPickup();
+        testGetPickupStates();
+    }
+
+    private void testGetPickupStates() {
+        StrollimoApplication.getService(StrollimoApi.class).getPickupStatus(null, new Callback<GetPickupStatusResponse>() {
+
+            @Override
+            public void success(GetPickupStatusResponse getPickupStatusResponse, Response response) {
+                Map<String, BaseAccomplishable.Status> statuses = getPickupStatusResponse.getSecretStatuses();
+                for (String stringId : statuses.keySet()) {
+                    Log.i("BB", "id: " + stringId + ", value: " + statuses.get(stringId));
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("BB", "Error: " + retrofitError.toString());
+            }
+        });
     }
 
     private void testPickup() {

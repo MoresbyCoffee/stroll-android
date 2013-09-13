@@ -2,13 +2,11 @@ package com.strollimo.android;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import com.crittercism.app.Crittercism;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.UserService;
-import com.strollimo.android.controller.VolleyRequestQueue;
+import com.strollimo.android.controller.*;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -51,6 +49,7 @@ public class StrollimoApplication extends Application {
         mUserService = new UserService(mPrefs);
         mUserService.loadCapturedSecrets();
         mAccomplishableController.preloadPlaces();
+        startService(new Intent(this, SecretStatusPollingService.class));
     }
 
     public <T> T getServiceInstance(Class<T> serviceClass) {

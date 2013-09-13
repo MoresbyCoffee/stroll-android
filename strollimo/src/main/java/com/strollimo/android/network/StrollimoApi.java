@@ -11,6 +11,8 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
+import java.util.List;
+
 public class StrollimoApi {
     public static final String ENDPOINT = "http://stroll.moresby.cloudbees.net";
     private StrollimoServiceInterface service;
@@ -61,5 +63,10 @@ public class StrollimoApi {
     public void pickupSecret(Secret secret, String capturedSecretUrl, Callback<PickupSecretResponse> callback) {
         PickupSecretRequest request = new PickupSecretRequest(mRequestHeader, secret.getId(), "imgComp", capturedSecretUrl);
         service.pickupSecret(request, callback);
+    }
+
+    public void getPickupStatus(List<String> secretsIds, Callback<GetPickupStatusResponse> callback) {
+        GetPickupStatusRequest request = new GetPickupStatusRequest (mRequestHeader, secretsIds);
+        service.getPickupStatus(request, callback);
     }
 }
