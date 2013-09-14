@@ -81,6 +81,10 @@ public class MysteryOpenActivity extends Activity {
     private void preloadSecretImages(Mystery mystery) {
         for (String secretId : mystery.getChildren()) {
             Secret secret = mAccomplishableController.getSecretById(secretId);
+            if (secret == null) {
+                Log.e(TAG, "Error - secret is not available: " + secretId);
+                return;
+            }
             String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(secret.getImgUrl());
             if (!TextUtils.isEmpty(imageUrl)) {
                 VolleyImageLoader.getInstance().get(imageUrl, new ImageLoader.ImageListener() {

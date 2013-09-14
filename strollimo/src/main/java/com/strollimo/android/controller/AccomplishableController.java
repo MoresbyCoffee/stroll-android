@@ -56,8 +56,12 @@ public class AccomplishableController {
                 Mystery myMystery = getMysteryById(mystery.getId());
                 for (String secretId : mystery.getChildren()) {
                     Secret secret = mPrefs.getSecret(secretId);
-                    myMystery.addChild(secretId);
-                    addSecret(secret, myMystery);
+                    if (secret == null) {
+                        Log.e(TAG, "Error - secret is not available: " + secretId);
+                    } else {
+                        myMystery.addChild(secretId);
+                        addSecret(secret, myMystery);
+                    }
                 }
             }
         }
