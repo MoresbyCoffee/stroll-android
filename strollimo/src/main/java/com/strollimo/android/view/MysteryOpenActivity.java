@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.strollimo.android.LogTags;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
@@ -21,6 +23,8 @@ import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
 public class MysteryOpenActivity extends Activity {
+    private static final String TAG = MysteryOpenActivity.class.getSimpleName();
+
     public static final String PLACE_ID_EXTRA = "place_id";
     private AccomplishableController mAccomplishableController;
     private Mystery mCurrentMystery;
@@ -55,6 +59,12 @@ public class MysteryOpenActivity extends Activity {
 
 
         preloadSecretImages(mCurrentMystery);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LogTags.ACCOMPLISHABLES_TAG, "Showing mystery: " + mCurrentMystery.getId());
     }
 
     @Override

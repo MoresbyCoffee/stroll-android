@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
+import com.strollimo.android.LogTags;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
@@ -25,6 +27,8 @@ import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 
 public class SecretCardFragment extends Fragment {
+    private final static String TAG = SecretCardFragment.class.getSimpleName();
+
     private final DetailsActivity.OnSecretClickListener mOnSecretClickListener;
     private final UserService mUserService;
     private final int mSecretOrderNum;
@@ -84,7 +88,6 @@ public class SecretCardFragment extends Fragment {
         super.onResume();
         IntentFilter filter = new IntentFilter(SecretStatusPollingService.ACTION_SECRET_STATUS_UPDATED);
         getActivity().registerReceiver(mSecretStatusUpdatedReceiver, filter);
-
         refreshView();
     }
 
