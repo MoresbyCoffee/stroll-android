@@ -202,7 +202,7 @@ public class AccomplishableController {
                             }
                         } else {
                             if (callback != null) {
-                                callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());
+                                callback.onError("Uploading to strollimo server failed with pickupState: " + updateMysteryResponse.getState());
                             }
                         }
                     }
@@ -258,7 +258,7 @@ public class AccomplishableController {
                                         }
                                     } else {
                                         if (callback != null) {
-                                            callback.onError("Uploading to strollimo server failed with status: " + updateSecretResponse.getState());
+                                            callback.onError("Uploading to strollimo server failed with pickupState: " + updateSecretResponse.getState());
                                         }
                                     }
                                 }
@@ -273,7 +273,7 @@ public class AccomplishableController {
 
                         } else {
                             if (callback != null) {
-                                callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());
+                                callback.onError("Uploading to strollimo server failed with pickupState: " + updateMysteryResponse.getState());
                             }
                         }
                     }

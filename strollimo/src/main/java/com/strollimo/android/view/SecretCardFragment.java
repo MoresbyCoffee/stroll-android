@@ -102,15 +102,15 @@ public class SecretCardFragment extends Fragment {
     };
 
     public void refreshView() {
-        BaseAccomplishable.Status status = mSecret.getStatus();
-        if (status == null) {
-            status = BaseAccomplishable.Status.UNPICKED;
+        BaseAccomplishable.PickupState pickupState = mSecret.getPickupState();
+        if (pickupState == null) {
+            pickupState = BaseAccomplishable.PickupState.UNPICKED;
         }
         final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSecret.getId(), mPrefs.getDeviceUUID());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(pickupPhotoUrl.getUrl());
         VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mCapturedImg, R.drawable.transparent_bg, R.drawable.transparent_bg));
 
-        switch (status) {
+        switch (pickupState) {
             case UNPICKED:
                 mStatusPanel.setVisibility(View.GONE);
                 mCaptureButton.setEnabled(true);

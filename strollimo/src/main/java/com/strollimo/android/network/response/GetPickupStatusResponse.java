@@ -10,11 +10,11 @@ public class GetPickupStatusResponse extends BaseResponse {
     @Expose
     private Map<String, String> body;
 
-    public Map<String, BaseAccomplishable.Status> getSecretStatuses() {
-        Map<String, BaseAccomplishable.Status> result = new HashMap<String, BaseAccomplishable.Status>();
+    public Map<String, BaseAccomplishable.PickupState> getSecretStatuses() {
+        Map<String, BaseAccomplishable.PickupState> result = new HashMap<String, BaseAccomplishable.PickupState>();
         if (body != null) {
             for (String secretId : body.keySet()) {
-                result.put(secretId, BaseAccomplishable.Status.valueOf(body.get(secretId)));
+                result.put(secretId, BaseAccomplishable.PickupState.valueOf(body.get(secretId)));
             }
         }
         return result;

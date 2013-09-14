@@ -22,7 +22,7 @@ public class Mystery extends BaseAccomplishable {
     }
 
     public Mystery(String id, String name, double lat, double lng, String imgUrl) {
-        super(id, name, lat, lng, imgUrl, TYPE, true, Status.UNPICKED);
+        super(id, name, lat, lng, imgUrl, TYPE, true, PickupState.UNPICKED);
         mCoinValue = new Random().nextInt(3) + 1;
     }
 

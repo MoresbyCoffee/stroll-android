@@ -9,9 +9,9 @@ public class PickupSecretResponse extends BaseResponse {
     @Expose
     private String body;
 
-    public BaseAccomplishable.Status getSecretStatus() {
+    public BaseAccomplishable.PickupState getSecretStatus() {
         try {
-            return BaseAccomplishable.Status.valueOf(body.toUpperCase(Locale.getDefault()));
+            return BaseAccomplishable.PickupState.valueOf(body.toUpperCase(Locale.getDefault()));
         } catch (Exception e) {
             return null;
         }

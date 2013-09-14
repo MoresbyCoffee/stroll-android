@@ -130,7 +130,7 @@ public class DebugFragment extends Fragment {
 
             @Override
             public void success(GetPickupStatusResponse getPickupStatusResponse, Response response) {
-                Map<String, BaseAccomplishable.Status> statuses = getPickupStatusResponse.getSecretStatuses();
+                Map<String, BaseAccomplishable.PickupState> statuses = getPickupStatusResponse.getSecretStatuses();
                 for (String stringId : statuses.keySet()) {
                     Log.i("BB", "id: " + stringId + ", value: " + statuses.get(stringId));
                 }

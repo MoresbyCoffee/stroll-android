@@ -14,16 +14,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.android.volley.Cache;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.UserService;
-import com.strollimo.android.controller.VolleyImageLoader;
+import com.strollimo.android.controller.*;
 import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -133,6 +131,13 @@ public class DetailsActivity extends FragmentActivity {
                 final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
                 String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(pickupPhotoUrl.getUrl());
                 VolleyImageLoader.getInstance().putBitmapIntoCache(imageUrl, bitmap);
+                Cache cache = VolleyRequestQueue.getInstance().getCache();
+                String imgageUrl2 = imageUrl;
+                if (imgageUrl2.contains("amazon")) {
+                    imgageUrl2 = imgageUrl2.substring(0, imgageUrl2.indexOf('?'));
+                }
+
+                cache.remove(imgageUrl2);
                 StrollimoApplication.getService(PhotoUploadController.class).asyncUploadPhotoToAmazon(pickupPhotoUrl, bitmap, new PhotoUploadController.Callback() {
                     @Override
                     public void onSuccess() {
@@ -141,7 +146,7 @@ public class DetailsActivity extends FragmentActivity {
                         StrollimoApplication.getService(StrollimoApi.class).pickupSecret(mSelectedSecret, pickupPhotoUrl.getUrl(), new Callback<PickupSecretResponse>() {
                             @Override
                             public void success(PickupSecretResponse pickupSecretResponse, Response response) {
-                                mSelectedSecret.setStatus(BaseAccomplishable.Status.PENDING);
+                                mSelectedSecret.setPickupState(BaseAccomplishable.PickupState.PENDING);
                                 mAccomplishableController.saveAllData();
                                 mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();

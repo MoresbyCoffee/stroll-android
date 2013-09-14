@@ -40,7 +40,7 @@ public class SecretStatusPollingService extends Service {
             Map<String, Secret> secrets = mAccomplishableController.getAllSecrets();
             List<String> refreshableSecretIds = new ArrayList<String>();
             for (Secret secret : secrets.values()) {
-                if (secret.getStatus() == BaseAccomplishable.Status.PENDING) {
+                if (secret.getPickupState() == BaseAccomplishable.PickupState.PENDING) {
                     refreshableSecretIds.add(secret.getId());
                 }
             }
@@ -49,11 +49,11 @@ public class SecretStatusPollingService extends Service {
                 @Override
                 public void success(GetPickupStatusResponse getPickupStatusResponse, Response response) {
                     boolean isModified = false;
-                    Map<String, BaseAccomplishable.Status> statuses = getPickupStatusResponse.getSecretStatuses();
+                    Map<String, BaseAccomplishable.PickupState> statuses = getPickupStatusResponse.getSecretStatuses();
                     for (String stringId : statuses.keySet()) {
                         Secret secret = mAccomplishableController.getSecretById(stringId);
                         if (secret != null) {
-                            secret.setStatus(statuses.get(stringId));
+                            secret.setPickupState(statuses.get(stringId));
                             isModified = true;
                         }
                     }
