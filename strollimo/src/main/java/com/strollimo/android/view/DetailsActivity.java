@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.android.volley.Cache;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -131,13 +130,12 @@ public class DetailsActivity extends FragmentActivity {
                 final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
                 String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(pickupPhotoUrl.getUrl());
                 VolleyImageLoader.getInstance().putBitmapIntoCache(imageUrl, bitmap);
-                Cache cache = VolleyRequestQueue.getInstance().getCache();
-                String imgageUrl2 = imageUrl;
-                if (imgageUrl2.contains("amazon")) {
-                    imgageUrl2 = imgageUrl2.substring(0, imgageUrl2.indexOf('?'));
+                String cachedUrl = imageUrl;
+                if (cachedUrl.contains("amazon")) {
+                    cachedUrl = cachedUrl.substring(0, cachedUrl.indexOf('?'));
                 }
+                VolleyRequestQueue.getInstance().getCache().remove(cachedUrl);
 
-                cache.remove(imgageUrl2);
                 StrollimoApplication.getService(PhotoUploadController.class).asyncUploadPhotoToAmazon(pickupPhotoUrl, bitmap, new PhotoUploadController.Callback() {
                     @Override
                     public void onSuccess() {
