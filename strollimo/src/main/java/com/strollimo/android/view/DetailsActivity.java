@@ -23,9 +23,11 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.PhotoUploadController;
 import com.strollimo.android.controller.UserService;
+import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.PickupSecretResponse;
@@ -129,6 +131,8 @@ public class DetailsActivity extends FragmentActivity {
 
                 Bitmap bitmap = BitmapUtils.getBitmapFromFile(mImage, 800, 600);
                 final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
+                String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(pickupPhotoUrl.getUrl());
+                VolleyImageLoader.getInstance().putBitmapIntoCache(imageUrl, bitmap);
                 StrollimoApplication.getService(PhotoUploadController.class).asyncUploadPhotoToAmazon(pickupPhotoUrl, bitmap, new PhotoUploadController.Callback() {
                     @Override
                     public void onSuccess() {
