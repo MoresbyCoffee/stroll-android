@@ -37,6 +37,7 @@ public class SecretCardFragment extends Fragment {
     private ImageView mCapturedImg;
     private ImageView mStatusIcon;
     private ProgressBar mStatusPending;
+    private ImageView mCaptureButton;
 
     public SecretCardFragment(Secret secret, int position, UserService userService, DetailsActivity.OnSecretClickListener onSecretClickListener) {
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
@@ -54,8 +55,8 @@ public class SecretCardFragment extends Fragment {
         if (mSecret == null) {
             return rootView;
         }
-
-        rootView.findViewById(R.id.capture_button).setOnClickListener(new View.OnClickListener() {
+        mCaptureButton = (ImageView)rootView.findViewById(R.id.capture_button);
+        mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnSecretClickListener != null) {
@@ -112,19 +113,23 @@ public class SecretCardFragment extends Fragment {
         switch (status) {
             case UNPICKED:
                 mStatusPanel.setVisibility(View.GONE);
+                mCaptureButton.setEnabled(true);
                 break;
             case PENDING:
+                mCaptureButton.setEnabled(false);
                 mStatusPanel.setVisibility(View.VISIBLE);
                 mStatusIcon.setVisibility(View.GONE);
                 mStatusPending.setVisibility(View.VISIBLE);
                 break;
             case REJECTED:
+                mCaptureButton.setEnabled(true);
                 mStatusPanel.setVisibility(View.VISIBLE);
                 mStatusPending.setVisibility(View.GONE);
                 mStatusIcon.setVisibility(View.VISIBLE);
                 mStatusIcon.setImageResource(R.drawable.failure);
                 break;
             case ACCOMPLISHED:
+                mCaptureButton.setEnabled(false);
                 mStatusPanel.setVisibility(View.VISIBLE);
                 mStatusPending.setVisibility(View.GONE);
                 mStatusIcon.setVisibility(View.VISIBLE);
@@ -132,6 +137,7 @@ public class SecretCardFragment extends Fragment {
                 break;
             case IN_PROGRESS:
             default:
+                mCaptureButton.setEnabled(false);
                 break;
         }
     }
