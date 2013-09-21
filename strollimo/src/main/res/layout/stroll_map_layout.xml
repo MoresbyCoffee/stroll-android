@@ -50,12 +50,25 @@
                             android:background="@color/stroll_panel_bg"
                             >
 
-                        <ImageView
-                                android:id="@+id/place_image"
-                                android:layout_width="120dp"
-                                android:layout_height="match_parent"
-                                android:src="@drawable/canary2"
-                                android:scaleType="centerCrop"/>
+                        <FrameLayout
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent" >
+
+                            <ProgressBar
+                                android:id="@+id/place_progress"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:indeterminate="true"
+                                android:layout_gravity="center"
+                                android:visibility="gone"/>
+
+                            <com.strollimo.android.view.ProgressNetworkImageView
+                                    android:id="@+id/place_image"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"/>
+
+                        </FrameLayout>
 
                         <TextView
                                 android:layout_width="wrap_content"

@@ -52,10 +52,9 @@ public class MysteryOpenActivity extends Activity {
             }
         });
         ((TextView) findViewById(R.id.title)).setText(mCurrentMystery.getName().toUpperCase());
-        ImageView detailsPhoto = (ImageView) findViewById(R.id.detailed_photo);
+        ProgressNetworkImageView detailsPhoto = (ProgressNetworkImageView) findViewById(R.id.detailed_photo);
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
-        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(detailsPhoto);
-        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(detailsPhoto, R.drawable.closed, R.drawable.closed));
+        detailsPhoto.setImageUrl(imageUrl, findViewById(R.id.detailed_photo_progress));
 
 
         preloadSecretImages(mCurrentMystery);

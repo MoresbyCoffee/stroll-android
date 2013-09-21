@@ -13,11 +13,8 @@ import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -33,7 +30,6 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
-import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.MapPlacesModel;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -47,7 +43,8 @@ public class MapFragment extends Fragment {
     private StrollimoPreferences mPrefs;
     private UserService mUserService;
     private boolean firstStart = true;
-    private ImageView mPlaceImage;
+    private ProgressNetworkImageView mPlaceImage;
+    private View mPlaceImgProgress;
     private TextView mPlaceTitle;
     private View mRibbonPanel;
     private Circle mCircleRadius;
@@ -132,7 +129,8 @@ public class MapFragment extends Fragment {
             mMapView = (MapView) mView.findViewById(R.id.map);
             mAccomplishableController = ((StrollimoApplication) getActivity().getApplication()).getService(AccomplishableController.class);
             mUserService = ((StrollimoApplication) getActivity().getApplication()).getService(UserService.class);
-            mPlaceImage = (ImageView) mView.findViewById(R.id.place_image);
+            mPlaceImage = (ProgressNetworkImageView) mView.findViewById(R.id.place_image);
+            mPlaceImgProgress = mView.findViewById(R.id.place_progress);
             mPlaceTitle = (TextView) mView.findViewById(R.id.place_title);
             mRibbonPanel = mView.findViewById(R.id.ribbon_panel);
 
@@ -363,8 +361,7 @@ public class MapFragment extends Fragment {
 
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
 
-        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mPlaceImage);
-        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mPlaceImage, R.drawable.closed, R.drawable.closed));
+        mPlaceImage.setImageUrl(imageUrl, mPlaceImgProgress);
 
         mPlaceTitle.setText(mystery.getName().toUpperCase());
         mRibbonPanel.startAnimation(anim);

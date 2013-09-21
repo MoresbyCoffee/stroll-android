@@ -5,13 +5,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <ImageView
+    <com.strollimo.android.view.ProgressNetworkImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/detailed_photo"
-            android:src="@drawable/ballerina"
             android:scaleType="centerCrop"
             android:layout_gravity="left|center_vertical"/>
+
+    <ProgressBar
+            android:id="@+id/detailed_photo_progress"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerInParent="true" />
 
     <RelativeLayout
             android:layout_width="match_parent"

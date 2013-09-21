@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.bumptech.glide.Glide;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.UserService;
-import com.strollimo.android.controller.VolleyImageLoader;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
@@ -23,7 +20,7 @@ public class SecretCardFragment extends Fragment {
     private final int mSecretOrderNum;
     private Secret mSecret;
     private TextView mSecretTitle;
-    private ImageView mSecretPhoto;
+    private ProgressNetworkImageView mSecretPhoto;
     private ImageView mCapturedView;
     private TextView mSecretOrder;
 
@@ -52,15 +49,14 @@ public class SecretCardFragment extends Fragment {
             }
         });
         mSecretTitle = (TextView) rootView.findViewById(R.id.secret_title);
-        mSecretPhoto = (ImageView) rootView.findViewById(R.id.secret_photo);
+        mSecretPhoto = (ProgressNetworkImageView) rootView.findViewById(R.id.secret_photo);
         mCapturedView = (ImageView) rootView.findViewById(R.id.captured);
         mSecretOrder = (TextView) rootView.findViewById(R.id.secret_order);
 
         mSecretOrder.setText("" + mSecretOrderNum);
         mSecretTitle.setText(mSecret.getName().toUpperCase());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSecret.getImgUrl());
-        //Glide.load(imageUrl).centerCrop().animate(android.R.anim.fade_in).placeholder(R.drawable.closed).into(mSecretPhoto);
-        VolleyImageLoader.getInstance().get(imageUrl, ImageLoader.getImageListener(mSecretPhoto, R.drawable.closed, R.drawable.closed));
+        mSecretPhoto.setImageUrl(imageUrl, rootView.findViewById(R.id.secret_photo_progress));
         refreshView();
         return rootView;
     }

@@ -163,6 +163,8 @@ public class NetworkImageView extends ImageView {
                             return;
                         }
 
+                        onImageResponse(response, isImmediate);
+
                         if (response.getBitmap() != null) {
                             setImageBitmap(response.getBitmap());
                         } else if (mDefaultImageId != 0) {
@@ -198,5 +200,9 @@ public class NetworkImageView extends ImageView {
     protected void drawableStateChanged() {
         super.drawableStateChanged();
         invalidate();
+    }
+
+    protected void onImageResponse(ImageContainer response, boolean isImmediate) {
+        //
     }
 }
