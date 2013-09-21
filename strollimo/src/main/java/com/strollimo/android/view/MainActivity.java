@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.strollimo.android.R;
+import com.strollimo.android.util.Utils;
 
 import java.util.HashMap;
 
@@ -73,53 +74,66 @@ public class MainActivity extends FragmentActivity {
         mActionBar = getActionBar();
         mActionBar.setTitle(mTitle);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
-        ) {
+        if (Utils.isDebugBuild()) {
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    this,                  /* host Activity */
+                    mDrawerLayout,         /* DrawerLayout object */
+                    R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                    R.string.drawer_open,  /* "open drawer" description */
+                    R.string.drawer_close  /* "close drawer" description */
+            ) {
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-            }
+                /** Called when a drawer has settled in a completely closed state. */
+                public void onDrawerClosed(View view) {
+                }
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerList = (ListView) findViewById(R.id.main_drawer_list);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.menu_item, MenuItemFragment.getLabels()));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        selectItem(this, 0);
+                /** Called when a drawer has settled in a completely open state. */
+                public void onDrawerOpened(View drawerView) {
+                }
+            };
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+            mDrawerList = (ListView) findViewById(R.id.main_drawer_list);
+            mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                    R.layout.menu_item, MenuItemFragment.getLabels()));
+            // Set the list's click listener
+            mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+            selectItem(this, 0);
+        } else {
+            mActionBar.setDisplayHomeAsUpEnabled(false);
+            mActionBar.setHomeButtonEnabled(false);
+            Class<Fragment> fragmentClass = (Class<Fragment>) MenuItemFragment.MAP.getFragment();
+            replaceFragment(this, fragmentClass);
+        }
     }
 
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        if (mDrawerToggle != null){
+            // Sync the toggle state after onRestoreInstanceState has occurred.
+            mDrawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null){
+            mDrawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+        if (mDrawerToggle != null){
+            // Pass the event to ActionBarDrawerToggle, if it returns
+            // true, then it has handled the app icon touch event
+            if (mDrawerToggle.onOptionsItemSelected(item)) {
+                return true;
+            }
         }
         // Handle your other action bar items...
 
@@ -138,27 +152,25 @@ public class MainActivity extends FragmentActivity {
         // Create a new fragment and specify the planet to show based on position
         Class<Fragment> fragmentClass = (Class<Fragment>) MenuItemFragment.values()[position].getFragment();
         if (fragmentClass != null) {
-            Fragment fragment;
-//            if (mFragmentCache.containsKey(fragmentClass)) {
-//                fragment = mFragmentCache.get(fragmentClass);
-//            } else {
-                String fragmentName = fragmentClass.getName();
-                fragment = Fragment.instantiate(context, fragmentName);
-                mFragmentCache.put(fragmentClass, fragment);
-//            }
 
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_content, fragment)
-                    .commit();
+            replaceFragment(context, fragmentClass);
 
             // Highlight the selected item, update the title, and close the drawer
             mDrawerList.setItemChecked(position, true);
         }
         //setName(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void replaceFragment(Context context, Class<Fragment> fragmentClass) {
+        String fragmentName = fragmentClass.getName();
+        Fragment fragment = Fragment.instantiate(context, fragmentName);
+        mFragmentCache.put(fragmentClass, fragment);
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_content, fragment)
+                .commit();
     }
 
 //    @Override
