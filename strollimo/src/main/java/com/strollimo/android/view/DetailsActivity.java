@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -21,26 +20,27 @@ import com.google.zxing.integration.android.IntentResult;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
-import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.UserService;
+import com.strollimo.android.controller.*;
+import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.util.BitmapUtils;
 import com.viewpagerindicator.CirclePageIndicator;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 public class DetailsActivity extends FragmentActivity {
+    public static final String TAG = DetailsActivity.class.getSimpleName();
+
     public static final String PLACE_ID_EXTRA = "place_id";
     private static final int TEMPORARY_TAKE_PHOTO = 15;
 
@@ -48,17 +48,11 @@ public class DetailsActivity extends FragmentActivity {
     private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
-
     private Mystery mCurrentMystery;
-
     private Secret mSelectedSecret;
     private ViewPager mViewPager;
     private SecretSlideAdapter mPagerAdapter;
     private File mImage;
-
-    public interface OnSecretClickListener {
-        public void onSecretClicked(Secret secret);
-    }
 
     public static Intent createDetailsIntent(Context context, String placeId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -79,7 +73,7 @@ public class DetailsActivity extends FragmentActivity {
         zxingLibConfig = new ZXingLibConfig();
         zxingLibConfig.useFrontLight = true;
 
-        mViewPager = (ViewPager)findViewById(R.id.secret_pager);
+        mViewPager = (ViewPager) findViewById(R.id.secret_pager);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
         mCurrentMystery = mAccomplishableController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
         mPagerAdapter = new SecretSlideAdapter(getSupportFragmentManager(), getApplicationContext(), mCurrentMystery);
@@ -96,7 +90,7 @@ public class DetailsActivity extends FragmentActivity {
         actionBar.setTitle(title);
 
 
-        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.page_indicator);
+        CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.page_indicator);
         indicator.setViewPager(mViewPager);
         indicator.setSnap(true);
     }
@@ -132,28 +126,33 @@ public class DetailsActivity extends FragmentActivity {
                 final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Uploading photo for checking...");
                 progressDialog.show();
 
-                //we should do it
-                //Uri imageUri = data.getData();
-                //File file = new File(BitmapUtils.getRealPathFromURI(this, imageUri));
                 Bitmap bitmap = BitmapUtils.getBitmapFromFile(mImage, 800, 600);
-                Log.d("MC", "Uploading photo secredId: "+ mSelectedSecret.getId()+" deviceId: "+ mPrefs.getDeviceUUID());
                 final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
+                String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(pickupPhotoUrl.getUrl());
+                VolleyImageLoader.getInstance().putBitmapIntoCache(imageUrl, bitmap);
+                String cachedUrl = imageUrl;
+                if (cachedUrl.contains("amazon")) {
+                    cachedUrl = cachedUrl.substring(0, cachedUrl.indexOf('?'));
+                }
+                VolleyRequestQueue.getInstance().getCache().remove(cachedUrl);
+
                 StrollimoApplication.getService(PhotoUploadController.class).asyncUploadPhotoToAmazon(pickupPhotoUrl, bitmap, new PhotoUploadController.Callback() {
                     @Override
                     public void onSuccess() {
-                        Log.d("MC", "Pickup photo succes");
                         mUserService.captureSecret(mSelectedSecret);
                         mPagerAdapter.notifyDataSetChanged();
                         StrollimoApplication.getService(StrollimoApi.class).pickupSecret(mSelectedSecret, pickupPhotoUrl.getUrl(), new Callback<PickupSecretResponse>() {
                             @Override
                             public void success(PickupSecretResponse pickupSecretResponse, Response response) {
-                                Log.d("MC", "Success pickup");
+                                mSelectedSecret.setPickupState(BaseAccomplishable.PickupState.PENDING);
+                                mAccomplishableController.saveAllData();
+                                mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();
                             }
 
                             @Override
                             public void failure(RetrofitError retrofitError) {
-                                Log.d("MC", "Error pickup");
+                                mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();
                             }
                         });
@@ -161,11 +160,9 @@ public class DetailsActivity extends FragmentActivity {
 
                     @Override
                     public void onError(Exception ex) {
-                        Log.d("MC", "Pickup photo error");
                         progressDialog.dismiss();
                     }
                 });
-
 
 
             default:
@@ -213,7 +210,6 @@ public class DetailsActivity extends FragmentActivity {
                 return true;
             case R.id.add_secret:
                 launchAddSecret();
-//                mPhotoFile = takePhoto(createFilename());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -229,15 +225,15 @@ public class DetailsActivity extends FragmentActivity {
     public void launchPickupActivity(String secretId) {
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/strollimoTmpPickImg");
-            if(!folder.exists())            {
+            if (!folder.exists()) {
                 folder.mkdir();
             }
-            mImage = new File(folder +"/tmp.jpg");
+            mImage = new File(folder + "/" + secretId + ".jpg");
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mImage));
             startActivityForResult(takePictureIntent, TEMPORARY_TAKE_PHOTO);
         } catch (Exception e) {
-            Log.e("MC", "LunchPickupActivity error "+e.toString());
+            Log.e(TAG, "LunchPickupActivity error " + e.toString());
         }
         // Temporarily disabling capture modes
 //        if (mPrefs.isUseBarcode()) {
@@ -253,6 +249,10 @@ public class DetailsActivity extends FragmentActivity {
                 new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "pic_big_1" + timeStamp + "_";
         return imageFileName;
+    }
+
+    public interface OnSecretClickListener {
+        public void onSecretClicked(Secret secret);
     }
 
 }

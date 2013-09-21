@@ -3,6 +3,7 @@ package com.strollimo.android;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.strollimo.android.model.Mystery;
@@ -12,6 +13,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class StrollimoPreferences {
+    private static final String TAG = StrollimoPreferences.class.getSimpleName();
+
     public static final String USE_BARCODE_KEY = "USE_BARCODE";
     public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
     public static final String MISSIONS_KEY = "mmissions_";
@@ -94,8 +97,10 @@ public class StrollimoPreferences {
 
     public void saveSecret(Secret secret) {
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(SECRET_KEY + secret.getId(), mGson.toJson(secret));
-        editor.apply();
+        if (secret != null) {
+            editor.putString(SECRET_KEY + secret.getId(), mGson.toJson(secret));
+            editor.apply();
+        }
     }
 
     public Secret getSecret(String id) {
@@ -124,13 +129,22 @@ public class StrollimoPreferences {
     }
 
     public void saveMissions(List<Mystery> mysteries, Map<String, Secret> secrets) {
+        if (mysteries == null || secrets == null || secrets.size() == 0 || mysteries.size() == 0) {
+            return;
+        }
         SharedPreferences.Editor editor = mPrefs.edit();
         String json = mGson.toJson(mysteries);
         editor.putString(MISSIONS_KEY, json);
         for (Mystery mystery : mysteries) {
-            for (String secretId : mystery.getChildren()) {
-                Secret secret = secrets.get(secretId);
-                saveSecret(secret);
+            if (mystery != null) {
+                for (String secretId : mystery.getChildren()) {
+                    Secret secret = secrets.get(secretId);
+                    if (secret == null) {
+                        Log.e(TAG, "Error - secret is not available: " + secretId);
+                    } else {
+                        saveSecret(secret);
+                    }
+                }
             }
         }
         editor.apply();

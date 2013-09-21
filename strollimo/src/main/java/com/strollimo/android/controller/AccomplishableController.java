@@ -5,12 +5,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
-import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
@@ -27,7 +23,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AccomplishableController {
     private static final String TAG = AccomplishableController.class.getSimpleName();
@@ -57,8 +56,12 @@ public class AccomplishableController {
                 Mystery myMystery = getMysteryById(mystery.getId());
                 for (String secretId : mystery.getChildren()) {
                     Secret secret = mPrefs.getSecret(secretId);
-                    myMystery.addChild(secretId);
-                    addSecret(secret, myMystery);
+                    if (secret == null) {
+                        Log.e(TAG, "Error - secret is not available: " + secretId);
+                    } else {
+                        myMystery.addChild(secretId);
+                        addSecret(secret, myMystery);
+                    }
                 }
             }
         }
@@ -70,32 +73,38 @@ public class AccomplishableController {
 
             @Override
             protected List<Mystery> doInBackground(Void... voids) {
-                GetMysteriesResponse getMysteriesResponse = mStrollimoApi.getMysteries(env);
-                if (getMysteriesResponse != null && "success".equals(getMysteriesResponse.getState())) {
-                    for (Mystery mystery : getMysteriesResponse.getBody()) {
-                        addMystery(mystery);
-                        syncSecrets(mystery);
-                        saveAllData();
+                try {
+                    GetMysteriesResponse getMysteriesResponse = mStrollimoApi.getMysteries(env);
+                    if (getMysteriesResponse != null && "success".equals(getMysteriesResponse.getState())) {
+                        for (Mystery mystery : getMysteriesResponse.getBody()) {
+                            addMystery(mystery);
+                            syncSecrets(mystery);
+                            saveAllData();
 
+                        }
+                        return getMysteriesResponse.getBody();
+                    } else {
                     }
-                    if (callback != null) {
-                        callback.onSuccess();
-                    }
-                    return getMysteriesResponse.getBody();
-                } else {
-                    if (callback != null) {
-                        callback.onError("Error while getting mysteries");
-                    }
+                    return null;
+                } catch (RetrofitError ex) {
+                    Log.e(TAG, "Error getting the mysteries", ex);
+                    return null;
                 }
-                return null;
             }
 
             @Override
             protected void onPostExecute(List<Mystery> mysteries) {
                 super.onPostExecute(mysteries);
                 if (mysteries == null) {
+                    if (callback != null) {
+                        callback.onError("Can't download mysteries");
+                    }
                     return;
                 }
+                if (callback != null) {
+                    callback.onSuccess();
+                }
+
                 //start preloading images, Image loader must be invoked on main thread
                 for (Mystery mystery : mysteries) {
                     String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
@@ -197,7 +206,7 @@ public class AccomplishableController {
                             }
                         } else {
                             if (callback != null) {
-                                callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());
+                                callback.onError("Uploading to strollimo server failed with pickupState: " + updateMysteryResponse.getState());
                             }
                         }
                     }
@@ -253,7 +262,7 @@ public class AccomplishableController {
                                         }
                                     } else {
                                         if (callback != null) {
-                                            callback.onError("Uploading to strollimo server failed with status: " + updateSecretResponse.getState());
+                                            callback.onError("Uploading to strollimo server failed with pickupState: " + updateSecretResponse.getState());
                                         }
                                     }
                                 }
@@ -268,7 +277,7 @@ public class AccomplishableController {
 
                         } else {
                             if (callback != null) {
-                                callback.onError("Uploading to strollimo server failed with status: " + updateMysteryResponse.getState());
+                                callback.onError("Uploading to strollimo server failed with pickupState: " + updateMysteryResponse.getState());
                             }
                         }
                     }

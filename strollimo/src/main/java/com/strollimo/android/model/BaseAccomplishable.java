@@ -17,23 +17,26 @@ public class BaseAccomplishable {
     @Expose
     protected boolean topLevel;
     @Expose
+    protected PickupState pickupState;
+    @Expose
     private String shortDesc;
     @Expose
     private List<String> envTags = new ArrayList<String>();
     @Expose
     private String type;
 
-    public BaseAccomplishable(String id, String name, double lat, double lng, String imgUrl, String type, boolean topLevel) {
+    public BaseAccomplishable(String id, String name, double lat, double lng, String imgUrl, String type, boolean topLevel, PickupState pickupState) {
         this.id = id;
         this.name = name;
         this.loc = new Location(lat, lng);
         this.topLevel = topLevel;
         this.imgUrl = imgUrl;
         this.type = type;
+        this.pickupState = pickupState;
     }
 
     public BaseAccomplishable(String id, String name, String type, boolean topLevel) {
-        this(id, name, 0, 0, null, type, topLevel);
+        this(id, name, 0, 0, null, type, topLevel, PickupState.UNPICKED);
     }
 
     public String getId() {
@@ -94,5 +97,21 @@ public class BaseAccomplishable {
 
     public String getType() {
         return type;
+    }
+
+    public PickupState getPickupState() {
+        return pickupState;
+    }
+
+    public void setPickupState(PickupState pickupState) {
+        this.pickupState = pickupState;
+    }
+
+    public enum PickupState {
+        UNPICKED,
+        IN_PROGRESS,
+        PENDING,
+        REJECTED,
+        ACCOMPLISHED;
     }
 }

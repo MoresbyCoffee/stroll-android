@@ -5,14 +5,13 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.request.*;
-import com.strollimo.android.network.response.GetMysteriesResponse;
-import com.strollimo.android.network.response.GetSecretsResponse;
-import com.strollimo.android.network.response.PickupSecretResponse;
-import com.strollimo.android.network.response.UpdateMysteryResponse;
-import com.strollimo.android.network.response.UpdateSecretResponse;
+import com.strollimo.android.network.response.*;
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
+
+import java.util.List;
 
 public class StrollimoApi {
     public static final String ENDPOINT = "http://stroll.moresby.cloudbees.net";
@@ -36,7 +35,7 @@ public class StrollimoApi {
         service.getMysteries(request, callback);
     }
 
-    public GetMysteriesResponse getMysteries(String envTag) {
+    public GetMysteriesResponse getMysteries(String envTag) throws RetrofitError {
         GetMysteriesRequest request = new GetMysteriesRequest(mRequestHeader, true, envTag);
         return service.getMysteries(request);
     }
@@ -64,5 +63,10 @@ public class StrollimoApi {
     public void pickupSecret(Secret secret, String capturedSecretUrl, Callback<PickupSecretResponse> callback) {
         PickupSecretRequest request = new PickupSecretRequest(mRequestHeader, secret.getId(), "imgComp", capturedSecretUrl);
         service.pickupSecret(request, callback);
+    }
+
+    public void getPickupStatus(List<String> secretsIds, Callback<GetPickupStatusResponse> callback) {
+        GetPickupStatusRequest request = new GetPickupStatusRequest (mRequestHeader, secretsIds);
+        service.getPickupStatus(request, callback);
     }
 }

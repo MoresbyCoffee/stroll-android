@@ -10,11 +10,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
+import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import android.widget.TextView;
-import com.bumptech.glide.Glide;
+import com.strollimo.android.LogTags;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
@@ -24,6 +23,8 @@ import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
 public class MysteryOpenActivity extends Activity {
+    private static final String TAG = MysteryOpenActivity.class.getSimpleName();
+
     public static final String PLACE_ID_EXTRA = "place_id";
     private AccomplishableController mAccomplishableController;
     private Mystery mCurrentMystery;
@@ -61,6 +62,12 @@ public class MysteryOpenActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LogTags.ACCOMPLISHABLES_TAG, "Showing mystery: " + mCurrentMystery.getId());
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -74,6 +81,10 @@ public class MysteryOpenActivity extends Activity {
     private void preloadSecretImages(Mystery mystery) {
         for (String secretId : mystery.getChildren()) {
             Secret secret = mAccomplishableController.getSecretById(secretId);
+            if (secret == null) {
+                Log.e(TAG, "Error - secret is not available: " + secretId);
+                return;
+            }
             String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(secret.getImgUrl());
             if (!TextUtils.isEmpty(imageUrl)) {
                 VolleyImageLoader.getInstance().get(imageUrl, new ImageLoader.ImageListener() {

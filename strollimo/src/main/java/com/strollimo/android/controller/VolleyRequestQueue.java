@@ -25,6 +25,7 @@ public class VolleyRequestQueue {
 
     /** Default on-disk cache directory. */
     private static final String DEFAULT_CACHE_DIR = "volley";
+    private static final int CACHE_SIZE = 30 * 1000 * 1000;
 
     private static RequestQueue instance = null;
 
@@ -40,7 +41,7 @@ public class VolleyRequestQueue {
 
     private static Cache getCache() {
         File cacheDir = new File(StrollimoApplication.getContext().getCacheDir(), DEFAULT_CACHE_DIR);
-        return new DiskBasedCache(cacheDir);
+        return new DiskBasedCache(cacheDir, CACHE_SIZE);
     }
 
     private static Network getNetwork(){

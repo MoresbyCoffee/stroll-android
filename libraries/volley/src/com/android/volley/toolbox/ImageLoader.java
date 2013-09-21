@@ -171,6 +171,11 @@ public class ImageLoader {
         return get(requestUrl, listener, 0, 0);
     }
 
+    public void putBitmapIntoCache(String requestUrl, Bitmap bitmap) {
+        String key = getCacheKey(requestUrl, 0, 0);
+        mCache.putBitmap(key, bitmap);
+    }
+
     /**
      * Issues a bitmap request with the given URL if that image is not available
      * in the cache, and returns a bitmap container that contains all of the data

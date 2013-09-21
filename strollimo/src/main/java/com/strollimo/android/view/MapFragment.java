@@ -360,7 +360,6 @@ public class MapFragment extends Fragment {
         mRibbonPanel.setVisibility(View.VISIBLE);
 
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
-
         mPlaceImage.setImageUrl(imageUrl, mPlaceImgProgress);
 
         mPlaceTitle.setText(mystery.getName().toUpperCase());
