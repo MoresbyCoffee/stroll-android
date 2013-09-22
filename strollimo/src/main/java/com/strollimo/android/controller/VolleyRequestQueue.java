@@ -15,6 +15,7 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.util.PermanentDiskBasedCache;
 
 import java.io.File;
 
@@ -41,7 +42,7 @@ public class VolleyRequestQueue {
 
     private static Cache getCache() {
         File cacheDir = new File(StrollimoApplication.getContext().getCacheDir(), DEFAULT_CACHE_DIR);
-        return new DiskBasedCache(cacheDir, CACHE_SIZE);
+        return new PermanentDiskBasedCache(cacheDir);//DiskBasedCache(cacheDir, CACHE_SIZE);
     }
 
     private static Network getNetwork(){

@@ -56,9 +56,6 @@ public class MysteryOpenActivity extends Activity {
         ProgressNetworkImageView detailsPhoto = (ProgressNetworkImageView) findViewById(R.id.detailed_photo);
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
         detailsPhoto.setImageUrl(imageUrl, findViewById(R.id.detailed_photo_progress));
-
-
-        preloadSecretImages(mCurrentMystery);
     }
 
     @Override
@@ -75,30 +72,6 @@ public class MysteryOpenActivity extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void preloadSecretImages(Mystery mystery) {
-        for (String secretId : mystery.getChildren()) {
-            Secret secret = mAccomplishableController.getSecretById(secretId);
-            if (secret == null) {
-                Log.e(TAG, "Error - secret is not available: " + secretId);
-                return;
-            }
-            String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(secret.getImgUrl());
-            if (!TextUtils.isEmpty(imageUrl)) {
-                VolleyImageLoader.getInstance().get(imageUrl, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        //
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //
-                    }
-                });
-            }
         }
     }
 }

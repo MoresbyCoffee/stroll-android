@@ -7,6 +7,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.network.ImagesPreloader;
 import com.strollimo.android.view.dialog.SyncDialogHelper;
 
 public class InitActivity extends Activity {
@@ -22,7 +23,7 @@ public class InitActivity extends Activity {
                     SyncDialogHelper.syncData(prefs.getEnvTag(), this, accomplishableController, prefs, new AccomplishableController.OperationCallback() {
                         @Override
                         public void onSuccess() {
-                            advanceToMainActivity();
+                            preloadImages();
                         }
 
                         @Override
@@ -38,6 +39,21 @@ public class InitActivity extends Activity {
                 GooglePlayServicesUtil.getErrorDialog(errorCode, this, 0).show();
                 break;
         }
+    }
+
+    private void preloadImages() {
+        ImagesPreloader preloader = new ImagesPreloader(this, StrollimoApplication.getService(AccomplishableController.class), new AccomplishableController.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                advanceToMainActivity();
+            }
+
+            @Override
+            public void onError(String errorMsg) {
+                advanceToMainActivity();
+            }
+        });
+        preloader.start();
     }
 
     private void advanceToMainActivity() {

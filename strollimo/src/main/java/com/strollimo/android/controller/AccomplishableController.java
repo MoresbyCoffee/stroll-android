@@ -104,24 +104,6 @@ public class AccomplishableController {
                 if (callback != null) {
                     callback.onSuccess();
                 }
-
-                //start preloading images, Image loader must be invoked on main thread
-                for (Mystery mystery : mysteries) {
-                    String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mystery.getImgUrl());
-                    if (!TextUtils.isEmpty(imageUrl)) {
-                        VolleyImageLoader.getInstance().get(imageUrl, new ImageLoader.ImageListener() {
-                            @Override
-                            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                                //
-                            }
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                //
-                            }
-                        });
-                    }
-                }
             }
         }.execute();
     }
@@ -157,20 +139,6 @@ public class AccomplishableController {
             return null;
         }
     }
-
-//    private void preloadImages(final List<Mystery> mysteries) {
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                for (Mystery mystery : mysteries) {
-//                    if (!TextUtils.isEmpty(mystery.getImgUrl())) {
-//                        mImageManager.cacheImage(mystery.getImgUrl(), 800, 600);
-//                    }
-//                }
-//            }
-//        }).start();
-//    }
 
     public void start() {
 
