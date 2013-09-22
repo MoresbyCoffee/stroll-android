@@ -1,4 +1,4 @@
-package com.strollimo.android.network;
+package com.strollimo.android.controller;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,10 +11,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.strollimo.android.StrollimoApplication;
-import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.VolleyRequestQueue;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +69,8 @@ public class ImagesPreloader {
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setMax(mImageUrls.size());
         mProgressDialog.setMessage("Downloading images...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
 
         RequestQueue requestQueue = VolleyRequestQueue.getInstance();

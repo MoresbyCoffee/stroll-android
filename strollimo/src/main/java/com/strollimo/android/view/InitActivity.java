@@ -7,7 +7,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.network.ImagesPreloader;
+import com.strollimo.android.controller.ImagesPreloader;
 import com.strollimo.android.view.dialog.SyncDialogHelper;
 
 public class InitActivity extends Activity {

@@ -1,7 +1,9 @@
 package com.strollimo.android.view;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -10,15 +12,31 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.strollimo.android.R;
+import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.model.BaseAccomplishable;
+import com.strollimo.android.model.Mystery;
+import com.strollimo.android.model.Secret;
+import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.util.Utils;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
@@ -65,6 +83,7 @@ public class MainActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
     private HashMap<Class<Fragment>, Fragment> mFragmentCache = new HashMap<Class<Fragment>, Fragment>();
+    private AlertDialog mQuestCompleteDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +138,19 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (isQuestComplete()) {
+            AlertDialog d = getQuestCompleteDialog();
+            if (!d.isShowing()) {
+                d.show();
+                // Make the textview clickable. Must be called after show()
+                ((TextView)d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+            }
+        }
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (mDrawerToggle != null){
@@ -147,6 +179,30 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    private boolean isQuestComplete() {
+        AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
+        List<Mystery> mysteries = accomplishableController.getAllMysteries();
+
+        for (Mystery mystery : mysteries) {
+            for (String secretId : mystery.getChildren()) {
+                Secret secret = accomplishableController.getSecretById(secretId);
+                if (secret == null) {
+                    Log.e(MainActivity.class.getSimpleName(), "Error - secret is not available isQuestComplete the images: " + secretId);
+                    continue;
+                }
+                BaseAccomplishable.PickupState state = secret.getPickupState();
+                switch (state) {
+                    case UNPICKED:
+                        return false;
+                    default:
+                        // keep going
+                }
+            }
+        }
+
+        return true;
+    }
+
     /** Swaps fragments in the main content view */
     private void selectItem(Context context, int position) {
         // Create a new fragment and specify the planet to show based on position
@@ -173,6 +229,23 @@ public class MainActivity extends FragmentActivity {
                 .commit();
     }
 
+
+    private AlertDialog getQuestCompleteDialog() {
+        if (mQuestCompleteDialog == null) {
+            SpannableStringBuilder msg = new SpannableStringBuilder();
+            msg.append("Congratulation, you've completed the Covent Garden quest and finished the Beta!\n\n");
+            msg.append("We're adding more quests soon, so stay tuned!\n\n");
+            msg.append(Html.fromHtml("We'd love to hear your opinion! Wether you've liked it or not please contact us by: <a href='mailto:strollimo@gmail.com'>strollimo@gmail.com</a><br/><br/>"));
+            msg.append(Html.fromHtml("<a href='https://plus.google.com/u/0/communities/107619132512578312178'>Strollimo beta community on Google+</a><br/><br/>"));
+            msg.append(Html.fromHtml("<a href='https://www.strollimo.com'>Strollimo.com</a>"));
+
+            mQuestCompleteDialog = new AlertDialog.Builder(this).create();
+            mQuestCompleteDialog.setCancelable(false);
+            mQuestCompleteDialog.setCanceledOnTouchOutside(false);
+            mQuestCompleteDialog.setMessage(msg);
+        }
+        return mQuestCompleteDialog;
+    }
 //    @Override
 //    public void setName(CharSequence title) {
 //        mTitle = title;
