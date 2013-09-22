@@ -22,6 +22,7 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.*;
 import com.strollimo.android.model.BaseAccomplishable;
+import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -30,6 +31,9 @@ import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.util.BitmapUtils;
 import com.viewpagerindicator.CirclePageIndicator;
+
+import org.json.JSONObject;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -82,6 +86,8 @@ public class DetailsActivity extends FragmentActivity {
             @Override
             public void onSecretClicked(Secret secret) {
                 mSelectedSecret = secret;
+                StrollimoApplication.getMixpanel().track(MixpanelEvent.OPEN_CAPTURE.toString(), null);
+
                 launchPickupActivity(mSelectedSecret.getId());
 
             }
@@ -93,6 +99,29 @@ public class DetailsActivity extends FragmentActivity {
         CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.page_indicator);
         indicator.setViewPager(mViewPager);
         indicator.setSnap(true);
+
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int page) {
+                JSONObject props = new JSONObject();
+                try {
+                    props.put("page", page);
+                } catch (Exception e) {
+
+                }
+                StrollimoApplication.getMixpanel().track(MixpanelEvent.SWIPE_SECRET.toString(), props);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     @Override

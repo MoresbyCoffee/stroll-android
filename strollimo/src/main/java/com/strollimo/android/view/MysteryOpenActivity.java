@@ -18,6 +18,7 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.VolleyImageLoader;
+import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -49,6 +50,9 @@ public class MysteryOpenActivity extends Activity {
         findViewById(R.id.open_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                StrollimoApplication.getMixpanel().track(MixpanelEvent.OPEN_MYSTERY_SECRETS.toString(), null);
+
                 startActivity(DetailsActivity.createDetailsIntent(MysteryOpenActivity.this, mCurrentMystery.getId()));
             }
         });

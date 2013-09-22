@@ -30,6 +30,7 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.BaseAccomplishable;
+import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -146,6 +147,8 @@ public class MainActivity extends FragmentActivity {
                 d.show();
                 // Make the textview clickable. Must be called after show()
                 ((TextView)d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+
+                StrollimoApplication.getMixpanel().track(MixpanelEvent.QUEST_COMPLETE.toString(), null);
             }
         }
     }
@@ -246,7 +249,14 @@ public class MainActivity extends FragmentActivity {
         }
         return mQuestCompleteDialog;
     }
-//    @Override
+
+    @Override
+    protected void onDestroy() {
+        StrollimoApplication.getInstance().flushMixpanel();
+        super.onDestroy();
+    }
+
+    //    @Override
 //    public void setName(CharSequence title) {
 //        mTitle = title;
 //        getActionBar().setName(mTitle);

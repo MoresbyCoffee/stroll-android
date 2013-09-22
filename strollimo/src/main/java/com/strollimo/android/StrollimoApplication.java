@@ -6,14 +6,18 @@ import android.content.Intent;
 import com.crittercism.app.Crittercism;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.strollimo.android.controller.*;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.util.Utils;
 
 public class StrollimoApplication extends Application {
     private static Context mContext;
+    private static StrollimoApplication mInstance;
+
     private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
@@ -23,6 +27,8 @@ public class StrollimoApplication extends Application {
     private StrollimoApi mStrollimoApi;
     private VolleyRequestQueue mVolleyRequestQueue;
 
+    private MixpanelAPI mMixpanel;
+
     public static <T> T getService(Class<T> serviceClass) {
         return ((StrollimoApplication) mContext.getApplicationContext()).getServiceInstance(serviceClass);
     }
@@ -31,6 +37,7 @@ public class StrollimoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
+        mInstance = this;
         // Initialize Crittercism crash reporting only on release builds
         if (!BuildConfig.DEBUG) {
             Crittercism.init(getApplicationContext(), "51f80ad3558d6a58c1000002");
@@ -70,7 +77,31 @@ public class StrollimoApplication extends Application {
 
     }
 
+
     public static Context getContext() {
         return StrollimoApplication.mContext;
+    }
+
+    public static StrollimoApplication getInstance() {
+        return mInstance;
+    }
+
+    public static MixpanelAPI getMixpanel() {
+        if (mInstance.mMixpanel == null) {
+            final String token;
+            if (Utils.isDebugBuild()) {
+                token = "dc79ca458e2252c03f31e8a86907e427";
+            } else {
+                token = "eeb6606cdbeb71f2774b1abad3e540d0";
+            }
+            mInstance.mMixpanel = MixpanelAPI.getInstance(mInstance, token);
+        }
+        return mInstance.mMixpanel;
+    }
+
+    public void flushMixpanel() {
+        if (mMixpanel != null) {
+            mMixpanel.flush();
+        }
     }
 }

@@ -31,6 +31,7 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.MapPlacesModel;
+import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
 
@@ -75,6 +76,9 @@ public class MapFragment extends Fragment {
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
             marker.hideInfoWindow();
             mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
+
+            StrollimoApplication.getMixpanel().track(MixpanelEvent.SELECT_MYSTERY_ON_MAP.toString(), null);
+
             return true;
         }
     };
@@ -180,6 +184,9 @@ public class MapFragment extends Fragment {
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(newMarker.getPosition()), 250, null);
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
+
+                            StrollimoApplication.getMixpanel().track(MixpanelEvent.SELECT_MYSTERY_ON_MAP.toString(), null);
+
                         } else {
                             Marker selectedMarker = mMapPlacesModel.getSelectedMarker();
                             if (selectedMarker != null) {
@@ -311,6 +318,9 @@ public class MapFragment extends Fragment {
 
     private void launchDetailsActivity() {
         Mystery selectedMystery = mMapPlacesModel.getSelectedPlace();
+
+        StrollimoApplication.getMixpanel().track(MixpanelEvent.OPEN_MYSTERY_MAIN.toString(), null);
+
         if (selectedMystery != null) {
             this.startActivity(MysteryOpenActivity.createDetailsIntent(getActivity(), selectedMystery.getId()));
         }
