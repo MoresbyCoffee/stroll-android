@@ -39,7 +39,7 @@ public class SecretCardFragment extends Fragment {
     private View mStatusPanel;
     private ImageView mCapturedImg;
     private ImageView mStatusIcon;
-    private ProgressBar mStatusPending;
+    private View mStatusPending;
     private ImageView mCaptureButton;
 
     public SecretCardFragment(Secret secret, int position, UserService userService, DetailsActivity.OnSecretClickListener onSecretClickListener) {
@@ -73,7 +73,7 @@ public class SecretCardFragment extends Fragment {
         mStatusPanel = rootView.findViewById(R.id.status_panel);
         mCapturedImg = (ImageView)rootView.findViewById(R.id.captured_img);
         mStatusIcon = (ImageView)rootView.findViewById(R.id.status_icon);
-        mStatusPending = (ProgressBar)rootView.findViewById(R.id.status_pending);
+        mStatusPending = rootView.findViewById(R.id.status_pending);
         mSecretOrder.setText("" + mSecretOrderNum);
         mSecretTitle.setText(mSecret.getName().toUpperCase());
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mSecret.getImgUrl());
