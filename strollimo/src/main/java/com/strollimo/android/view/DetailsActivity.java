@@ -100,7 +100,7 @@ public class DetailsActivity extends FragmentActivity {
         indicator.setViewPager(mViewPager);
         indicator.setSnap(true);
 
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
 
