@@ -10,7 +10,7 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.ImagesPreloader;
 import com.strollimo.android.view.dialog.SyncDialogHelper;
 
-public class InitActivity extends Activity {
+public class InitActivity extends AbstractTrackedActivity {
     @Override
     protected void onResume() {
         super.onResume();

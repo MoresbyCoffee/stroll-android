@@ -15,6 +15,10 @@ import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.util.Utils;
 
 public class StrollimoApplication extends Application {
+
+    public static String FLURRY_DEBUG_KEY = "23F35RQ9T33RMY5X3FH6";
+    public static String FLURRY_PRODUCTION_KEY = "X9YHVP5TX29M8GSQWSJ3";
+
     private static Context mContext;
     private static StrollimoApplication mInstance;
 

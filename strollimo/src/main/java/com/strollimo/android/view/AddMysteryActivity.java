@@ -34,7 +34,7 @@ import com.strollimo.android.util.BitmapUtils;
 import java.io.File;
 import java.util.Random;
 
-public class AddMysteryActivity extends Activity {
+public class AddMysteryActivity extends AbstractTrackedActivity {
     public static final int REQUEST_PICK_IMAGE = 52;
     private EditText mIdEditText;
     private EditText mNameEditText;

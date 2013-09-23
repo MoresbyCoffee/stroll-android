@@ -23,7 +23,7 @@ import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
-public class MysteryOpenActivity extends Activity {
+public class MysteryOpenActivity extends AbstractTrackedActivity {
     private static final String TAG = MysteryOpenActivity.class.getSimpleName();
 
     public static final String PLACE_ID_EXTRA = "place_id";

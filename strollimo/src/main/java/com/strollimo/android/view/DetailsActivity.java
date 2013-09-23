@@ -42,7 +42,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DetailsActivity extends FragmentActivity {
+public class DetailsActivity extends AbstractTrackedFragmentActivity {
     public static final String TAG = DetailsActivity.class.getSimpleName();
 
     public static final String PLACE_ID_EXTRA = "place_id";

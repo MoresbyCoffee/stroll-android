@@ -39,7 +39,7 @@ import com.strollimo.android.util.Utils;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AbstractTrackedFragmentActivity {
 
     public enum MenuItemFragment {
         MAP("Map", MapFragment.class),

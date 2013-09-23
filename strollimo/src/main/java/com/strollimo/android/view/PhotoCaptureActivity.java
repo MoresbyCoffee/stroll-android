@@ -23,7 +23,7 @@ import org.opencv.android.OpenCVLoader;
 
 import java.util.Random;
 
-public class PhotoCaptureActivity extends Activity {
+public class PhotoCaptureActivity extends AbstractTrackedActivity {
     public static final int REQUEST_CODE = 1;
     public static final String PHOTO_CAPTURE_RESULT = "PHOTO_CAPTURE_RESULT";
     public static final String PLACE_ID_EXTRA = "place_id";
