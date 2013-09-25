@@ -3,21 +3,16 @@ package com.strollimo.android.view;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +25,9 @@ import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.BaseAccomplishable;
-import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.network.AmazonS3Controller;
+import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.Utils;
 
 import java.util.HashMap;
@@ -148,7 +142,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
                 // Make the textview clickable. Must be called after show()
                 ((TextView)d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
 
-                StrollimoApplication.getMixpanel().track(MixpanelEvent.QUEST_COMPLETE.toString(), null);
+                Analytics.track(Analytics.Event.QUEST_COMPLETE);
             }
         }
     }
@@ -252,7 +246,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
 
     @Override
     protected void onDestroy() {
-        StrollimoApplication.getInstance().flushMixpanel();
+        Analytics.flush();
         super.onDestroy();
     }
 

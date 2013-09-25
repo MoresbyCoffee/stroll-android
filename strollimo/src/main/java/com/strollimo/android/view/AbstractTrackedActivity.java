@@ -3,7 +3,7 @@ package com.strollimo.android.view;
 import android.app.Activity;
 
 import com.flurry.android.FlurryAgent;
-import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.Utils;
 
 /**
@@ -18,9 +18,9 @@ public abstract class AbstractTrackedActivity extends Activity {
         super.onStart();
         final String token;
         if (Utils.isDebugBuild()) {
-            token = StrollimoApplication.FLURRY_DEBUG_KEY;
+            token = Analytics.FLURRY_DEBUG_KEY;
         } else {
-            token = StrollimoApplication.FLURRY_PRODUCTION_KEY;
+            token = Analytics.FLURRY_PRODUCTION_KEY;
         }
         FlurryAgent.onStartSession(this, token);
     }

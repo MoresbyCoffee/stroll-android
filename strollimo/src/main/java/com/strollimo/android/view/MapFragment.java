@@ -31,9 +31,9 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 import com.strollimo.android.model.MapPlacesModel;
-import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
+import com.strollimo.android.util.Analytics;
 
 public class MapFragment extends Fragment {
     public static final int DEFAULT_RADIUS = 25;
@@ -77,7 +77,7 @@ public class MapFragment extends Fragment {
             marker.hideInfoWindow();
             mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
 
-            StrollimoApplication.getMixpanel().track(MixpanelEvent.SELECT_MYSTERY_ON_MAP.toString(), null);
+            Analytics.track(Analytics.Event.SELECT_MYSTERY_ON_MAP);
 
             return true;
         }
@@ -185,7 +185,7 @@ public class MapFragment extends Fragment {
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
 
-                            StrollimoApplication.getMixpanel().track(MixpanelEvent.SELECT_MYSTERY_ON_MAP.toString(), null);
+                            Analytics.track(Analytics.Event.SELECT_MYSTERY_ON_MAP);
 
                         } else {
                             Marker selectedMarker = mMapPlacesModel.getSelectedMarker();
@@ -319,7 +319,7 @@ public class MapFragment extends Fragment {
     private void launchDetailsActivity() {
         Mystery selectedMystery = mMapPlacesModel.getSelectedPlace();
 
-        StrollimoApplication.getMixpanel().track(MixpanelEvent.OPEN_MYSTERY_MAIN.toString(), null);
+        Analytics.track(Analytics.Event.OPEN_MYSTERY_MAIN);
 
         if (selectedMystery != null) {
             this.startActivity(MysteryOpenActivity.createDetailsIntent(getActivity(), selectedMystery.getId()));

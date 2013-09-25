@@ -12,12 +12,10 @@ import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.Utils;
 
 public class StrollimoApplication extends Application {
-
-    public static String FLURRY_DEBUG_KEY = "23F35RQ9T33RMY5X3FH6";
-    public static String FLURRY_PRODUCTION_KEY = "X9YHVP5TX29M8GSQWSJ3";
 
     private static Context mContext;
     private static StrollimoApplication mInstance;
@@ -31,7 +29,7 @@ public class StrollimoApplication extends Application {
     private StrollimoApi mStrollimoApi;
     private VolleyRequestQueue mVolleyRequestQueue;
 
-    private MixpanelAPI mMixpanel;
+
 
     public static <T> T getService(Class<T> serviceClass) {
         return ((StrollimoApplication) mContext.getApplicationContext()).getServiceInstance(serviceClass);
@@ -88,24 +86,5 @@ public class StrollimoApplication extends Application {
 
     public static StrollimoApplication getInstance() {
         return mInstance;
-    }
-
-    public static MixpanelAPI getMixpanel() {
-        if (mInstance.mMixpanel == null) {
-            final String token;
-            if (Utils.isDebugBuild()) {
-                token = "dc79ca458e2252c03f31e8a86907e427";
-            } else {
-                token = "eeb6606cdbeb71f2774b1abad3e540d0";
-            }
-            mInstance.mMixpanel = MixpanelAPI.getInstance(mInstance, token);
-        }
-        return mInstance.mMixpanel;
-    }
-
-    public void flushMixpanel() {
-        if (mMixpanel != null) {
-            mMixpanel.flush();
-        }
     }
 }

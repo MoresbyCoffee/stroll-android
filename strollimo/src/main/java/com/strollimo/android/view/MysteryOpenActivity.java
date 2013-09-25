@@ -1,27 +1,21 @@
 package com.strollimo.android.view;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
+
 import com.strollimo.android.LogTags;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.VolleyImageLoader;
-import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
-import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
+import com.strollimo.android.util.Analytics;
 
 public class MysteryOpenActivity extends AbstractTrackedActivity {
     private static final String TAG = MysteryOpenActivity.class.getSimpleName();
@@ -51,7 +45,7 @@ public class MysteryOpenActivity extends AbstractTrackedActivity {
             @Override
             public void onClick(View v) {
 
-                StrollimoApplication.getMixpanel().track(MixpanelEvent.OPEN_MYSTERY_SECRETS.toString(), null);
+                Analytics.track(Analytics.Event.OPEN_MYSTERY_SECRETS);
 
                 startActivity(DetailsActivity.createDetailsIntent(MysteryOpenActivity.this, mCurrentMystery.getId()));
             }

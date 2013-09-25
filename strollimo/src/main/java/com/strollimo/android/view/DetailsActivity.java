@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -22,13 +21,13 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.*;
 import com.strollimo.android.model.BaseAccomplishable;
-import com.strollimo.android.model.MixpanelEvent;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.PickupSecretResponse;
+import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.BitmapUtils;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -41,6 +40,7 @@ import retrofit.client.Response;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class DetailsActivity extends AbstractTrackedFragmentActivity {
     public static final String TAG = DetailsActivity.class.getSimpleName();
@@ -86,7 +86,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
             @Override
             public void onSecretClicked(Secret secret) {
                 mSelectedSecret = secret;
-                StrollimoApplication.getMixpanel().track(MixpanelEvent.OPEN_CAPTURE.toString(), null);
+                Analytics.track(Analytics.Event.OPEN_CAPTURE);
 
                 launchPickupActivity(mSelectedSecret.getId());
 
@@ -108,13 +108,9 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
 
             @Override
             public void onPageSelected(int page) {
-                JSONObject props = new JSONObject();
-                try {
-                    props.put("page", page);
-                } catch (Exception e) {
-
-                }
-                StrollimoApplication.getMixpanel().track(MixpanelEvent.SWIPE_SECRET.toString(), props);
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("page", String.valueOf(page));
+                Analytics.track(Analytics.Event.SWIPE_SECRET, params);
             }
 
             @Override
