@@ -3,6 +3,7 @@ package com.strollimo.android;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import com.crittercism.app.Crittercism;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,7 @@ import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.Utils;
 
 public class StrollimoApplication extends Application {
+    public static String TAG = StrollimoApplication.class.getSimpleName();
 
     private static Context mContext;
     private static StrollimoApplication mInstance;
@@ -59,6 +61,8 @@ public class StrollimoApplication extends Application {
         mUserService.loadCapturedSecrets();
         mAccomplishableController.preloadPlaces();
         startService(new Intent(this, SecretStatusPollingService.class));
+
+        Log.i(TAG, String.format("Device UUID: %s", mPrefs.getDeviceUUID()));
     }
 
     public <T> T getServiceInstance(Class<T> serviceClass) {
