@@ -72,7 +72,7 @@ public class MapFragment extends Fragment {
 
             // TODO: replace this with assets
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
-            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
+//            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
             marker.hideInfoWindow();
             mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
@@ -105,7 +105,7 @@ public class MapFragment extends Fragment {
      */
     private Bitmap getMoWithAlpha(int alpha) {
         BitmapDrawable drawable = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.mo));
-        drawable.setAlpha(alpha);
+//        drawable.setAlpha(alpha);
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -180,7 +180,7 @@ public class MapFragment extends Fragment {
                             mMapPlacesModel.onMarkerClick(newMarker);
                             // TODO: replace this with assets
                             newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
-                            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
+//                            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(newMarker.getPosition()), 250, null);
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
