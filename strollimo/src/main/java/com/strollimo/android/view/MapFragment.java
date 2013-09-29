@@ -3,9 +3,6 @@ package com.strollimo.android.view;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +11,6 @@ import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -36,6 +32,8 @@ import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.util.Analytics;
 
 public class MapFragment extends Fragment {
+    private static final String TAG = MapFragment.class.getSimpleName();
+
     public static final int DEFAULT_RADIUS = 25;
     private View mView;
     private GoogleMap mMap;
@@ -51,10 +49,10 @@ public class MapFragment extends Fragment {
     private Circle mCircleRadius;
     private MapPlacesModel mMapPlacesModel;
     private MapView mMapView;
+
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
-            Log.i("BB", "on info window selected");
             launchDetailsActivity();
         }
     };
@@ -71,8 +69,12 @@ public class MapFragment extends Fragment {
             mMapPlacesModel.onMarkerClick(marker);
 
             // TODO: replace this with assets
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
-//            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
+            if (mAccomplishableController.isMysteryFinished(mMapPlacesModel.getSelectedPlace().getId())) {
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getSelectedDiscoveredMarker()));
+            } else {
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getSelectedNotDiscoveredMarker()));
+            }
+
             displayRibbon(mMapPlacesModel.getSelectedPlace(), true);
             marker.hideInfoWindow();
             mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
@@ -82,6 +84,7 @@ public class MapFragment extends Fragment {
             return true;
         }
     };
+
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
@@ -89,28 +92,33 @@ public class MapFragment extends Fragment {
             if (selectedMarker != null) {
                 resetMarkerIcon(selectedMarker);
             }
-            removeCircleRadius();
             hideRibbon();
             mMapPlacesModel.clearSelectedPlace();
         }
     };
 
     private void resetMarkerIcon(Marker marker) {
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(150)));
+        if (mAccomplishableController.isMysteryFinished(mMapPlacesModel.getSelectedPlace().getId())) {
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(getNormalDiscoveredMarker()));
+        } else {
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(getNormalNotDiscoveredMarker()));
+        }
     }
 
-    /**
-     * @param alpha Between 0 and 255
-     * @return
-     */
-    private Bitmap getMoWithAlpha(int alpha) {
-        BitmapDrawable drawable = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.mo));
-//        drawable.setAlpha(alpha);
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
+    private Bitmap getNormalNotDiscoveredMarker() {
+        return BitmapFactory.decodeResource(getResources(), R.drawable.light_mark);
+    }
+
+    private Bitmap getSelectedNotDiscoveredMarker() {
+        return BitmapFactory.decodeResource(getResources(), R.drawable.dark_mark);
+    }
+
+    private Bitmap getNormalDiscoveredMarker() {
+        return BitmapFactory.decodeResource(getResources(), R.drawable.light_mark_accepted);
+    }
+
+    private Bitmap getSelectedDiscoveredMarker() {
+        return BitmapFactory.decodeResource(getResources(), R.drawable.dark_mark_accepted);
     }
 
     @Override
@@ -125,7 +133,7 @@ public class MapFragment extends Fragment {
         try {
             MapsInitializer.initialize(getActivity());
         } catch (GooglePlayServicesNotAvailableException ex) {
-            Log.e("BB", "Error", ex);
+            Log.e(TAG, "Google play services not available.", ex);
         }
         if (mView == null) {
             firstStart = true;
@@ -179,8 +187,7 @@ public class MapFragment extends Fragment {
                             Marker newMarker = mMapPlacesModel.getMarkerForPlace(toMystery);
                             mMapPlacesModel.onMarkerClick(newMarker);
                             // TODO: replace this with assets
-                            newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(200)));
-//                            displayCircleRadius(mMapPlacesModel.getSelectedPlace());
+                            newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getNormalNotDiscoveredMarker()));
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(newMarker.getPosition()), 250, null);
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
@@ -260,16 +267,6 @@ public class MapFragment extends Fragment {
         }
     }
 
-    private void displayCircleRadius(Mystery selectedPlace) {
-        removeCircleRadius();
-        double radius = selectedPlace.getLocation().getRadius() <= 0 ? DEFAULT_RADIUS : selectedPlace.getLocation().getRadius();
-        mCircleRadius = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(selectedPlace.getLocation().getLat(), selectedPlace.getLocation().getLng()))
-                .radius(radius)
-                .strokeColor(Color.TRANSPARENT)
-                .fillColor(getResources().getColor(R.color.map_circle)));
-    }
-
     private void setUpMapIfNecessary() {
         if (mMap == null) {
             mMap = mMapView.getMap();
@@ -287,7 +284,7 @@ public class MapFragment extends Fragment {
             return;
         }
 
-        mMapPlacesModel = new MapPlacesModel(mUserService);
+        mMapPlacesModel = new MapPlacesModel(mUserService, mAccomplishableController);
         mMap.clear();
         for (Mystery mystery : mAccomplishableController.getAllMysteries()) {
             addPlaceToMap(mystery);
@@ -296,12 +293,10 @@ public class MapFragment extends Fragment {
 
     private void addPlaceToMap(Mystery mystery) {
         BitmapDescriptor bitmapDescriptor;
-        if (mUserService.isSecretCaptured(mystery.getId())) {
-            // TODO: need an asset for captured mysteries
-            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pink_flag);
+        if (mAccomplishableController.isMysteryFinished(mystery.getId())) {
+            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(getNormalDiscoveredMarker());
         } else {
-            // TODO: replace this with assets
-            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(getMoWithAlpha(150));
+            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(getNormalNotDiscoveredMarker());
         }
 
         Marker marker = mMap.addMarker(new MarkerOptions()

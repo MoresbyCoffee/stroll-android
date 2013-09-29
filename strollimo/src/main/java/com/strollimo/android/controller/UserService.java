@@ -28,8 +28,4 @@ public class UserService {
         mCapturedSecrets.add(secret.getId());
     }
 
-    public boolean isSecretCaptured(String secretId) {
-        return mCapturedSecrets.contains(secretId);
-    }
-
 }

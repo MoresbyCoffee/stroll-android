@@ -1,10 +1,6 @@
 package com.strollimo.android.model;
 
-import android.app.Activity;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
-import com.strollimo.android.R;
-import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.UserService;
 
@@ -12,13 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapPlacesModel {
+    private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private MapPlace mSelectedMapPlace;
     private List<MapPlace> mMapPlaces;
 
-    public MapPlacesModel(UserService userService) {
+    public MapPlacesModel(UserService userService, AccomplishableController accomplishableController) {
         mUserService = userService;
         mMapPlaces = new ArrayList<MapPlace>();
+        mAccomplishableController = accomplishableController;
     }
 
     public void refreshSelectedMarker() {
@@ -76,11 +74,7 @@ public class MapPlacesModel {
     }
 
     public boolean isSelectedPlaceCaptured() {
-        if (getSelectedPlace() != null && mUserService.isSecretCaptured(getSelectedPlace().getId())) {
-            return true;
-        } else {
-            return false;
-        }
+        return mAccomplishableController.isMysteryFinished(getSelectedPlace().getId());
     }
 
     public void clearSelectedPlace() {

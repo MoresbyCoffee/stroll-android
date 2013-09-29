@@ -5,9 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -28,13 +26,11 @@ import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.util.Analytics;
-import com.strollimo.android.util.BitmapUtils;
 import com.viewpagerindicator.CirclePageIndicator;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +49,6 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
     private Secret mSelectedSecret;
     private ViewPager mViewPager;
     private SecretSlideAdapter mPagerAdapter;
-    private File mImage;
 
     public static Intent createDetailsIntent(Context context, String placeId) {
         Intent intent = new Intent(context, DetailsActivity.class);
@@ -148,7 +143,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
                 final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Uploading photo for checking...");
                 progressDialog.show();
 
-                Bitmap bitmap = BitmapUtils.getBitmapFromFile(mImage, 800, 600);
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
                 String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(pickupPhotoUrl.getUrl());
                 VolleyImageLoader.getInstance().putBitmapIntoCache(imageUrl, bitmap);
@@ -247,13 +242,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
 
     public void launchPickupActivity(String secretId) {
         try {
-            File folder = new File(Environment.getExternalStorageDirectory() + "/strollimoTmpPickImg");
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
-            mImage = new File(folder + "/" + secretId + ".jpg");
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mImage));
             startActivityForResult(takePictureIntent, TEMPORARY_TAKE_PHOTO);
         } catch (Exception e) {
             Log.e(TAG, "LunchPickupActivity error " + e.toString());

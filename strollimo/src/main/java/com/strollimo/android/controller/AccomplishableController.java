@@ -3,15 +3,11 @@ package com.strollimo.android.controller;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
+import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.AmazonUrl;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.GetMysteriesResponse;
@@ -314,6 +310,21 @@ public class AccomplishableController {
             newIndex = mysteryList.size() - 1;
         }
         return mysteryList.get(newIndex);
+    }
+
+    public boolean isMysteryFinished(String mysteryId) {
+        Mystery mystery = mMysteriesMapById.get(mysteryId);
+        if (mystery == null) {
+            return false;
+        }
+
+        for (String secretId : mystery.getChildren()) {
+            Secret secret = mSecrets.get(secretId);
+            if (secret != null && secret.getPickupState() != BaseAccomplishable.PickupState.ACCOMPLISHED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public interface OperationCallback {
