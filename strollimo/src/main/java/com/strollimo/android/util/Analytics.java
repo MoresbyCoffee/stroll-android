@@ -6,6 +6,7 @@ import com.strollimo.android.StrollimoApplication;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,7 +27,19 @@ public class Analytics {
         OPEN_MYSTERY_SECRETS("Open mystery secrets"),
         SWIPE_SECRET("Swipe secret"),
         OPEN_CAPTURE("Open capture"),
-        QUEST_COMPLETE("Quest complete");
+        QUEST_COMPLETE("Quest complete"),
+        FEEDBACK_PAGE1("Feedback page 1"),
+        FEEDBACK_PAGE2("Feedback page 2"),
+        FEEDBACK_LIKE("Like app"),
+        FEEDBACK_USE("Use it again"),
+        FEEDBACK_RECOMMEND("Recommend to friends"),
+        FEEDBACK_COLLECT("Collect points and achievements"),
+        FEEDBACK_FIND_PHOTOS("Find photos"),
+        FEEDBACK_DISCOVER_PLACES("Discover places"),
+        FEEDBACK_LEARNING_FACTS("Learning new facts"),
+        FEEDBACK_FUN("Having fun with friends"),
+        FEEDBACK_GET_OUT("Getting out");
+
 
         private String mEvent;
 
@@ -49,6 +62,13 @@ public class Analytics {
     public static void track(Event event, Map<String, String> params) {
         getMixpanel().track(event.toString(), new JSONObject(params));
         FlurryAgent.logEvent(event.toString(), params);
+    }
+
+    public static void track(Event event, String value) {
+        Map<String,String> param = new HashMap<String, String>();
+        param.put("value", value);
+        getMixpanel().track(event.toString(), new JSONObject(param));
+        FlurryAgent.logEvent(event.toString(), param);
     }
 
     private static synchronized MixpanelAPI getMixpanel() {

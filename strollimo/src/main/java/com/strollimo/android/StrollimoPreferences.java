@@ -25,6 +25,7 @@ public class StrollimoPreferences {
     public static final String ENV_TAG_KEY = "ENV_TAG_KEY";
     public static final String DEFAULT_ENV_TAG = "cv";
     public static final String LAST_SYNC_KEY = "LAST_SYNC";
+    private static final String FEEDBACK_COMPLETED_KEY = "feedback_completed";
 
     // The client should sync daily
     public static final int SYNC_INTERVAL = 24 * 60 * 60 * 1000;
@@ -85,6 +86,14 @@ public class StrollimoPreferences {
 
     public void setDebugModeOn(boolean debugModeOn) {
         mPrefs.edit().putBoolean(DEBUG_MODE_ON, debugModeOn).apply();
+    }
+
+    public boolean isFeedbackCompleted() {
+        return mPrefs.getBoolean(FEEDBACK_COMPLETED_KEY, false);
+    }
+
+    public void setFeedbackCompleted(boolean completed) {
+        mPrefs.edit().putBoolean(FEEDBACK_COMPLETED_KEY, completed).apply();
     }
 
     public String getEnvTag() {

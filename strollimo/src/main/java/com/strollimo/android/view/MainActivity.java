@@ -3,6 +3,7 @@ package com.strollimo.android.view;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -14,6 +15,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
+import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
@@ -79,11 +82,14 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
     private ListView mDrawerList;
     private HashMap<Class<Fragment>, Fragment> mFragmentCache = new HashMap<Class<Fragment>, Fragment>();
     private AlertDialog mQuestCompleteDialog;
+    private StrollimoPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPreferences = StrollimoApplication.getService(StrollimoPreferences.class);
 
         mActionBar = getActionBar();
         mActionBar.setTitle(mTitle);
@@ -135,7 +141,13 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if (isQuestComplete()) {
+
+            if (!mPreferences.isFeedbackCompleted()) {
+                startActivity(new Intent(this, FeedbackFormActivity.class));
+            }
+
             AlertDialog d = getQuestCompleteDialog();
             if (!d.isShowing()) {
                 d.show();
@@ -144,7 +156,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
 
                 Analytics.track(Analytics.Event.QUEST_COMPLETE);
             }
-        }
+       }
     }
 
     @Override
@@ -236,7 +248,8 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
             msg.append(Html.fromHtml("<a href='https://plus.google.com/u/0/communities/107619132512578312178'>Strollimo beta community on Google+</a><br/><br/>"));
             msg.append(Html.fromHtml("<a href='https://www.strollimo.com'>Strollimo.com</a>"));
 
-            mQuestCompleteDialog = new AlertDialog.Builder(this).create();
+            ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.StrollDialogTheme);
+            mQuestCompleteDialog = new AlertDialog.Builder(wrapper).create();
             mQuestCompleteDialog.setCancelable(false);
             mQuestCompleteDialog.setCanceledOnTouchOutside(false);
             mQuestCompleteDialog.setMessage(msg);

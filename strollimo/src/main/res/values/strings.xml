@@ -20,5 +20,6 @@
     <string name="title_mystery_open_activity">Mystery</string>
     <string name="debug_env_title">Current env: [%s]</string>
     <string name="secret_status_pending">Awaiting verification...</string>
+    <string name="title_feedback_form_activity">Feedback</string>
 
 </resources>

@@ -67,6 +67,9 @@
         <activity
                 android:name=".view.MysteryOpenActivity"
                 android:label="@string/title_mystery_open_activity" />
+        <activity
+            android:name=".view.FeedbackFormActivity"
+            android:label="@string/title_feedback_form_activity" />
     </application>
 
     <uses-feature android:name="android.hardware.camera" />
