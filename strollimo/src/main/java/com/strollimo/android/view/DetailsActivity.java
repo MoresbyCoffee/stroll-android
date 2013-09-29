@@ -30,9 +30,6 @@ import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.BitmapUtils;
 import com.viewpagerindicator.CirclePageIndicator;
-
-import org.json.JSONObject;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -170,6 +167,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
                             @Override
                             public void success(PickupSecretResponse pickupSecretResponse, Response response) {
                                 mSelectedSecret.setPickupState(BaseAccomplishable.PickupState.PENDING);
+                                startService(new Intent(DetailsActivity.this, SecretStatusPollingService.class));
                                 mAccomplishableController.saveAllData();
                                 mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();

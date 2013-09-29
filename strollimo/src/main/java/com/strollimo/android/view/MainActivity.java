@@ -15,18 +15,17 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.controller.SecretStatusPollingService;
 import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -141,7 +140,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        startService(new Intent(this, SecretStatusPollingService.class));
         if (isQuestComplete()) {
 
             if (!mPreferences.isFeedbackCompleted()) {

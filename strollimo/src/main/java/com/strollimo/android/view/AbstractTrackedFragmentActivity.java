@@ -6,9 +6,6 @@ import com.flurry.android.FlurryAgent;
 import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.Utils;
 
-/**
- * Created by marcoc on 23/09/2013.
- */
 public class AbstractTrackedFragmentActivity extends FragmentActivity {
 
     @Override
