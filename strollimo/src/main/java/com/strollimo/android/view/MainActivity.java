@@ -248,8 +248,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
             msg.append(Html.fromHtml("<a href='https://plus.google.com/u/0/communities/107619132512578312178'>Strollimo beta community on Google+</a><br/><br/>"));
             msg.append(Html.fromHtml("<a href='https://www.strollimo.com'>Strollimo.com</a>"));
 
-            ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.StrollDialogTheme);
-            mQuestCompleteDialog = new AlertDialog.Builder(wrapper).create();
+            mQuestCompleteDialog = new AlertDialog.Builder(this).create();
             mQuestCompleteDialog.setCancelable(false);
             mQuestCompleteDialog.setCanceledOnTouchOutside(false);
             mQuestCompleteDialog.setMessage(msg);
