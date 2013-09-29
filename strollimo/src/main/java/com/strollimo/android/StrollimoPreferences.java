@@ -28,7 +28,7 @@ public class StrollimoPreferences {
     private static final String FEEDBACK_COMPLETED_KEY = "feedback_completed";
 
     // The client should sync daily
-    public static final int SYNC_INTERVAL = 24 * 60 * 60 * 1000;
+    //public static final int SYNC_INTERVAL = 24 * 60 * 60 * 1000;
     private final Context mContext;
     private final Gson mGson;
     private SharedPreferences mPrefs;
@@ -161,7 +161,8 @@ public class StrollimoPreferences {
 
     public boolean needInitialSync() {
         long lastSync = mPrefs.getLong(LAST_SYNC_KEY, 0);
-        if (System.currentTimeMillis() - lastSync > SYNC_INTERVAL) {
+        //if (System.currentTimeMillis() - lastSync > SYNC_INTERVAL) {
+        if (lastSync == 0) {
             return true;
         } else {
             return false;

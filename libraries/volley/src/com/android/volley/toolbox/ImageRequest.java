@@ -80,7 +80,7 @@ public class ImageRequest extends Request<Bitmap> {
 
     @Override
     public Priority getPriority() {
-        return Priority.LOW;
+        return Priority.NORMAL;
     }
 
     /**

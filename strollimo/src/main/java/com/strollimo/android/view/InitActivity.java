@@ -1,6 +1,9 @@
 package com.strollimo.android.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -11,9 +14,16 @@ import com.strollimo.android.controller.ImagesPreloader;
 import com.strollimo.android.view.dialog.SyncDialogHelper;
 
 public class InitActivity extends AbstractTrackedActivity {
+
+    private AlertDialog mRetryDialog;
+
     @Override
     protected void onResume() {
         super.onResume();
+        sync();
+    }
+
+    private void sync() {
         int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         switch (errorCode) {
             case ConnectionResult.SUCCESS:
@@ -28,7 +38,7 @@ public class InitActivity extends AbstractTrackedActivity {
 
                         @Override
                         public void onError(String errorMsg) {
-                            advanceToMainActivity();
+                            getRetryDialog().show();
                         }
                     });
                 } else {
@@ -46,11 +56,12 @@ public class InitActivity extends AbstractTrackedActivity {
             @Override
             public void onSuccess() {
                 advanceToMainActivity();
+                StrollimoApplication.getService(StrollimoPreferences.class).saveSyncTime();
             }
 
             @Override
             public void onError(String errorMsg) {
-                advanceToMainActivity();
+                getRetryDialog().show();
             }
         });
         preloader.start();
@@ -62,5 +73,27 @@ public class InitActivity extends AbstractTrackedActivity {
         startActivity(intent);
         finish();
     }
+
+
+
+    private AlertDialog getRetryDialog() {
+        if (mRetryDialog == null) {
+            mRetryDialog = new AlertDialog.Builder(this)
+                    .setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sync();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setMessage("Your first hunt is to find a reliable internet connection! :)")
+                    .create();
+            mRetryDialog.setCancelable(false);
+            mRetryDialog.setCanceledOnTouchOutside(false);
+        }
+        return mRetryDialog;
+    }
+
+
 
 }

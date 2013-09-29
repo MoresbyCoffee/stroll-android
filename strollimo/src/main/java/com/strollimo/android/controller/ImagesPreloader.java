@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -76,6 +77,7 @@ public class ImagesPreloader {
         RequestQueue requestQueue = VolleyRequestQueue.getInstance();
         for (String imageUrl : mImageUrls) {
             ImageRequest request = new ImageRequest(imageUrl, mResponseListener, 0, 0, Bitmap.Config.RGB_565, mErrorListener);
+            request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, 0));
             requestQueue.add(request);
         }
     }

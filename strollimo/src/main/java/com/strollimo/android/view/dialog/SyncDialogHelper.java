@@ -38,7 +38,6 @@ public class SyncDialogHelper {
             @Override
             public void onSuccess() {
                 progressDialog.dismiss();
-                prefs.saveSyncTime();
                 if (callback != null) {
                     callback.onSuccess();
                 }
