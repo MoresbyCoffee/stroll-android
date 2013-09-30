@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,16 +25,14 @@ import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.SecretStatusPollingService;
-import com.strollimo.android.model.BaseAccomplishable;
-import com.strollimo.android.model.Mystery;
-import com.strollimo.android.model.Secret;
 import com.strollimo.android.util.Analytics;
 import com.strollimo.android.util.Utils;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AbstractTrackedFragmentActivity {
+
+    private AccomplishableController mAccomplisableController;
 
     public enum MenuItemFragment {
         MAP("Map", MapFragment.class),
@@ -87,6 +84,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAccomplisableController = StrollimoApplication.getService(AccomplishableController.class);
 
         mPreferences = StrollimoApplication.getService(StrollimoPreferences.class);
 
@@ -141,7 +139,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
     protected void onResume() {
         super.onResume();
         startService(new Intent(this, SecretStatusPollingService.class));
-        if (isQuestComplete()) {
+        if (mAccomplisableController.isQuestCompleted()) {
 
             if (!mPreferences.isFeedbackCompleted()) {
                 startActivity(new Intent(this, FeedbackFormActivity.class));
@@ -185,30 +183,6 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(view.getContext(), position);
         }
-    }
-
-    private boolean isQuestComplete() {
-        AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
-        List<Mystery> mysteries = accomplishableController.getAllMysteries();
-
-        for (Mystery mystery : mysteries) {
-            for (String secretId : mystery.getChildren()) {
-                Secret secret = accomplishableController.getSecretById(secretId);
-                if (secret == null) {
-                    Log.e(MainActivity.class.getSimpleName(), "Error - secret is not available isQuestComplete the images: " + secretId);
-                    continue;
-                }
-                BaseAccomplishable.PickupState state = secret.getPickupState();
-                switch (state) {
-                    case UNPICKED:
-                        return false;
-                    default:
-                        // keep going
-                }
-            }
-        }
-
-        return true;
     }
 
     /** Swaps fragments in the main content view */
@@ -260,11 +234,5 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
         Analytics.flush();
         super.onDestroy();
     }
-
-    //    @Override
-//    public void setName(CharSequence title) {
-//        mTitle = title;
-//        getActionBar().setName(mTitle);
-//    }
 
 }

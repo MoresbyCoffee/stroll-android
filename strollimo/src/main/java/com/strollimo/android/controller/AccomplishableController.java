@@ -14,6 +14,7 @@ import com.strollimo.android.network.response.GetMysteriesResponse;
 import com.strollimo.android.network.response.GetSecretsResponse;
 import com.strollimo.android.network.response.UpdateMysteryResponse;
 import com.strollimo.android.network.response.UpdateSecretResponse;
+import com.strollimo.android.view.MainActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -324,6 +325,34 @@ public class AccomplishableController {
                 return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * Returns whether the quest is completed (every secret is different than unpicked).
+     * @return - true if the quest is completed, false otherwise
+     */
+    public boolean isQuestCompleted() {
+        for (Mystery mystery : getAllMysteries()) {
+            for (String secretId : mystery.getChildren()) {
+                Secret secret = getSecretById(secretId);
+                if (secret == null) {
+                    Log.e(MainActivity.class.getSimpleName(), "Error - secret is not available isQuestComplete the images: " + secretId);
+                    continue;
+                }
+                BaseAccomplishable.PickupState state = secret.getPickupState();
+                if (state == null) {
+                    return false;
+                }
+                switch (state) {
+                    case UNPICKED:
+                        return false;
+                    default:
+                        // keep going
+                }
+            }
+        }
+
         return true;
     }
 
