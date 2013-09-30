@@ -32,9 +32,8 @@ import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.util.Analytics;
 
 public class MapFragment extends Fragment {
-    private static final String TAG = MapFragment.class.getSimpleName();
-
     public static final int DEFAULT_RADIUS = 25;
+    private static final String TAG = MapFragment.class.getSimpleName();
     private View mView;
     private GoogleMap mMap;
     private LocationClient mLocationClient;
@@ -49,7 +48,6 @@ public class MapFragment extends Fragment {
     private Circle mCircleRadius;
     private MapPlacesModel mMapPlacesModel;
     private MapView mMapView;
-
     private GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
         public void onInfoWindowClick(Marker marker) {
@@ -84,7 +82,6 @@ public class MapFragment extends Fragment {
             return true;
         }
     };
-
     private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {

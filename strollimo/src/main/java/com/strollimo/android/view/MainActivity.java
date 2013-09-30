@@ -243,9 +243,9 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
             SpannableStringBuilder msg = new SpannableStringBuilder();
             msg.append("Congratulation, you've completed the Covent Garden quest and finished the Beta!\n\n");
             msg.append("We're adding more quests soon, so stay tuned!\n\n");
-            msg.append(Html.fromHtml("We'd love to hear your opinion! Wether you've liked it or not please contact us by: <a href='mailto:strollimo@gmail.com'>strollimo@gmail.com</a><br/><br/>"));
-            msg.append(Html.fromHtml("<a href='https://plus.google.com/u/0/communities/107619132512578312178'>Strollimo beta community on Google+</a><br/><br/>"));
-            msg.append(Html.fromHtml("<a href='https://www.strollimo.com'>Strollimo.com</a>"));
+            msg.append(Html.fromHtml("We'd love to hear your opinion! Whether you've liked it or not please contact us by: <a href='mailto:strollimo@gmail.com'>strollimo@gmail.com</a><br/><br/>"));
+            msg.append(Html.fromHtml("<a href='https://plus.google.com/u/0/communities/106116568876419375773'>Strollimo beta community on Google+</a><br/><br/>"));
+            msg.append(Html.fromHtml("<a href='http://www.strollimo.com'>Strollimo.com</a>"));
 
             mQuestCompleteDialog = new AlertDialog.Builder(this).create();
             mQuestCompleteDialog.setCancelable(false);
