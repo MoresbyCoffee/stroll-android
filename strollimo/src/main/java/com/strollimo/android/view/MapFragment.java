@@ -276,7 +276,7 @@ public class MapFragment extends Fragment {
             mMap.setOnMarkerClickListener(mOnMarkerClickListener);
             mMap.setOnMapClickListener(mOnMapClickListener);
             mMap.getUiSettings().setZoomControlsEnabled(false);
-            mMap.getUiSettings().setCompassEnabled(false);
+            mMap.getUiSettings().setCompassEnabled(true);
         }
     }
 
@@ -338,7 +338,7 @@ public class MapFragment extends Fragment {
                         } else {
                             latLng = AppGlobals.LONDON_SOMERSET_HOUSE;
                         }
-                        CameraPosition pos = CameraPosition.builder().target(latLng).zoom(16f).tilt(45).build();
+                        CameraPosition pos = CameraPosition.builder().target(latLng).zoom(16f).build();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         firstStart = false;
                     }
