@@ -26,7 +26,6 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.controller.SecretStatusPollingService;
 import com.strollimo.android.util.Analytics;
-import com.strollimo.android.util.Utils;
 
 import java.util.HashMap;
 
@@ -91,7 +90,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
         mActionBar = getActionBar();
         mActionBar.setTitle(mTitle);
 
-        if (Utils.isDebugBuild()) {
+        if (mPreferences.isDebugModeOn()) {
             mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(

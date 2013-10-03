@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import com.strollimo.android.LogTags;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -16,6 +15,7 @@ import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.util.Analytics;
+import com.strollimo.android.util.DebugModeController;
 
 public class MysteryOpenActivity extends AbstractTrackedActivity {
     private static final String TAG = MysteryOpenActivity.class.getSimpleName();
@@ -23,6 +23,7 @@ public class MysteryOpenActivity extends AbstractTrackedActivity {
     public static final String PLACE_ID_EXTRA = "place_id";
     private AccomplishableController mAccomplishableController;
     private Mystery mCurrentMystery;
+    private DebugModeController mDebugModeController;
 
     public static Intent createDetailsIntent(Context context, String mysteryId) {
         Intent intent = new Intent(context, MysteryOpenActivity.class);
@@ -54,6 +55,7 @@ public class MysteryOpenActivity extends AbstractTrackedActivity {
         ProgressNetworkImageView detailsPhoto = (ProgressNetworkImageView) findViewById(R.id.detailed_photo);
         String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
         detailsPhoto.setImageUrl(imageUrl, findViewById(R.id.detailed_photo_progress));
+        mDebugModeController = new DebugModeController(detailsPhoto, this);
     }
 
     @Override
