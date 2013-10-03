@@ -90,8 +90,8 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
         mActionBar = getActionBar();
         mActionBar.setTitle(mTitle);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         if (mPreferences.isDebugModeOn()) {
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
             mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             mDrawerToggle = new ActionBarDrawerToggle(
                     this,                  /* host Activity */
@@ -117,6 +117,7 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
             mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
             selectItem(this, 0);
         } else {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mActionBar.setDisplayHomeAsUpEnabled(false);
             mActionBar.setHomeButtonEnabled(false);
             Class<Fragment> fragmentClass = (Class<Fragment>) MenuItemFragment.MAP.getFragment();
