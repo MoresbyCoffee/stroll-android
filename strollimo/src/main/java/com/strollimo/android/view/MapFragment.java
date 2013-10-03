@@ -184,7 +184,11 @@ public class MapFragment extends Fragment {
                             Marker newMarker = mMapPlacesModel.getMarkerForPlace(toMystery);
                             mMapPlacesModel.onMarkerClick(newMarker);
                             // TODO: replace this with assets
-                            newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getNormalNotDiscoveredMarker()));
+                            if (mAccomplishableController.isMysteryFinished(mMapPlacesModel.getSelectedPlace().getId())) {
+                                newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getSelectedDiscoveredMarker()));
+                            } else {
+                                newMarker.setIcon(BitmapDescriptorFactory.fromBitmap(getSelectedNotDiscoveredMarker()));
+                            }
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(newMarker.getPosition()), 250, null);
                             mMapPlacesModel.selectMapPlaceByPlace(toMystery);
                             displayRibbon(mMapPlacesModel.getSelectedPlace(), dismissDirectionType != DismissDirectionType.RIGHT);
