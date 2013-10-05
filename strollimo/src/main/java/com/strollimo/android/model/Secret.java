@@ -10,6 +10,10 @@ public class Secret extends BaseAccomplishable {
 
     @Expose
     private List<PickupMode> pickupModes = new ArrayList<PickupMode>();
+    @Expose
+    private int rewardPoint;
+    @Expose
+    private List<Clue> clues;
 
     public Secret(String id, String name) {
         super(id, name, TYPE, false);
