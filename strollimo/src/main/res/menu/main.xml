@@ -4,4 +4,9 @@
             android:title="@string/action_add_mystery"
             android:orderInCategory="100"
             android:showAsAction="always"/>
+    <item
+            android:id="@+id/debug_menu"
+            android:title="@string/debug_menu_title"
+            android:orderInCategory="100"
+            android:showAsAction="never"/>
 </menu>

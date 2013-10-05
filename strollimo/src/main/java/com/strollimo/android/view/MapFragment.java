@@ -237,27 +237,22 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if (menu == null) {
-            return;
-        }
-        MenuItem addMysteryItem = menu.findItem(R.id.add_mystery);
-        if (addMysteryItem != null) {
-            addMysteryItem.setVisible(mPrefs.isDebugModeOn());
+        if (mPrefs.isDebugModeOn()) {
+            inflater.inflate(R.menu.main, menu);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_mystery) {
-            startActivity(new Intent(getActivity(), AddMysteryActivity.class));
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.add_mystery:
+                startActivity(new Intent(getActivity(), AddMysteryActivity.class));
+                return true;
+            case R.id.debug_menu:
+                startActivity(new Intent(getActivity(), DebugActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

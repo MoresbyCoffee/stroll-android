@@ -35,7 +35,6 @@ public class MainActivity extends AbstractTrackedFragmentActivity {
 
     public enum MenuItemFragment {
         MAP("Map", MapFragment.class),
-        DEBUG("Debug", DebugFragment.class),
         PROFILE("Profile", null),
         QUESTS("Quests", null),
         ACHIEVEMENTS("Achievements", null),

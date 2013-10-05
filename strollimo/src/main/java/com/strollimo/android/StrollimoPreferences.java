@@ -16,7 +16,7 @@ public class StrollimoPreferences {
     private static final String TAG = StrollimoPreferences.class.getSimpleName();
 
     public static final String USE_BARCODE_KEY = "USE_BARCODE";
-    public static final String DEBUG_MODE_ON = "DEBUG_MODE_ON";
+    public static final String DEBUG_MODE_ON = "pref_debug_mode_on";
     public static final String MISSIONS_KEY = "mmissions_";
     public static final String SECRET_KEY = "SECRET";
     private static final String CAPTURED_SECRET_KEY = "CAPTURED_SECRET_";
