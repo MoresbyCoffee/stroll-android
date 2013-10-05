@@ -5,12 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -19,18 +19,17 @@ import com.strollimo.android.network.AmazonS3Controller;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcoc on 22/09/2013.
- */
-public class ImagesPreloader {
+public class EnvSyncManager {
 
-    private static final String TAG = ImagesPreloader.class.getSimpleName();
+    private static final String TAG = EnvSyncManager.class.getSimpleName();
+    public static final int DEFAULT_ITEM_NUM = 20;
 
     private final Context mContext;
     private final AccomplishableController mAccomplishableController;
     private final AccomplishableController.OperationCallback mOperationCallback;
     private final List<String> mImageUrls;
     private final ProgressDialog mProgressDialog;
+    private final String mEnv;
 
     private int mSuccessfulCount;
     private int mErrorCount;
@@ -51,35 +50,53 @@ public class ImagesPreloader {
         }
     };
 
-    public ImagesPreloader(Context context, AccomplishableController accomplishableController, final AccomplishableController.OperationCallback callback) {
+    public EnvSyncManager(Context context, String env, final AccomplishableController.OperationCallback callback) {
         mContext = context;
-        mAccomplishableController = accomplishableController;
+        mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         mOperationCallback = callback;
         mImageUrls = new ArrayList<String>();
         mProgressDialog = new ProgressDialog(context);
+        mEnv = env;
     }
 
     public void start() {
+        showProgressDialog();
+        mAccomplishableController.clearMysteries();
+        mAccomplishableController.asyncSyncMysteries(mEnv, new AccomplishableController.OperationCallback() {
+            @Override
+            public void onSuccess() {
+                loadPhotosAsync();
+            }
 
+            @Override
+            public void onError(String errorMsg) {
+                mOperationCallback.onError("Failed to sync mysteries");
+            }
+        });
+    }
+
+    private void loadPhotosAsync() {
         getImageUrls();
 
+        mProgressDialog.setMax(mImageUrls.size());
         mSuccessfulCount = 0;
         mErrorCount = 0;
-
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setMax(mImageUrls.size());
-        mProgressDialog.setMessage("Downloading images...");
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.show();
-
         RequestQueue requestQueue = VolleyRequestQueue.getInstance();
         for (String imageUrl : mImageUrls) {
             ImageRequest request = new ImageRequest(imageUrl, mResponseListener, 0, 0, Bitmap.Config.RGB_565, mErrorListener);
-            request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, 0));
+            request.setRetryPolicy(new DefaultRetryPolicy(1000, 3, 0));
             requestQueue.add(request);
         }
+    }
+
+    private void showProgressDialog() {
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setMax(DEFAULT_ITEM_NUM);
+        mProgressDialog.setMessage(mContext.getString(R.string.full_sync_dialog_title));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
     }
 
     private void onOperationCompleted() {

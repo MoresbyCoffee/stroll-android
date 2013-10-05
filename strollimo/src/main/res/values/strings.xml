@@ -22,5 +22,7 @@
     <string name="debug_env_title">Current env: [%s]</string>
     <string name="secret_status_pending">Awaiting verification...</string>
     <string name="title_feedback_form_activity">Feedback</string>
+    <string name="full_sync_dialog_title">Downloading quest...</string>
+    <string name="full_sync_dialog_error_msg">We\'re trying hard to start your experience but something went wrong.</string>
 
 </resources>

@@ -1,17 +1,15 @@
 package com.strollimo.android.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.ImagesPreloader;
-import com.strollimo.android.view.dialog.SyncDialogHelper;
+import com.strollimo.android.controller.EnvSyncManager;
 
 public class InitActivity extends AbstractTrackedActivity {
 
@@ -29,18 +27,7 @@ public class InitActivity extends AbstractTrackedActivity {
             case ConnectionResult.SUCCESS:
                 StrollimoPreferences prefs = StrollimoApplication.getService(StrollimoPreferences.class);
                 if (prefs.needInitialSync()) {
-                    AccomplishableController accomplishableController = StrollimoApplication.getService(AccomplishableController.class);
-                    SyncDialogHelper.syncData(prefs.getEnvTag(), this, accomplishableController, prefs, new AccomplishableController.OperationCallback() {
-                        @Override
-                        public void onSuccess() {
-                            preloadImages();
-                        }
-
-                        @Override
-                        public void onError(String errorMsg) {
-                            getRetryDialog().show();
-                        }
-                    });
+                    syncEnvironment();
                 } else {
                     advanceToMainActivity();
                 }
@@ -51,8 +38,9 @@ public class InitActivity extends AbstractTrackedActivity {
         }
     }
 
-    private void preloadImages() {
-        ImagesPreloader preloader = new ImagesPreloader(this, StrollimoApplication.getService(AccomplishableController.class), new AccomplishableController.OperationCallback() {
+    private void syncEnvironment() {
+        String env = StrollimoApplication.getService(StrollimoPreferences.class).getEnvTag();
+        EnvSyncManager preloader = new EnvSyncManager(this, env, new AccomplishableController.OperationCallback() {
             @Override
             public void onSuccess() {
                 advanceToMainActivity();
@@ -86,7 +74,7 @@ public class InitActivity extends AbstractTrackedActivity {
                             dialog.dismiss();
                         }
                     })
-                    .setMessage("Your first hunt is to find a reliable internet connection! :)")
+                    .setMessage(getString(R.string.full_sync_dialog_error_msg))
                     .create();
             mRetryDialog.setCancelable(false);
             mRetryDialog.setCanceledOnTouchOutside(false);

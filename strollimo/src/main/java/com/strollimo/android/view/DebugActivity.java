@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
+import android.widget.Toast;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
+import com.strollimo.android.controller.EnvSyncManager;
 import com.strollimo.android.model.*;
 import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.*;
-import com.strollimo.android.view.dialog.SyncDialogHelper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -82,7 +83,19 @@ public class DebugActivity extends Activity {
         }
 
         private void syncData() {
-            SyncDialogHelper.syncData(mPrefs.getEnvTag(), getActivity(), mAccomplishableController, mPrefs);
+            String env = StrollimoApplication.getService(StrollimoPreferences.class).getEnvTag();
+            EnvSyncManager preloader = new EnvSyncManager(getActivity(), env, new AccomplishableController.OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    StrollimoApplication.getService(StrollimoPreferences.class).saveSyncTime();
+                }
+
+                @Override
+                public void onError(String errorMsg) {
+                    Toast.makeText(getActivity(), "Sync error", Toast.LENGTH_SHORT).show();
+                }
+            });
+            preloader.start();
         }
 
         private void testSomething() {
