@@ -3,18 +3,16 @@ package com.strollimo.android;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.crittercism.app.Crittercism;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.strollimo.android.controller.*;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonS3Controller;
 import com.strollimo.android.network.StrollimoApi;
-import com.strollimo.android.util.Analytics;
-import com.strollimo.android.util.Utils;
 
 public class StrollimoApplication extends Application {
     public static String TAG = StrollimoApplication.class.getSimpleName();
@@ -51,8 +49,7 @@ public class StrollimoApplication extends Application {
         builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
         builder.excludeFieldsWithoutExposeAnnotation();
         mGson = builder.create();
-
-        mPrefs = new StrollimoPreferences(this, getSharedPreferences("StrollimoPreferences", 0), mGson);
+        mPrefs = new StrollimoPreferences(this, PreferenceManager.getDefaultSharedPreferences(this), mGson);
         mStrollimoApi = new StrollimoApi(mGson, mPrefs);
         mAmazonS3Controller = new AmazonS3Controller();
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);

@@ -2,6 +2,9 @@ package com.strollimo.android.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import com.strollimo.android.StrollimoApplication;
@@ -10,31 +13,40 @@ import com.strollimo.android.view.MainActivity;
 
 public class DebugModeController {
 
-    public static final int DEBUG_MODE_COUNT = 10;
-    public static final int DEBUG_MODE_WARNING = 3;
     private final View mDebugView;
     private final Context mContext;
-    private int mClickCount = 0;
+    private final Handler mHandler;
+    private Runnable mDebugModeRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            StrollimoApplication.getService(StrollimoPreferences.class).setDebugModeOn(true);
+            Toast.makeText(mContext, "You're in debug mode", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            mContext.startActivity(intent);
+        }
+    };
 
     public DebugModeController(View view, Context context) {
         mDebugView = view;
         mContext = context;
-        mDebugView.setOnClickListener(new View.OnClickListener() {
+        mHandler = new Handler();
+        mDebugView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                mClickCount++;
-                if (mClickCount > DEBUG_MODE_COUNT - DEBUG_MODE_WARNING) {
-                    if (mClickCount >= DEBUG_MODE_COUNT) {
-                        StrollimoApplication.getService(StrollimoPreferences.class).setDebugModeOn(true);
-                        Toast.makeText(mContext, "You're in debug mode", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(mContext, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        mContext.startActivity(intent);
-                    } else {
-                        Toast.makeText(mContext, String.format("%d click to debug mode", DEBUG_MODE_COUNT - mClickCount), Toast.LENGTH_SHORT).show();
-                    }
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction() & MotionEvent.ACTION_MASK;
+                if (event.getPointerCount() >= 3 && (action) == MotionEvent.ACTION_POINTER_DOWN) {
+                    Log.i("BB", event.toString());
+                    mHandler.postDelayed(mDebugModeRunnable, 5000);
+                    return true;
+                } else if (event.getPointerCount() >= 3 && (action) == MotionEvent.ACTION_POINTER_UP) {
+                    mHandler.removeCallbacks(mDebugModeRunnable);
+                    return true;
                 }
+                return false;
             }
         });
     }
+
 }
