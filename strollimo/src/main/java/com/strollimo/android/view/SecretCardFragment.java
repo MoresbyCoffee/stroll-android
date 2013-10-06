@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -28,7 +27,7 @@ import com.strollimo.android.network.AmazonUrl;
 public class SecretCardFragment extends Fragment {
     private final static String TAG = SecretCardFragment.class.getSimpleName();
 
-    private final DetailsActivity.OnSecretClickListener mOnSecretClickListener;
+    private final MysterySecretsFragment.OnSecretClickListener mOnSecretClickListener;
     private final UserService mUserService;
     private final int mSecretOrderNum;
     private final StrollimoPreferences mPrefs;
@@ -42,7 +41,7 @@ public class SecretCardFragment extends Fragment {
     private View mStatusPending;
     private ImageView mCaptureButton;
 
-    public SecretCardFragment(Secret secret, int position, UserService userService, DetailsActivity.OnSecretClickListener onSecretClickListener) {
+    public SecretCardFragment(Secret secret, int position, UserService userService, MysterySecretsFragment.OnSecretClickListener onSecretClickListener) {
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
         mUserService = userService;
         mSecret = secret;

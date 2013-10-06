@@ -1,16 +1,20 @@
 package com.strollimo.android.view;
 
-import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -27,52 +31,49 @@ import com.strollimo.android.network.StrollimoApi;
 import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.util.Analytics;
 import com.viewpagerindicator.CirclePageIndicator;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class DetailsActivity extends AbstractTrackedFragmentActivity {
-    public static final String TAG = DetailsActivity.class.getSimpleName();
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-    public static final String PLACE_ID_EXTRA = "place_id";
+public class MysterySecretsFragment extends Fragment {
+    public static final String TAG = MysterySecretsFragment.class.getSimpleName();
+
     private static final int TEMPORARY_TAKE_PHOTO = 15;
 
-    private ZXingLibConfig zxingLibConfig;
+//    private ZXingLibConfig zxingLibConfig;
     private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
+
     private Mystery mCurrentMystery;
     private Secret mSelectedSecret;
     private ViewPager mViewPager;
     private SecretSlideAdapter mPagerAdapter;
 
-    public static Intent createDetailsIntent(Context context, String placeId) {
-        Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(PLACE_ID_EXTRA, placeId);
-        return intent;
+    public MysterySecretsFragment(Mystery mystery) {
+        mCurrentMystery = mystery;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        setContentView(R.layout.details_screen);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        mAccomplishableController = ((StrollimoApplication) getApplication()).getService(AccomplishableController.class);
-        mUserService = ((StrollimoApplication) getApplication()).getService(UserService.class);
-        mPrefs = ((StrollimoApplication) getApplication()).getService(StrollimoPreferences.class);
-        zxingLibConfig = new ZXingLibConfig();
-        zxingLibConfig.useFrontLight = true;
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.details_screen, container, false);
 
-        mViewPager = (ViewPager) findViewById(R.id.secret_pager);
+        mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
+        mUserService = StrollimoApplication.getService(UserService.class);
+        mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
+//        zxingLibConfig = new ZXingLibConfig();
+//        zxingLibConfig.useFrontLight = true;
+        Log.e("aaa", "MysterySecrets onCreateView");
+        mViewPager = (ViewPager) rootView.findViewById(R.id.secret_pager);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
-        mCurrentMystery = mAccomplishableController.getMysteryById(getIntent().getStringExtra(PLACE_ID_EXTRA));
-        mPagerAdapter = new SecretSlideAdapter(getSupportFragmentManager(), getApplicationContext(), mCurrentMystery);
+        mPagerAdapter = new SecretSlideAdapter(getActivity().getSupportFragmentManager(), getActivity().getApplicationContext(), mCurrentMystery);
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.setOnSecretClickListener(new OnSecretClickListener() {
             @Override
@@ -84,11 +85,9 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
 
             }
         });
-        String title = mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase();
-        actionBar.setTitle(title);
 
 
-        CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.page_indicator);
+        CirclePageIndicator indicator = (CirclePageIndicator) rootView.findViewById(R.id.page_indicator);
         indicator.setViewPager(mViewPager);
         indicator.setSnap(true);
 
@@ -110,19 +109,21 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
 
             }
         });
+        return rootView;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mPagerAdapter.notifyDataSetChanged();
     }
 
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK) {
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
 
@@ -140,7 +141,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
                 break;
             case TEMPORARY_TAKE_PHOTO:
-                final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Uploading photo for checking...");
+                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Uploading photo for checking...");
                 progressDialog.show();
 
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
@@ -162,7 +163,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
                             @Override
                             public void success(PickupSecretResponse pickupSecretResponse, Response response) {
                                 mSelectedSecret.setPickupState(BaseAccomplishable.PickupState.PENDING);
-                                startService(new Intent(DetailsActivity.this, SecretStatusPollingService.class));
+                                getActivity().startService(new Intent(getActivity(), SecretStatusPollingService.class));
                                 mAccomplishableController.saveAllData();
                                 mPagerAdapter.notifyDataSetChanged();
                                 progressDialog.dismiss();
@@ -199,46 +200,7 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (mPrefs.isDebugModeOn()) {
-            getMenuInflater().inflate(R.menu.main_options, menu);
-        }
-        return true;
-    }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mPrefs.isDebugModeOn()) {
-            menu.findItem(R.id.use_barcode).setChecked(mPrefs.isUseBarcode());
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.use_barcode:
-                boolean checked = item.isChecked();
-                mPrefs.setUseBarcode(!checked);
-                item.setChecked(!checked);
-                return true;
-            case R.id.add_secret:
-                launchAddSecret();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void launchAddSecret() {
-        Intent intent = new Intent(this, AddSecretActivity.class);
-        intent.putExtra(PLACE_ID_EXTRA, mCurrentMystery.getId());
-        startActivity(intent);
-    }
 
     public void launchPickupActivity(String secretId) {
         try {
@@ -266,5 +228,14 @@ public class DetailsActivity extends AbstractTrackedFragmentActivity {
     public interface OnSecretClickListener {
         public void onSecretClicked(Secret secret);
     }
+
+    public PagerAdapter getPagerAdapter() {
+        return mPagerAdapter;
+    }
+
+    public ViewPager getViewPager() {
+        return mViewPager;
+    }
+
 
 }

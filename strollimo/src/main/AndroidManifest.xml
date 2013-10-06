@@ -53,11 +53,6 @@
                 android:label="@string/debug_menu_title"
                 android:screenOrientation="portrait" />
         <activity
-            android:name=".view.DetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_details"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.strollimo.android.view.PhotoCaptureActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_details"
@@ -71,7 +66,8 @@
                 android:label="@string/title_activity_add_mystery" />
         <activity
                 android:name=".view.MysteryOpenActivity"
-                android:label="@string/title_mystery_open_activity" />
+                android:label="@string/title_mystery_open_activity"
+                android:screenOrientation="portrait" />
         <activity
             android:name=".view.FeedbackFormActivity"
             android:label="@string/title_feedback_form_activity" />

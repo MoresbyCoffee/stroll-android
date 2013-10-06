@@ -1,6 +1,5 @@
 package com.strollimo.android.view;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -58,7 +57,7 @@ public class AddSecretActivity extends AbstractTrackedActivity {
     }
 
     private Mystery getSelectedPlace() {
-        String placeId = getIntent().getStringExtra(DetailsActivity.PLACE_ID_EXTRA);
+        String placeId = getIntent().getStringExtra(MysteryOpenActivity.PLACE_ID_EXTRA);
         if (placeId != "") {
             return mAccomplishableController.getMysteryById(placeId);
         } else {

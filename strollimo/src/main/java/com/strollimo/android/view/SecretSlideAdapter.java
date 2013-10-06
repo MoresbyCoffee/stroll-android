@@ -19,7 +19,7 @@ public class SecretSlideAdapter extends FragmentStatePagerAdapter {
     private final AccomplishableController mAccomplishableController;
     private final UserService mUserService;
     private Mystery mMystery;
-    private DetailsActivity.OnSecretClickListener mOnSecretClickListener;
+    private MysterySecretsFragment.OnSecretClickListener mOnSecretClickListener;
     private List<WeakReference<SecretCardFragment>> mFragments;
 
     public SecretSlideAdapter(FragmentManager fm, Context context, Mystery mystery) {
@@ -44,7 +44,7 @@ public class SecretSlideAdapter extends FragmentStatePagerAdapter {
         return mMystery.getChildren().size();
     }
 
-    public void setOnSecretClickListener(DetailsActivity.OnSecretClickListener onSecretClickListener) {
+    public void setOnSecretClickListener(MysterySecretsFragment.OnSecretClickListener onSecretClickListener) {
         mOnSecretClickListener = onSecretClickListener;
     }
 
