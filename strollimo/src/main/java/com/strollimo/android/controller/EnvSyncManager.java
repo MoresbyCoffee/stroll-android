@@ -16,6 +16,7 @@ import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
 import com.strollimo.android.network.AmazonS3Controller;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,11 +92,13 @@ public class EnvSyncManager {
 
     private void showProgressDialog() {
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setProgressPercentFormat(NumberFormat.getPercentInstance());
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.setMax(DEFAULT_ITEM_NUM);
         mProgressDialog.setMessage(mContext.getString(R.string.full_sync_dialog_title));
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setProgressNumberFormat(null);
         mProgressDialog.show();
     }
 
