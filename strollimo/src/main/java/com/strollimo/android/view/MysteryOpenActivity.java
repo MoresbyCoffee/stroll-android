@@ -10,8 +10,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.*;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import com.strollimo.android.LogTags;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
@@ -19,9 +21,6 @@ import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.AccomplishableController;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
-import com.strollimo.android.network.AmazonS3Controller;
-import com.strollimo.android.util.Analytics;
-import com.strollimo.android.util.DebugModeController;
 
 public class MysteryOpenActivity extends AbstractTrackedFragmentActivity {
     private static final String TAG = MysteryOpenActivity.class.getSimpleName();
@@ -57,6 +56,9 @@ public class MysteryOpenActivity extends AbstractTrackedFragmentActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         String title = mCurrentMystery == null ? "Error" : mCurrentMystery.getName().toUpperCase();
         actionBar.setTitle(title);
+        if (!mPrefs.isDebugModeOn()) {
+            actionBar.hide();
+        }
 
         mMainViewPager = new ViewPager(this) {
 
@@ -188,50 +190,6 @@ public class MysteryOpenActivity extends AbstractTrackedFragmentActivity {
         @Override
         public int getCount() {
             return mFragments.length;
-        }
-    }
-
-    private static class MysterySplashFragment extends Fragment {
-
-        private Mystery mCurrentMystery;
-        private ViewPager mMainViewPager;
-
-        public MysterySplashFragment(Mystery mystery, ViewPager mainViewPager) {
-            mCurrentMystery = mystery;
-            mMainViewPager = mainViewPager;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.mystery_open_layout, container, false);
-
-
-            ((TextView) rootView.findViewById(R.id.title)).setText(mCurrentMystery.getName().toUpperCase());
-            ProgressNetworkImageView detailsPhoto = (ProgressNetworkImageView) rootView.findViewById(R.id.detailed_photo);
-            String imageUrl = StrollimoApplication.getService(AmazonS3Controller.class).getUrl(mCurrentMystery.getImgUrl());
-            detailsPhoto.setImageUrl(imageUrl, rootView.findViewById(R.id.detailed_photo_progress));
-            new DebugModeController(detailsPhoto, getActivity());
-            detailsPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Analytics.track(Analytics.Event.OPEN_MYSTERY_SECRETS);
-
-                    mMainViewPager.setCurrentItem(1, true);
-                }
-            });
-
-
-            rootView.findViewById(R.id.open_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Analytics.track(Analytics.Event.OPEN_MYSTERY_SECRETS);
-
-                    mMainViewPager.setCurrentItem(1, true);
-                }
-            });
-            return rootView;
         }
     }
 }

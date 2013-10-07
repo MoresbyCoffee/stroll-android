@@ -23,6 +23,6 @@
     <string name="secret_status_pending">Awaiting verification...</string>
     <string name="title_feedback_form_activity">Feedback</string>
     <string name="full_sync_dialog_title">Downloading quest...</string>
-    <string name="full_sync_dialog_error_msg">We\'re trying hard to start your experience but something went wrong.</string>
+    <string name="full_sync_dialog_error_msg">We weren't able to download the quest. Your first treasure hunt is to find a reliable internet connection ;)</string>
 
 </resources>
