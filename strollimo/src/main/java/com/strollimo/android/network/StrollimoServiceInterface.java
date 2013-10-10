@@ -17,6 +17,9 @@ public interface StrollimoServiceInterface {
     GetSecretsResponse getSecrets(@Body GetSecretsRequest body);
 
     @POST("/rest/accomplishables")
+    PickupSecretResponse getPickupSecret(@Body PickupSecretRequest body);
+
+    @POST("/rest/accomplishables")
     void getSecrets(@Body GetSecretsRequest body, Callback<GetSecretsResponse> callback);
 
     @POST("/rest/accomplishables")

@@ -7,6 +7,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 
@@ -33,6 +34,18 @@ public class AmazonS3Controller {
             AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
             PutObjectRequest por = new PutObjectRequest(bucket, key, file);
             s3Client.putObject(por);
+        } catch (Exception ex) {
+            Log.e(TAG, "Upload to amazon failed", ex);
+            throw new AmazonS3Exception("Upload to amazon failed", ex);
+        }
+    }
+
+    public void uploadStream(String bucket, String key, InputStream inputStream, int size) {
+        try {
+            AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(AWSAccessKeyId, AWSSecretKey));
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(size);
+            s3Client.putObject(bucket, key, inputStream, metadata);
         } catch (Exception ex) {
             Log.e(TAG, "Upload to amazon failed", ex);
             throw new AmazonS3Exception("Upload to amazon failed", ex);

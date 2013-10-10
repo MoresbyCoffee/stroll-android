@@ -18,10 +18,15 @@ import android.view.ViewGroup;
 import com.google.zxing.config.ZXingLibConfig;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.StrollimoPreferences;
 import com.strollimo.android.controller.*;
+import com.strollimo.android.controller.ImageUploader.ImageUploadTask;
+import com.strollimo.android.controller.ImageUploader.ImageUploadTaskQueue;
+import com.strollimo.android.event.ImageUploadSuccessEvent;
 import com.strollimo.android.model.BaseAccomplishable;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
@@ -32,6 +37,8 @@ import com.strollimo.android.network.response.PickupSecretResponse;
 import com.strollimo.android.util.Analytics;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,6 +56,7 @@ public class MysterySecretsFragment extends Fragment {
     private AccomplishableController mAccomplishableController;
     private UserService mUserService;
     private StrollimoPreferences mPrefs;
+    //private Bus mBus;
 
     private Mystery mCurrentMystery;
     private Secret mSelectedSecret;
@@ -65,12 +73,13 @@ public class MysterySecretsFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.details_screen, container, false);
 
+        //mBus = StrollimoApplication.getService(Bus.class);
         mAccomplishableController = StrollimoApplication.getService(AccomplishableController.class);
         mUserService = StrollimoApplication.getService(UserService.class);
         mPrefs = StrollimoApplication.getService(StrollimoPreferences.class);
 //        zxingLibConfig = new ZXingLibConfig();
 //        zxingLibConfig.useFrontLight = true;
-        Log.e("aaa", "MysterySecrets onCreateView");
+
         mViewPager = (ViewPager) rootView.findViewById(R.id.secret_pager);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
         mPagerAdapter = new SecretSlideAdapter(getActivity().getSupportFragmentManager(), getActivity().getApplicationContext(), mCurrentMystery);
@@ -115,9 +124,15 @@ public class MysterySecretsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //mBus.register(this);
         mPagerAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onPause() {
+        //mBus.unregister(this);
+        super.onPause();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -141,8 +156,6 @@ public class MysterySecretsFragment extends Fragment {
                 handleResult(PhotoCaptureActivity.getResult(requestCode, resultCode, data));
                 break;
             case TEMPORARY_TAKE_PHOTO:
-                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Uploading photo for checking...");
-                progressDialog.show();
 
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 final AmazonUrl pickupPhotoUrl = AmazonUrl.createPickupPhotoUrl(mSelectedSecret.getId(), mPrefs.getDeviceUUID());
@@ -154,39 +167,20 @@ public class MysterySecretsFragment extends Fragment {
                 }
                 VolleyRequestQueue.getInstance().getCache().remove(cachedUrl);
 
-                StrollimoApplication.getService(PhotoUploadController.class).asyncUploadPhotoToAmazon(pickupPhotoUrl, bitmap, new PhotoUploadController.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        mUserService.captureSecret(mSelectedSecret);
-                        mPagerAdapter.notifyDataSetChanged();
-                        StrollimoApplication.getService(StrollimoApi.class).pickupSecret(mSelectedSecret, pickupPhotoUrl.getUrl(), new Callback<PickupSecretResponse>() {
-                            @Override
-                            public void success(PickupSecretResponse pickupSecretResponse, Response response) {
-                                mSelectedSecret.setPickupState(BaseAccomplishable.PickupState.PENDING);
-                                getActivity().startService(new Intent(getActivity(), SecretStatusPollingService.class));
-                                mAccomplishableController.saveAllData();
-                                mPagerAdapter.notifyDataSetChanged();
-                                progressDialog.dismiss();
-                            }
+                ImageUploadTaskQueue imageUploadTaskQueue = StrollimoApplication.getService(ImageUploadTaskQueue.class);
+                imageUploadTaskQueue.add(new ImageUploadTask(mSelectedSecret.getId(), pickupPhotoUrl, bitmap));
 
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                                mPagerAdapter.notifyDataSetChanged();
-                                progressDialog.dismiss();
-                            }
-                        });
-                    }
 
-                    @Override
-                    public void onError(Exception ex) {
-                        progressDialog.dismiss();
-                    }
-                });
-
+                mUserService.captureSecret(mSelectedSecret);
+                mSelectedSecret.setPickupState(BaseAccomplishable.PickupState.PENDING);
+                getActivity().startService(new Intent(getActivity(), SecretStatusPollingService.class));
+                mAccomplishableController.saveAllData();
+                mPagerAdapter.notifyDataSetChanged();
 
             default:
         }
     }
+
 
     private void handleResult(boolean captureSuccessful) {
         if (captureSuccessful) {

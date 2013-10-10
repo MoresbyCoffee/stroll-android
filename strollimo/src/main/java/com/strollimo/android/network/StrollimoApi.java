@@ -65,6 +65,11 @@ public class StrollimoApi {
         service.pickupSecret(request, callback);
     }
 
+    public PickupSecretResponse getPickupSecret(String secretId, String capturedSecretUrl) {
+        PickupSecretRequest request = new PickupSecretRequest(mRequestHeader, secretId, "imgComp", capturedSecretUrl);
+        return service.getPickupSecret(request);
+    }
+
     public void getPickupStatus(List<String> secretsIds, Callback<GetPickupStatusResponse> callback) {
         GetPickupStatusRequest request = new GetPickupStatusRequest (mRequestHeader, secretsIds);
         service.getPickupStatus(request, callback);

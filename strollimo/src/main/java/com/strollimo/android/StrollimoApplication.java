@@ -4,11 +4,16 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.graphics.Bitmap;
 import android.util.Log;
 import com.crittercism.app.Crittercism;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.otto.Bus;
 import com.strollimo.android.controller.*;
+import com.strollimo.android.controller.ImageUploader.BitmapTypeAdapter;
+import com.strollimo.android.controller.ImageUploader.ImageUploadTask;
+import com.strollimo.android.controller.ImageUploader.ImageUploadTaskQueue;
 import com.strollimo.android.model.PickupMode;
 import com.strollimo.android.model.PickupModeTypeAdapter;
 import com.strollimo.android.network.AmazonS3Controller;
@@ -27,7 +32,8 @@ public class StrollimoApplication extends Application {
     private PhotoUploadController mPhotoUploadController;
     private Gson mGson;
     private StrollimoApi mStrollimoApi;
-    private VolleyRequestQueue mVolleyRequestQueue;
+    private ImageUploadTaskQueue mImageUploadTaskQueue;
+    private Bus mBus;
 
 
 
@@ -50,6 +56,8 @@ public class StrollimoApplication extends Application {
         builder.excludeFieldsWithoutExposeAnnotation();
         mGson = builder.create();
         mPrefs = new StrollimoPreferences(this, PreferenceManager.getDefaultSharedPreferences(this), mGson);
+        mBus = new Bus();
+        mPrefs = new StrollimoPreferences(this, getSharedPreferences("StrollimoPreferences", 0), mGson);
         mStrollimoApi = new StrollimoApi(mGson, mPrefs);
         mAmazonS3Controller = new AmazonS3Controller();
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
@@ -57,6 +65,7 @@ public class StrollimoApplication extends Application {
         mUserService = new UserService(mPrefs);
         mUserService.loadCapturedSecrets();
         mAccomplishableController.preloadPlaces();
+        mImageUploadTaskQueue = ImageUploadTaskQueue.create(this, new GsonBuilder().registerTypeAdapter(Bitmap.class, new BitmapTypeAdapter()).create()); // start upload service if there were images to upload since the last time
         startService(new Intent(this, SecretStatusPollingService.class));
 
         Log.i(TAG, String.format("Device UUID: %s", mPrefs.getDeviceUUID()));
@@ -75,6 +84,10 @@ public class StrollimoApplication extends Application {
             return (T) mPhotoUploadController;
         } else if (serviceClass == StrollimoApi.class) {
             return (T) mStrollimoApi;
+        } else if (serviceClass == ImageUploadTaskQueue.class) {
+            return (T) mImageUploadTaskQueue;
+        } else if (serviceClass == Bus.class) {
+            return (T) mBus;
         }
         return null;
 

@@ -40,7 +40,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".controller.SecretStatusPollingService" />
+
+        <service android:name=".controller.ImageUploader.ImageUploadTaskService" />
 
         <activity
             android:name="com.strollimo.android.view.MainActivity"
