@@ -40,15 +40,6 @@ public class MysterySplashFragment extends Fragment {
         detailsPhoto.setImageUrl(imageUrl, rootView.findViewById(R.id.detailed_photo_progress));
         new DebugModeController(detailsPhoto, getActivity());
 
-        rootView.findViewById(R.id.open_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Analytics.track(Analytics.Event.OPEN_MYSTERY_SECRETS);
-
-                mMainViewPager.setCurrentItem(1, true);
-            }
-        });
         return rootView;
     }
 }

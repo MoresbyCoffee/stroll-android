@@ -19,52 +19,52 @@
             android:indeterminate="true"
             android:layout_centerInParent="true" />
 
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:background="@color/stroll_blue"
-            android:layout_marginRight="100dp"
-            android:alpha="0.8"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="50dp">
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"
+        android:gravity="center_vertical" >
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BALLERINA"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:id="@+id/title"
-                android:typeface="sans"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="OPEN"
-                android:background="@drawable/transparent_button"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:id="@+id/open_button"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:clickable="true"
-                android:typeface="sans"
-                android:textSize="20sp"
-                android:textColor="#ffffff"/>
+        <ImageView
+            android:layout_height="80dp"
+            android:layout_width="40dp"
+            android:src="@drawable/left_arrow"
+            android:layout_marginRight="10dp" />
 
         <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_toLeftOf="@id/open_button"
-                android:background="#99ffffff"
-                />
-    </RelativeLayout>
+            android:layout_height="60dp"
+            android:layout_width="10dp"
+            android:background="@color/stroll_blue_with_alpha"
+            android:layout_marginRight="10dp"/>
+
+        <View
+            android:layout_height="60dp"
+            android:layout_width="20dp"
+            android:background="@color/stroll_blue_with_alpha"
+            android:layout_marginRight="10dp"/>
+
+        <View
+            android:layout_height="60dp"
+            android:layout_width="30dp"
+            android:background="@color/stroll_blue_with_alpha"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:minWidth="170dp"
+            android:background="@color/stroll_blue_with_alpha"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical|right"
+            android:typeface="sans"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:text="BALLERINA"/>
+    </LinearLayout>
 
 </RelativeLayout>

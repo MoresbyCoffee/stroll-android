@@ -2,6 +2,7 @@
 <resources>
     <color name="stroll_blue">#ff0099cc</color>
     <color name="stroll_blue_press_color">#330099cc</color>
+    <color name="stroll_blue_with_alpha">#cc0099cc</color>
     <color name="stroll_yellow">#ffffd02d</color>
     <color name="stroll_dark_blue">#ff005884</color>
     <color name="card_border">#333333</color>
