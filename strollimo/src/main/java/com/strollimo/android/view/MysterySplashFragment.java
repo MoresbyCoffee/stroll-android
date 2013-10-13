@@ -19,6 +19,10 @@ public class MysterySplashFragment extends Fragment {
     private Mystery mCurrentMystery;
     private ViewPager mMainViewPager;
 
+    public MysterySplashFragment() {
+
+    }
+
     public MysterySplashFragment(Mystery mystery, ViewPager mainViewPager) {
         mCurrentMystery = mystery;
         mMainViewPager = mainViewPager;
