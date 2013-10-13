@@ -3,7 +3,6 @@ package com.strollimo.android.util;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -36,15 +35,14 @@ public class DebugModeController {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction() & MotionEvent.ACTION_MASK;
-                if (event.getPointerCount() >= 3 && (action) == MotionEvent.ACTION_POINTER_DOWN) {
-                    Log.i("BB", event.toString());
+                if (event.getPointerCount() >= 3 && action == MotionEvent.ACTION_POINTER_DOWN) {
                     mHandler.postDelayed(mDebugModeRunnable, 5000);
                     return true;
-                } else if (event.getPointerCount() >= 3 && (action) == MotionEvent.ACTION_POINTER_UP) {
+                } else if (action == MotionEvent.ACTION_POINTER_UP) {
                     mHandler.removeCallbacks(mDebugModeRunnable);
                     return true;
                 }
-                return false;
+                return true;
             }
         });
     }

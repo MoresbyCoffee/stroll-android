@@ -29,10 +29,10 @@ public class DebugActivity extends Activity {
 
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction().replace(android.R.id.content,
-                new DebugFragment2()).commit();
+                new DebugFragment()).commit();
     }
 
-    public static class DebugFragment2 extends PreferenceFragment {
+    public static class DebugFragment extends PreferenceFragment {
         public static final String PREF_CURRENT_ENV = "pref_current_env";
         private StrollimoPreferences mPrefs;
         private AccomplishableController mAccomplishableController;
