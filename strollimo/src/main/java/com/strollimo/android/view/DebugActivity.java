@@ -2,6 +2,7 @@ package com.strollimo.android.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
@@ -62,6 +63,18 @@ public class DebugActivity extends Activity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     mPrefs.setDebugModeOn((Boolean) newValue);
+                    return true;
+                }
+            });
+
+            final ListPreference sysEnvPref = (ListPreference) findPreference("pref_system_env");
+            sysEnvPref.setSummary(sysEnvPref.getValue());
+            sysEnvPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    sysEnvPref.setSummary(newValue.toString());
+                    StrollimoPreferences.SystemEnv env = StrollimoPreferences.SystemEnv.valueOf((String)newValue);
+                    StrollimoApplication.getService(StrollimoApi.class).reset(env);
                     return true;
                 }
             });

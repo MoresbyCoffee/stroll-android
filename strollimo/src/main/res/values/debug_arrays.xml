@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+            name="system_env_keys">
+        <item>LIVE</item>
+        <item>DEV</item>
+    </string-array>
+</resources>

@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.strollimo.android.model.Mystery;
 import com.strollimo.android.model.Secret;
+import com.strollimo.android.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -16,6 +17,7 @@ public class StrollimoPreferences {
     private static final String TAG = StrollimoPreferences.class.getSimpleName();
 
     public static final String USE_BARCODE_KEY = "USE_BARCODE";
+    public static final String SYSTEM_ENV = "pref_system_env";
     public static final String DEBUG_MODE_ON = "pref_debug_mode_on";
     public static final String MISSIONS_KEY = "mmissions_";
     public static final String SECRET_KEY = "SECRET";
@@ -27,6 +29,21 @@ public class StrollimoPreferences {
     public static final String LAST_SYNC_KEY = "LAST_SYNC";
     private static final String FEEDBACK_COMPLETED_KEY = "feedback_completed";
 
+    public enum SystemEnv {
+        LIVE("http://stroll.moresby.cloudbees.net"),
+        DEV("http://strollimo-test.moresby.cloudbees.net");
+
+        private String mUrl;
+
+        SystemEnv(String url) {
+            mUrl = url;
+        }
+
+        public String getUrl() {
+            return mUrl;
+        }
+    }
+
     // The client should sync daily
     //public static final int SYNC_INTERVAL = 24 * 60 * 60 * 1000;
     private final Context mContext;
@@ -37,6 +54,15 @@ public class StrollimoPreferences {
         mPrefs = prefs;
         mContext = context;
         mGson = gson;
+        if (!mPrefs.contains(SYSTEM_ENV)) {
+            SystemEnv env = Utils.isDebugBuild() ? SystemEnv.DEV : SystemEnv.LIVE;
+            mPrefs.edit().putString(SYSTEM_ENV, env.toString()).apply();
+        }
+    }
+
+    public String getStrollimoUrl() {
+        String savedEnv = mPrefs.getString(SYSTEM_ENV, SystemEnv.LIVE.toString());
+        return SystemEnv.valueOf(savedEnv).getUrl();
     }
 
     public String getDeviceUUID() {

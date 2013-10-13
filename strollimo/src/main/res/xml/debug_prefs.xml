@@ -11,6 +11,16 @@
     <Preference
             android:key="nopref_crash_app"
             android:title="Crash app"/>
+    <ListPreference
+            android:key="pref_system_env"
+            android:title="System environment"
+            android:dialogTitle="Choose environment"
+            android:entries="@array/system_env_keys"
+            android:entryValues="@array/system_env_keys"
+            android:defaultValue="DEV"/>
+    <Preference
+            android:key="nopref_crash_app"
+            android:title="Crash app"/>
     <Preference
             android:key="nopref_test_something"
             android:summary="Button for development"

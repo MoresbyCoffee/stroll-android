@@ -14,19 +14,30 @@ import retrofit.converter.GsonConverter;
 import java.util.List;
 
 public class StrollimoApi {
-    public static final String ENDPOINT = "http://stroll.moresby.cloudbees.net";
     private StrollimoServiceInterface service;
     private RequestHeader mRequestHeader;
     private Gson mGson;
+    private StrollimoPreferences mPrefs;
 
     public StrollimoApi(Gson gson, StrollimoPreferences prefs) {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setServer(ENDPOINT)
+                .setServer(prefs.getStrollimoUrl())
                 .setConverter(new GsonConverter(gson))
                 .build();
         mGson = gson;
+        mPrefs = prefs;
         service = restAdapter.create(StrollimoServiceInterface.class);
         String deviceId = prefs.getDeviceUUID();
+        mRequestHeader = new RequestHeader(deviceId);
+    }
+
+    public void reset(StrollimoPreferences.SystemEnv env) {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setServer(env.getUrl())
+                .setConverter(new GsonConverter(mGson))
+                .build();
+        service = restAdapter.create(StrollimoServiceInterface.class);
+        String deviceId = mPrefs.getDeviceUUID();
         mRequestHeader = new RequestHeader(deviceId);
     }
 
