@@ -18,9 +18,9 @@ import com.google.zxing.integration.android.IntentResult;
 import com.strollimo.android.R;
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.core.AccomplishableController;
+import com.strollimo.android.core.ImageUploadTaskQueueController;
 import com.strollimo.android.core.PreferencesController;
 import com.strollimo.android.core.ImageUploadTask;
-import com.strollimo.android.core.ImageUploadTaskQueue;
 import com.strollimo.android.core.UserController;
 import com.strollimo.android.core.VolleyImageLoader;
 import com.strollimo.android.core.VolleyRequestQueue;
@@ -160,8 +160,8 @@ public class MysterySecretsFragment extends Fragment {
                 }
                 VolleyRequestQueue.getInstance().getCache().remove(cachedUrl);
 
-                ImageUploadTaskQueue imageUploadTaskQueue = StrollimoApplication.getService(ImageUploadTaskQueue.class);
-                imageUploadTaskQueue.add(new ImageUploadTask(mSelectedSecret.getId(), pickupPhotoUrl, bitmap));
+                ImageUploadTaskQueueController imageUploadTaskQueueController = StrollimoApplication.getService(ImageUploadTaskQueueController.class);
+                imageUploadTaskQueueController.add(new ImageUploadTask(mSelectedSecret.getId(), pickupPhotoUrl, bitmap));
 
 
                 mUserController.captureSecret(mSelectedSecret);

@@ -18,12 +18,12 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-public class ImageUploadTaskQueue extends TaskQueue<ImageUploadTask> {
+public class ImageUploadTaskQueueController extends TaskQueue<ImageUploadTask> {
     private static final String FILENAME = "image_upload_task_queue";
 
     private final Context mContext;
 
-    private ImageUploadTaskQueue(ObjectQueue<ImageUploadTask> delegate, Context context) {
+    private ImageUploadTaskQueueController(ObjectQueue<ImageUploadTask> delegate, Context context) {
         super(delegate);
         mContext = context;
 
@@ -43,7 +43,7 @@ public class ImageUploadTaskQueue extends TaskQueue<ImageUploadTask> {
         startService();
     }
 
-    public static ImageUploadTaskQueue create(Context context, Gson gson) {
+    public static ImageUploadTaskQueueController create(Context context, Gson gson) {
         Converter<ImageUploadTask> converter = new GsonConverter<ImageUploadTask>(gson, ImageUploadTask.class);
         File queueFile = new File(context.getFilesDir(), FILENAME);
         FileObjectQueue<ImageUploadTask> delegate;
@@ -52,7 +52,7 @@ public class ImageUploadTaskQueue extends TaskQueue<ImageUploadTask> {
         } catch (IOException e) {
             throw new RuntimeException("Unable to create file queue.", e);
         }
-        return new ImageUploadTaskQueue(delegate, context);
+        return new ImageUploadTaskQueueController(delegate, context);
     }
 
 

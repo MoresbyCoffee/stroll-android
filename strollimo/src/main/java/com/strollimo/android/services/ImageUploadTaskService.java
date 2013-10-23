@@ -7,20 +7,20 @@ import android.util.Log;
 
 import com.strollimo.android.StrollimoApplication;
 import com.strollimo.android.core.ImageUploadTask;
-import com.strollimo.android.core.ImageUploadTaskQueue;
+import com.strollimo.android.core.ImageUploadTaskQueueController;
 
 
 public class ImageUploadTaskService extends Service implements ImageUploadTask.Callback {
     private static final String TAG = "Tape:ImageUploadTaskService";
 
-    private ImageUploadTaskQueue mQueue;
+    private ImageUploadTaskQueueController mQueue;
 
     private boolean running;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mQueue = StrollimoApplication.getService(ImageUploadTaskQueue.class);
+        mQueue = StrollimoApplication.getService(ImageUploadTaskQueueController.class);
         Log.i(TAG, "Service starting!");
     }
 

@@ -11,9 +11,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.otto.Bus;
 import com.strollimo.android.core.AccomplishableController;
+import com.strollimo.android.core.ImageUploadTaskQueueController;
 import com.strollimo.android.core.PreferencesController;
 import com.strollimo.android.utils.gson.adapters.BitmapTypeAdapter;
-import com.strollimo.android.core.ImageUploadTaskQueue;
 import com.strollimo.android.core.PhotoUploadController;
 import com.strollimo.android.core.UserController;
 import com.strollimo.android.services.SecretStatusPollingService;
@@ -35,7 +35,7 @@ public class StrollimoApplication extends Application {
     private PhotoUploadController mPhotoUploadController;
     private Gson mGson;
     private EndpointsController mEndpointsController;
-    private ImageUploadTaskQueue mImageUploadTaskQueue;
+    private ImageUploadTaskQueueController mImageUploadTaskQueueController;
     private Bus mBus;
 
 
@@ -67,7 +67,7 @@ public class StrollimoApplication extends Application {
         mUserController = new UserController(mPrefs);
         mUserController.loadCapturedSecrets();
         mAccomplishableController.preloadPlaces();
-        mImageUploadTaskQueue = ImageUploadTaskQueue.create(this, new GsonBuilder().registerTypeAdapter(Bitmap.class, new BitmapTypeAdapter()).create()); // start upload service if there were images to upload since the last time
+        mImageUploadTaskQueueController = ImageUploadTaskQueueController.create(this, new GsonBuilder().registerTypeAdapter(Bitmap.class, new BitmapTypeAdapter()).create()); // start upload service if there were images to upload since the last time
         startService(new Intent(this, SecretStatusPollingService.class));
 
         Log.i(TAG, String.format("Device UUID: %s", mPrefs.getDeviceUUID()));
@@ -86,8 +86,8 @@ public class StrollimoApplication extends Application {
             return (T) mPhotoUploadController;
         } else if (serviceClass == EndpointsController.class) {
             return (T) mEndpointsController;
-        } else if (serviceClass == ImageUploadTaskQueue.class) {
-            return (T) mImageUploadTaskQueue;
+        } else if (serviceClass == ImageUploadTaskQueueController.class) {
+            return (T) mImageUploadTaskQueueController;
         } else if (serviceClass == Bus.class) {
             return (T) mBus;
         }
