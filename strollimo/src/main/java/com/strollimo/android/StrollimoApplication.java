@@ -10,16 +10,17 @@ import com.crittercism.app.Crittercism;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.otto.Bus;
-import com.strollimo.android.controller.AccomplishableController;
-import com.strollimo.android.controller.ImageUploader.BitmapTypeAdapter;
-import com.strollimo.android.controller.ImageUploader.ImageUploadTaskQueue;
-import com.strollimo.android.controller.PhotoUploadController;
-import com.strollimo.android.controller.SecretStatusPollingService;
-import com.strollimo.android.controller.UserService;
-import com.strollimo.android.model.PickupMode;
-import com.strollimo.android.model.PickupModeTypeAdapter;
-import com.strollimo.android.network.AmazonS3Controller;
-import com.strollimo.android.network.StrollimoApi;
+import com.strollimo.android.core.AccomplishableController;
+import com.strollimo.android.core.PreferencesController;
+import com.strollimo.android.utils.gson.adapters.BitmapTypeAdapter;
+import com.strollimo.android.core.ImageUploadTaskQueue;
+import com.strollimo.android.core.PhotoUploadController;
+import com.strollimo.android.core.UserController;
+import com.strollimo.android.services.SecretStatusPollingService;
+import com.strollimo.android.models.PickupMode;
+import com.strollimo.android.utils.gson.adapters.PickupModeTypeAdapter;
+import com.strollimo.android.core.AmazonS3Controller;
+import com.strollimo.android.core.EndpointsController;
 
 public class StrollimoApplication extends Application {
     public static String TAG = StrollimoApplication.class.getSimpleName();
@@ -28,12 +29,12 @@ public class StrollimoApplication extends Application {
     private static StrollimoApplication mInstance;
 
     private AccomplishableController mAccomplishableController;
-    private UserService mUserService;
-    private StrollimoPreferences mPrefs;
+    private UserController mUserController;
+    private PreferencesController mPrefs;
     private AmazonS3Controller mAmazonS3Controller;
     private PhotoUploadController mPhotoUploadController;
     private Gson mGson;
-    private StrollimoApi mStrollimoApi;
+    private EndpointsController mEndpointsController;
     private ImageUploadTaskQueue mImageUploadTaskQueue;
     private Bus mBus;
 
@@ -57,14 +58,14 @@ public class StrollimoApplication extends Application {
         builder.registerTypeAdapter(PickupMode.class, new PickupModeTypeAdapter());
         builder.excludeFieldsWithoutExposeAnnotation();
         mGson = builder.create();
-        mPrefs = new StrollimoPreferences(this, PreferenceManager.getDefaultSharedPreferences(this), mGson);
+        mPrefs = new PreferencesController(this, PreferenceManager.getDefaultSharedPreferences(this), mGson);
         mBus = new Bus();
-        mStrollimoApi = new StrollimoApi(mGson, mPrefs);
+        mEndpointsController = new EndpointsController(mGson, mPrefs);
         mAmazonS3Controller = new AmazonS3Controller();
         mPhotoUploadController = new PhotoUploadController(this, mAmazonS3Controller);
-        mAccomplishableController = new AccomplishableController(this, mPrefs, mPhotoUploadController, mStrollimoApi);
-        mUserService = new UserService(mPrefs);
-        mUserService.loadCapturedSecrets();
+        mAccomplishableController = new AccomplishableController(this, mPrefs, mPhotoUploadController, mEndpointsController);
+        mUserController = new UserController(mPrefs);
+        mUserController.loadCapturedSecrets();
         mAccomplishableController.preloadPlaces();
         mImageUploadTaskQueue = ImageUploadTaskQueue.create(this, new GsonBuilder().registerTypeAdapter(Bitmap.class, new BitmapTypeAdapter()).create()); // start upload service if there were images to upload since the last time
         startService(new Intent(this, SecretStatusPollingService.class));
@@ -75,16 +76,16 @@ public class StrollimoApplication extends Application {
     public <T> T getServiceInstance(Class<T> serviceClass) {
         if (serviceClass == AccomplishableController.class) {
             return (T) mAccomplishableController;
-        } else if (serviceClass == UserService.class) {
-            return (T) mUserService;
-        } else if (serviceClass == StrollimoPreferences.class) {
+        } else if (serviceClass == UserController.class) {
+            return (T) mUserController;
+        } else if (serviceClass == PreferencesController.class) {
             return (T) mPrefs;
         } else if (serviceClass == AmazonS3Controller.class) {
             return (T) mAmazonS3Controller;
         } else if (serviceClass == PhotoUploadController.class) {
             return (T) mPhotoUploadController;
-        } else if (serviceClass == StrollimoApi.class) {
-            return (T) mStrollimoApi;
+        } else if (serviceClass == EndpointsController.class) {
+            return (T) mEndpointsController;
         } else if (serviceClass == ImageUploadTaskQueue.class) {
             return (T) mImageUploadTaskQueue;
         } else if (serviceClass == Bus.class) {

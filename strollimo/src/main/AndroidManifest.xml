@@ -30,7 +30,7 @@
             android:value="AIzaSyCvyVayQO8ke2bPQZ3RVwhAqwhcx7aIG7s" />
 
         <activity
-                android:name="com.strollimo.android.view.InitActivity"
+                android:name=".ui.activities.InitActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"
                 android:label="@string/app_name"
                 android:screenOrientation="portrait" >
@@ -41,38 +41,38 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".controller.SecretStatusPollingService" />
+        <service android:name=".services.SecretStatusPollingService" />
 
-        <service android:name=".controller.ImageUploader.ImageUploadTaskService" />
+        <service android:name=".services.ImageUploadTaskService" />
 
         <activity
-            android:name="com.strollimo.android.view.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-                android:name="com.strollimo.android.view.DebugActivity"
+                android:name=".ui.activities.DebugActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"
                 android:label="@string/debug_menu_title"
                 android:screenOrientation="portrait" />
         <activity
-            android:name="com.strollimo.android.view.PhotoCaptureActivity"
+            android:name=".ui.activities.PhotoCaptureActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_details"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
         <activity
-            android:name=".view.AddSecretActivity"
+            android:name=".ui.activities.AddSecretActivity"
             android:label="@string/title_activity_add_secret" />
         <activity
-                android:name=".view.AddMysteryActivity"
+                android:name=".ui.activities.AddMysteryActivity"
                 android:label="@string/title_activity_add_mystery" />
         <activity
-                android:name=".view.MysteryOpenActivity"
+                android:name=".ui.activities.MysteryOpenActivity"
                 android:label="@string/title_mystery_open_activity"
                 android:screenOrientation="portrait" />
         <activity
-            android:name=".view.FeedbackFormActivity"
+            android:name=".ui.activities.FeedbackFormActivity"
             android:label="@string/title_feedback_form_activity" />
     </application>
 
